@@ -1,2 +1,2 @@
 # Randomizer
-Generates random data fro facturaScripts 2018.
+Generates random data for FacturaScripts 2018.

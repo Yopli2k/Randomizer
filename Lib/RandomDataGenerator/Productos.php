@@ -97,7 +97,7 @@ class Productos extends AbstractRandom
             $product->clear();
             $this->setProductoData($product);
             if (!$product->save()) {
-                break;
+                continue;
             }
 
             $variants = $this->setVariants($product);
@@ -120,10 +120,9 @@ class Productos extends AbstractRandom
         $product->codimpuesto = $this->impuestos[0]->codimpuesto;
         $product->precio = $this->precio(1, 49, 699);
 
-        switch (mt_rand(0, 2)) {
+        switch (mt_rand(0, 5)) {
             case 0:
-                $variante = new Model\Variante();
-                $product->referencia = $variante->newCode('referencia');
+                $product->referencia = $this->randomString(10);
                 break;
 
             case 1:
@@ -132,7 +131,9 @@ class Productos extends AbstractRandom
                 break;
 
             default:
-                $product->referencia = $this->randomString(10);
+                $variante = new Model\Variante();
+                $product->referencia = $variante->newCode('referencia');
+                break;
         }
 
         if (mt_rand(0, 9) > 0) {

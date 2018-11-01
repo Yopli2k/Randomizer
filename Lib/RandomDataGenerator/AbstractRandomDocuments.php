@@ -44,13 +44,6 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
     protected $divisas;
 
     /**
-     * Exercice to use.
-     *
-     * @var Model\Ejercicio
-     */
-    protected $ejercicio;
-
-    /**
      * List of payment methods.
      *
      * @var Model\FormaPago[]
@@ -79,7 +72,6 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
     public function __construct($model)
     {
         parent::__construct($model);
-        $this->ejercicio = new Model\Ejercicio();
         $this->shuffle($this->almacenes, new Model\Almacen());
         $this->shuffle($this->divisas, new Model\Divisa());
         $this->shuffle($this->formasPago, new Model\FormaPago());
@@ -90,12 +82,14 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
     /**
      * Generates a random document
      *
-     * @param mixed $doc
+     * @param Model\Base\BusinessDocument $doc
      */
     protected function randomizeDocument(&$doc)
     {
-        $doc->fecha = $this->fecha();
-        $doc->hora = mt_rand(10, 20) . ':' . mt_rand(10, 59) . ':' . mt_rand(10, 59);
+        $fecha = $this->fecha();
+        $hora = mt_rand(10, 20) . ':' . mt_rand(10, 59) . ':' . mt_rand(10, 59);
+        $doc->setDate($fecha, $hora);
+
         $doc->codpago = $this->formasPago[0]->codpago;
         $doc->codalmacen = (mt_rand(0, 2) == 0) ? $this->almacenes[0]->codalmacen : $doc->codalmacen;
         $doc->codserie = (mt_rand(0, 2) == 0) ? $this->series[0]->codserie : $doc->codserie;
@@ -124,16 +118,13 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
      * Generates a random purchase document
      *
      * @param $doc
-     * @param Model\Ejercicio   $eje
      * @param Model\Proveedor[] $proveedores
      * @param int               $num
      *
      * @return string
      */
-    protected function randomizeDocumentCompra(&$doc, $eje, $proveedores, $num)
+    protected function randomizeDocumentCompra(&$doc, $proveedores, $num)
     {
-        $doc->codejercicio = $eje->codejercicio;
-
         $regimeniva = 'Exento';
         if (mt_rand(0, 14) > 0 && isset($proveedores[$num])) {
             $doc->setSubject($proveedores[$num]);
@@ -151,29 +142,19 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
      * Generates a random sale document
      *
      * @param $doc
-     * @param Model\Ejercicio $eje
      * @param Model\Cliente[] $clientes
      * @param int             $num
      *
      * @return string
      */
-    protected function randomizeDocumentVenta(&$doc, $eje, $clientes, $num)
+    protected function randomizeDocumentVenta(&$doc, $clientes, $num)
     {
-        $doc->codejercicio = $eje->codejercicio;
-
         $regimeniva = 'Exento';
         if (isset($clientes[$num])) {
             $doc->setSubject($clientes[$num]);
             $regimeniva = $clientes[$num]->regimeniva;
         }
 
-        /**
-        /// Every once in a while, generate one without the client, to check if it breaks ;-)
-        $doc->nombrecliente = $this->nombre() . ' ' . $this->apellidos();
-        $doc->cifnif = mt_rand(1111, 999999999) . 'J';
-        // TODO: Needs a idcontactoenv placeholder
-        $this->miniLog->critical("Client without idcontactoenv because don't have codcliente");
-        */
         return $regimeniva;
     }
 

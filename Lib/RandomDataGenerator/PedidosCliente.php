@@ -61,18 +61,14 @@ class PedidosCliente extends AbstractRandomDocuments
             while ($generated < $num) {
                 $ped->clear();
                 $this->randomizeDocument($ped);
-                $eje = $this->ejercicio->getByFecha($ped->fecha);
-                if (false === $eje) {
-                    break;
-                }
 
                 $recargo = ($clientes[0]->recargo || mt_rand(0, 4) === 0);
-                $regimeniva = $this->randomizeDocumentVenta($ped, $eje, $clientes, $generated);
+                $regimeniva = $this->randomizeDocumentVenta($ped, $clientes, $generated);
                 if (mt_rand(0, 3) == 0) {
                     $ped->fechasalida = date('d-m-Y', strtotime($ped->fecha . ' +' . mt_rand(1, 3) . ' months'));
                 }
                 if ($ped->save()) {
-                    $this->randomLineas($ped, 'idpedido', 'FacturaScripts\Dinamic\Model\LineaPedidoCliente', $regimeniva, $recargo);
+                    $this->randomLineas($ped, 'idpedido', self::MODEL_NAMESPACE . '\LineaPedidoCliente', $regimeniva, $recargo);
                     ++$generated;
                 } else {
                     break;

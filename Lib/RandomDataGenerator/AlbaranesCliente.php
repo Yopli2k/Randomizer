@@ -61,19 +61,15 @@ class AlbaranesCliente extends AbstractRandomDocuments
             while ($generated < $num) {
                 $alb->clear();
                 $this->randomizeDocument($alb);
-                $eje = $this->ejercicio->getByFecha($alb->fecha);
-                if (false === $eje) {
-                    break;
-                }
 
                 $recargo = false;
                 if ($clientes[0]->recargo || mt_rand(0, 4) === 0) {
                     $recargo = true;
                 }
 
-                $regimeniva = $this->randomizeDocumentVenta($alb, $eje, $clientes, $generated);
+                $regimeniva = $this->randomizeDocumentVenta($alb, $clientes, $generated);
                 if ($alb->save()) {
-                    $this->randomLineas($alb, 'idalbaran', 'FacturaScripts\Dinamic\Model\LineaAlbaranCliente', $regimeniva, $recargo, -1);
+                    $this->randomLineas($alb, 'idalbaran', self::MODEL_NAMESPACE . '\LineaAlbaranCliente', $regimeniva, $recargo, -1);
                     ++$generated;
                 } else {
                     break;

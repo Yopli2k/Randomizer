@@ -31,6 +31,8 @@ use FacturaScripts\Core\Model;
 abstract class AbstractRandom
 {
 
+    const MODEL_NAMESPACE = '\FacturaScripts\Dinamic\Model';
+
     /**
      * Link with the active database
      *
@@ -276,7 +278,7 @@ abstract class AbstractRandom
      */
     protected function randomAgentes()
     {
-        return $this->randomModel('\FacturaScripts\Dinamic\Model\Agente', 'agentes');
+        return $this->randomModel(self::MODEL_NAMESPACE . '\Agente', 'agentes');
     }
 
     /**
@@ -286,7 +288,7 @@ abstract class AbstractRandom
      */
     protected function randomClientes()
     {
-        return $this->randomModel('\FacturaScripts\Dinamic\Model\Cliente', 'clientes');
+        return $this->randomModel(self::MODEL_NAMESPACE . '\Cliente', 'clientes');
     }
 
     /**
@@ -321,7 +323,7 @@ abstract class AbstractRandom
      */
     protected function randomProductos()
     {
-        return $this->randomModel('\FacturaScripts\Dinamic\Model\Producto', 'productos');
+        return $this->randomModel(self::MODEL_NAMESPACE . '\Producto', 'productos');
     }
 
     /**
@@ -331,7 +333,7 @@ abstract class AbstractRandom
      */
     protected function randomProveedores()
     {
-        return $this->randomModel('\FacturaScripts\Dinamic\Model\Proveedor', 'proveedores');
+        return $this->randomModel(self::MODEL_NAMESPACE . '\Proveedor', 'proveedores');
     }
 
     /**

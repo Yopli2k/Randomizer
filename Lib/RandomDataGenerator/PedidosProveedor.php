@@ -61,15 +61,11 @@ class PedidosProveedor extends AbstractRandomDocuments
             while ($generated < $num) {
                 $ped->clear();
                 $this->randomizeDocument($ped);
-                $eje = $this->ejercicio->getByFecha($ped->fecha);
-                if (false === $eje) {
-                    break;
-                }
 
                 $recargo = (mt_rand(0, 4) === 0);
-                $regimeniva = $this->randomizeDocumentCompra($ped, $eje, $proveedores, $generated);
+                $regimeniva = $this->randomizeDocumentCompra($ped, $proveedores, $generated);
                 if ($ped->save()) {
-                    $this->randomLineas($ped, 'idpedido', 'FacturaScripts\Dinamic\Model\LineaPedidoProveedor', $regimeniva, $recargo);
+                    $this->randomLineas($ped, 'idpedido', self::MODEL_NAMESPACE . '\LineaPedidoProveedor', $regimeniva, $recargo);
                     ++$generated;
                 } else {
                     break;

@@ -57,12 +57,12 @@ class PresupuestosProveedor extends AbstractRandomDocuments
 
                 $proveedor = $this->getOneItem($proveedores);
                 $this->randomizeDocument($pre, false, $proveedor);
-                if ($pre->save()) {
-                    $this->randomLineas($pre);
-                    ++$generated;
-                } else {
+                if (!$pre->save()) {
                     break;
                 }
+
+                $this->randomLineas($pre);
+                ++$generated;
             }
 
             // confirm data

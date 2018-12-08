@@ -56,12 +56,12 @@ class AlbaranesProveedor extends AbstractRandomDocuments
 
                 $proveedor = $this->getOneItem($proveedores);
                 $this->randomizeDocument($alb, false, $proveedor);
-                if ($alb->save()) {
-                    $this->randomLineas($alb);
-                    ++$generated;
-                } else {
+                if (!$alb->save()) {
                     break;
                 }
+
+                $this->randomLineas($alb);
+                ++$generated;
             }
 
             // confirm data

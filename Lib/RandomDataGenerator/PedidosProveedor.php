@@ -56,12 +56,12 @@ class PedidosProveedor extends AbstractRandomDocuments
 
                 $proveedor = $this->getOneItem($proveedores);
                 $this->randomizeDocument($ped, false, $proveedor);
-                if ($ped->save()) {
-                    $this->randomLineas($ped);
-                    ++$generated;
-                } else {
+                if (!$ped->save()) {
                     break;
                 }
+
+                $this->randomLineas($ped);
+                ++$generated;
             }
 
             // confirm data

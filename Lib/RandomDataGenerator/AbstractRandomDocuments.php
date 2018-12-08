@@ -118,7 +118,7 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
         if ($cliente && $option == 0) {
             $doc->cifnif = $this->cif();
             $doc->nombrecliente = $this->empresa();
-        } else if ($cliente) {
+        } elseif ($cliente) {
             $doc->setSubject($cliente);
         } elseif ($proveedor && $option == 0) {
             $doc->cifnif = $this->cif();

@@ -107,7 +107,6 @@ class Clientes extends AbstractRandomPeople
             $cuenta->iban = $this->iban();
             $cuenta->swift = (mt_rand(0, 2) != 0) ? $this->randomString(8) : '';
             $cuenta->fmandato = (mt_rand(0, 1) == 0) ? date('d-m-Y', strtotime($cliente->fechaalta . ' +' . mt_rand(1, 30) . ' days')) : null;
-
             if (!$cuenta->save()) {
                 break;
             }
@@ -134,7 +133,6 @@ class Clientes extends AbstractRandomPeople
             $dir->codpostal = (string) mt_rand(1234, 99999);
             $dir->nombre = 'Dirección facturación/envío #' . $max;
             $dir->observaciones = 'Dirección facturación/envío #' . $max;
-
             if (!$dir->save()) {
                 break;
             }

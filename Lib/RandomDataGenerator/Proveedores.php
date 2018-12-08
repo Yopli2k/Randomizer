@@ -50,17 +50,17 @@ class Proveedores extends AbstractRandomPeople
                 $proveedor->clear();
 
                 $this->fillCliPro($proveedor);
-                if ($proveedor->save()) {
-                    /// añadimos direcciones
-                    $numDirs = mt_rand(0, 3);
-                    $this->direccionesProveedor($proveedor, $numDirs);
-
-                    /// Añadimos cuentas bancarias
-                    $numCuentas = mt_rand(0, 3);
-                    $this->cuentasBancoProveedor($proveedor, $numCuentas);
-                } else {
+                if (!$proveedor->save()) {
                     break;
                 }
+
+                // adds addreses
+                $numDirs = mt_rand(0, 3);
+                $this->direccionesProveedor($proveedor, $numDirs);
+
+                // adds bacnk accounts
+                $numCuentas = mt_rand(0, 3);
+                $this->cuentasBancoProveedor($proveedor, $numCuentas);
             }
 
             // confirm data

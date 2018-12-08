@@ -56,12 +56,12 @@ class AlbaranesCliente extends AbstractRandomDocuments
 
                 $cliente = $this->getOneItem($clientes);
                 $this->randomizeDocument($alb, $cliente);
-                if ($alb->save()) {
-                    $this->randomLineas($alb);
-                    ++$generated;
-                } else {
+                if (!$alb->save()) {
                     break;
                 }
+
+                $this->randomLineas($alb);
+                ++$generated;
             }
 
             // confirm data

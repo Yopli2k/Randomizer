@@ -59,12 +59,13 @@ class PedidosCliente extends AbstractRandomDocuments
                 if (mt_rand(0, 3) == 0) {
                     $ped->fechasalida = date('d-m-Y', strtotime($ped->fecha . ' +' . mt_rand(1, 3) . ' months'));
                 }
-                if ($ped->save()) {
-                    $this->randomLineas($ped);
-                    ++$generated;
-                } else {
+
+                if (!$ped->save()) {
                     break;
                 }
+
+                $this->randomLineas($ped);
+                ++$generated;
             }
 
             // confirm data

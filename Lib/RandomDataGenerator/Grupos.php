@@ -53,12 +53,14 @@ class Grupos extends AbstractRandomPeople
         try {
             for ($generated = 0; $generated < $num; ++$generated) {
                 $grupo->clear();
+
                 $grupo->codgrupo = $grupo->newCode();
                 $grupo->nombre = $this->getOneItem($nombres) . ' ' . $this->getOneItem($sufijos) . " $generated";
                 if (!$grupo->save()) {
                     break;
                 }
             }
+
             // confirm data
             $this->dataBase->commit();
         } catch (\Exception $e) {

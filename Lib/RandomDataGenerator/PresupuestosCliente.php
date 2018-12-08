@@ -53,18 +53,18 @@ class PresupuestosCliente extends AbstractRandomDocuments
         try {
             while ($generated < $num) {
                 $presu->clear();
-                
+
                 $cliente = $this->getOneItem($clientes);
                 $this->randomizeDocument($presu, $cliente);
                 $presu->finoferta = date('d-m-Y', strtotime($presu->fecha . ' +' . mt_rand(1, 18) . ' months'));
-                if ($presu->save()) {
-                    $this->randomLineas($presu);
-                    ++$generated;
-                } else {
+                if (!$presu->save()) {
                     break;
                 }
+
+                $this->randomLineas($presu);
+                ++$generated;
             }
-            
+
             // confirm data
             $this->dataBase->commit();
         } catch (\Exception $e) {

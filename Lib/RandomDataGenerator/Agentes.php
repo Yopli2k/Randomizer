@@ -47,12 +47,13 @@ class Agentes extends AbstractRandomPeople
         try {
             for ($generated = 0; $generated < $num; ++$generated) {
                 $agente->clear();
-                $this->setAgenteData($agente);
 
+                $this->setAgenteData($agente);
                 if (!$agente->save()) {
                     break;
                 }
             }
+
             // confirm data
             $this->dataBase->commit();
         } catch (\Exception $e) {

@@ -61,6 +61,7 @@ class Subcuentas extends AbstractRandomAccounting
                     break;
                 }
             }
+
             // confirm data
             $this->dataBase->commit();
         } catch (\Exception $e) {

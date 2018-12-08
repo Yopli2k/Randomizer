@@ -53,6 +53,7 @@ class Cuentas extends AbstractRandomAccounting
                 $ejercicio = $this->getOneItem($this->ejercicios)->codejercicio;
                 foreach ([$madre, $codigo] as $value) {
                     $cuenta->clear();
+
                     $cuenta->codejercicio = $ejercicio;
                     $cuenta->codcuenta = $value;
                     $cuenta->descripcion = $this->descripcion();
@@ -61,6 +62,7 @@ class Cuentas extends AbstractRandomAccounting
                     }
                 }
             }
+
             // confirm data
             $this->dataBase->commit();
         } catch (\Exception $e) {

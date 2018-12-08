@@ -49,11 +49,13 @@ class Contactos extends AbstractRandomPeople
         try {
             for ($i = 0; $i < $num; ++$i) {
                 $contacto->clear();
+
                 $this->fillContacto($contacto);
                 if (!$contacto->save()) {
                     break;
                 }
             }
+
             // confirm data
             $this->dataBase->commit();
         } catch (\Exception $e) {

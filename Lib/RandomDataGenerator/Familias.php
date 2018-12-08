@@ -48,6 +48,7 @@ class Familias extends AbstractRandom
         try {
             for ($generated = 0; $generated < $num; ++$generated) {
                 $fam->clear();
+
                 $fam->descripcion = $this->familia();
                 $fam->codfamilia = $this->txt2codigo($fam->descripcion);
                 $fam->madre = (mt_rand(0, 4) == 0 && $fam->codfamilia != $codfamilia) ? $codfamilia : null;
@@ -57,6 +58,7 @@ class Familias extends AbstractRandom
 
                 $codfamilia = $fam->codfamilia;
             }
+
             // confirm data
             $this->dataBase->commit();
         } catch (\Exception $e) {

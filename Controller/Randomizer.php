@@ -19,15 +19,15 @@
 namespace FacturaScripts\Plugins\Randomizer\Controller;
 
 use FacturaScripts\Core\Base;
-use FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 use FacturaScripts\Core\Model\User;
+use FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller to generate random data
  *
- * @author Carlos García Gómez <carlos@facturascripts.com>
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
  */
 class Randomizer extends Base\Controller
 {
@@ -47,6 +47,21 @@ class Randomizer extends Base\Controller
     public $totalCounter = [];
 
     /**
+     * Returns basic page attributes
+     *
+     * @return array
+     */
+    public function getPageData()
+    {
+        $pageData = parent::getPageData();
+        $pageData['menu'] = 'admin';
+        $pageData['title'] = 'generate-test-data';
+        $pageData['icon'] = 'fas fa-magic';
+
+        return $pageData;
+    }
+
+    /**
      * Runs the controller's private logic.
      *
      * @param Response                   $response
@@ -64,21 +79,6 @@ class Randomizer extends Base\Controller
         }
 
         $this->getTotals();
-    }
-
-    /**
-     * Returns basic page attributes
-     *
-     * @return array
-     */
-    public function getPageData()
-    {
-        $pageData = parent::getPageData();
-        $pageData['menu'] = 'admin';
-        $pageData['title'] = 'generate-test-data';
-        $pageData['icon'] = 'fas fa-magic';
-
-        return $pageData;
     }
 
     /**

@@ -18,23 +18,16 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model\AlbaranProveedor;
 
 /**
  *  Generates delivery notes to suppliers with random data.
  *
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 class AlbaranesProveedor extends AbstractRandomDocuments
 {
-
-    /**
-     * AlbaranesProveedor constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct(new Model\AlbaranProveedor());
-    }
 
     /**
      * Generate random data.
@@ -50,8 +43,8 @@ class AlbaranesProveedor extends AbstractRandomDocuments
             return 0;
         }
 
-        $alb = $this->model;
         $generated = 0;
+        $alb = $this->model();
 
         // start transaction
         $this->dataBase->beginTransaction();
@@ -60,17 +53,17 @@ class AlbaranesProveedor extends AbstractRandomDocuments
         try {
             while ($generated < $num) {
                 $alb->clear();
-                $this->randomizeDocument($alb);
 
-                $recargo = (mt_rand(0, 4) === 0);
-                $regimeniva = $this->randomizeDocumentCompra($alb, $proveedores, $generated);
+                $proveedor = $this->getOneItem($proveedores);
+                $this->randomizeDocument($alb, false, $proveedor);
                 if ($alb->save()) {
-                    $this->randomLineas($alb, 'idalbaran', self::MODEL_NAMESPACE . '\LineaAlbaranProveedor', $regimeniva, $recargo, 1);
+                    $this->randomLineas($alb);
                     ++$generated;
                 } else {
                     break;
                 }
             }
+
             // confirm data
             $this->dataBase->commit();
         } catch (\Exception $e) {
@@ -82,5 +75,14 @@ class AlbaranesProveedor extends AbstractRandomDocuments
         }
 
         return $generated;
+    }
+
+    /**
+     * 
+     * @return AlbaranProveedor
+     */
+    protected function model()
+    {
+        return new AlbaranProveedor();
     }
 }

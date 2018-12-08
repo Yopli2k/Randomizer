@@ -18,23 +18,16 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model\PresupuestoCliente;
 
 /**
  *  Generate customer budgets with random data.
  *
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 class PresupuestosCliente extends AbstractRandomDocuments
 {
-
-    /**
-     * PresupuestosCliente constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct(new Model\PresupuestoCliente());
-    }
 
     /**
      * Generate random data.
@@ -51,7 +44,7 @@ class PresupuestosCliente extends AbstractRandomDocuments
         }
 
         $generated = 0;
-        $presu = $this->model;
+        $presu = $this->model();
 
         // start transaction
         $this->dataBase->beginTransaction();
@@ -60,18 +53,18 @@ class PresupuestosCliente extends AbstractRandomDocuments
         try {
             while ($generated < $num) {
                 $presu->clear();
-                $this->randomizeDocument($presu);
-
-                $recargo = ($clientes[0]->recargo || mt_rand(0, 4) === 0);
-                $regimeniva = $this->randomizeDocumentVenta($presu, $clientes, $generated);
+                
+                $cliente = $this->getOneItem($clientes);
+                $this->randomizeDocument($presu, $cliente);
                 $presu->finoferta = date('d-m-Y', strtotime($presu->fecha . ' +' . mt_rand(1, 18) . ' months'));
                 if ($presu->save()) {
-                    $this->randomLineas($presu, 'idpresupuesto', self::MODEL_NAMESPACE . '\LineaPresupuestoCliente', $regimeniva, $recargo);
+                    $this->randomLineas($presu);
                     ++$generated;
                 } else {
                     break;
                 }
             }
+            
             // confirm data
             $this->dataBase->commit();
         } catch (\Exception $e) {
@@ -83,5 +76,14 @@ class PresupuestosCliente extends AbstractRandomDocuments
         }
 
         return $generated;
+    }
+
+    /**
+     * 
+     * @return PresupuestoCliente
+     */
+    protected function model()
+    {
+        return new PresupuestoCliente();
     }
 }

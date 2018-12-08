@@ -20,13 +20,14 @@ namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
 use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Base\MiniLog;
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model;
 
 /**
  * Abstract class that contains the basic methods to populate a table with 
  * random data 
  *
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 abstract class AbstractRandom
 {
@@ -48,31 +49,22 @@ abstract class AbstractRandom
     protected $miniLog;
 
     /**
-     * Contains the model to generate random data.
-     *
-     * @var mixed
-     */
-    protected $model;
-
-    /**
-     * Generate random data.
-     *
-     * @param int $num
-     *
-     * @return mixed
+     * Generates random data.
      */
     abstract public function generate($num = 50);
 
     /**
-     * AbstractRandom constructor.
-     *
-     * @param $model
+     * Returns the model to operate.
      */
-    public function __construct($model)
+    abstract protected function model();
+
+    /**
+     * AbstractRandom constructor.
+     */
+    public function __construct()
     {
         $this->dataBase = new DataBase();
         $this->miniLog = new MiniLog();
-        $this->model = $model;
     }
 
     /**

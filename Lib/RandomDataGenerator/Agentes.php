@@ -18,23 +18,16 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model\Agente;
 
 /**
  * Generate random data for the agents (Agentes) file
  *
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 class Agentes extends AbstractRandomPeople
 {
-
-    /**
-     * Agentes constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct(new Model\Agente());
-    }
 
     /**
      * Generate random data.
@@ -45,7 +38,7 @@ class Agentes extends AbstractRandomPeople
      */
     public function generate($num = 50)
     {
-        $agente = $this->model;
+        $agente = $this->model();
 
         // start transaction
         $this->dataBase->beginTransaction();
@@ -73,7 +66,20 @@ class Agentes extends AbstractRandomPeople
         return $generated;
     }
 
-    private function setAgenteData(Model\Agente &$agente)
+    /**
+     * 
+     * @return Agente
+     */
+    protected function model()
+    {
+        return new Agente();
+    }
+
+    /**
+     * 
+     * @param Agente $agente
+     */
+    private function setAgenteData(Agente &$agente)
     {
         $agente->fechanacimiento = $this->fecha(1970, 1997);
         $agente->fechaalta = $this->fecha(2013, 2016);

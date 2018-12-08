@@ -18,13 +18,14 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model\Ejercicio;
 
 /**
  * Abstract class that contains the methods that generate random data 
  * for accounting.
  *
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 abstract class AbstractRandomAccounting extends AbstractRandom
 {
@@ -32,20 +33,17 @@ abstract class AbstractRandomAccounting extends AbstractRandom
     /**
      * List of exercices.
      *
-     * @var array
+     * @var Ejercicio[]
      */
     protected $ejercicios;
 
     /**
      * AbstractRandomAccounting constructor.
-     *
-     * @param $model
      */
-    public function __construct($model)
+    public function __construct()
     {
-        parent::__construct($model);
-
-        $ejercicios = new Model\Ejercicio();
+        parent::__construct();
+        $ejercicios = new Ejercicio();
         $this->ejercicios = $ejercicios->all();
     }
 }

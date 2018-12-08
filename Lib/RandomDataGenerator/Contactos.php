@@ -20,23 +20,16 @@ namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
 use FacturaScripts\Core\App\AppSettings;
 use FacturaScripts\Core\Base\Utils;
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model;
 
 /**
  * Generate random data for the contact
  *
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 class Contactos extends AbstractRandomPeople
 {
-
-    /**
-     * Contactos constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct(new Model\Contacto());
-    }
 
     /**
      * Generate random data.
@@ -47,7 +40,7 @@ class Contactos extends AbstractRandomPeople
      */
     public function generate($num = 50): int
     {
-        $contacto = $this->model;
+        $contacto = $this->model();
 
         // start transaction
         $this->dataBase->beginTransaction();
@@ -57,7 +50,6 @@ class Contactos extends AbstractRandomPeople
             for ($i = 0; $i < $num; ++$i) {
                 $contacto->clear();
                 $this->fillContacto($contacto);
-
                 if (!$contacto->save()) {
                     break;
                 }
@@ -89,7 +81,7 @@ class Contactos extends AbstractRandomPeople
         $paises = [];
         $this->shuffle($paises, new Model\Pais());
 
-        $timeStamp = random_int(0, 1) > 0 ? random_int(time()/2, time()) : time();
+        $timeStamp = random_int(0, 1) > 0 ? random_int(time() / 2, time()) : time();
         $randomIp = random_int(0, 255) . '.' . random_int(0, 255) . '.' . random_int(0, 255) . '.' . random_int(0, 255);
 
         $contacto->admitemarketing = random_int(0, 1) > 0;
@@ -122,5 +114,14 @@ class Contactos extends AbstractRandomPeople
         $contacto->telefono2 = random_int(0, 1) > 0 ? $this->telefono() : null;
         $contacto->verificado = random_int(0, 1) > 0;
         $contacto->cifnif = random_int(0, 14) === 0 ? '' : random_int(0, 99999999);
+    }
+
+    /**
+     * 
+     * @return Model\Contacto
+     */
+    protected function model()
+    {
+        return new Model\Contacto();
     }
 }

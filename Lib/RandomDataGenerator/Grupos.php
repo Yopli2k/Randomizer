@@ -18,23 +18,16 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model\GrupoClientes;
 
 /**
  * Generate random data for the customer groups (grupos de clientes) file
  *
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 class Grupos extends AbstractRandomPeople
 {
-
-    /**
-     * Grupos constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct(new Model\GrupoClientes());
-    }
 
     /**
      * Generate random data.
@@ -51,7 +44,7 @@ class Grupos extends AbstractRandomPeople
         ];
         $sufijos = ['VIP', 'PRO', 'NEO', 'XL', 'XXL', '50 aniversario', 'C', 'Z'];
 
-        $grupo = $this->model;
+        $grupo = $this->model();
 
         // start transaction
         $this->dataBase->beginTransaction();
@@ -77,5 +70,14 @@ class Grupos extends AbstractRandomPeople
         }
 
         return $generated;
+    }
+
+    /**
+     * 
+     * @return GrupoClientes
+     */
+    protected function model()
+    {
+        return new GrupoClientes();
     }
 }

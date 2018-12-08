@@ -18,24 +18,17 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model\PresupuestoProveedor;
 
 /**
  *  Generates delivery notes to suppliers with random data.
  *
- * @author Francesc Pineda Segarra <francesc.pineda.segarra@gmail.com>
- * @author Rafael San José Tovar <rsanjoseo@gmail.com>
+ * @author Francesc Pineda Segarra  <francesc.pineda.segarra@gmail.com>
+ * @author Rafael San José Tovar    <rsanjoseo@gmail.com>
+ * @author Carlos García Gómez      <carlos@facturascripts.com>
  */
 class PresupuestosProveedor extends AbstractRandomDocuments
 {
-
-    /**
-     * PresupuestosProveedor constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct(new Model\PresupuestoProveedor());
-    }
 
     /**
      * Generate random data.
@@ -52,7 +45,7 @@ class PresupuestosProveedor extends AbstractRandomDocuments
         }
 
         $generated = 0;
-        $pre = $this->model;
+        $pre = $this->model();
 
         // start transaction
         $this->dataBase->beginTransaction();
@@ -61,17 +54,17 @@ class PresupuestosProveedor extends AbstractRandomDocuments
         try {
             while ($generated < $num) {
                 $pre->clear();
-                $this->randomizeDocument($pre);
 
-                $recargo = (random_int(0, 4) === 0);
-                $regimeniva = $this->randomizeDocumentCompra($pre, $proveedores, $generated);
+                $proveedor = $this->getOneItem($proveedores);
+                $this->randomizeDocument($pre, false, $proveedor);
                 if ($pre->save()) {
-                    $this->randomLineas($pre, 'idpresupuesto', self::MODEL_NAMESPACE . '\LineaPresupuestoProveedor', $regimeniva, $recargo, 1);
+                    $this->randomLineas($pre);
                     ++$generated;
                 } else {
                     break;
                 }
             }
+
             // confirm data
             $this->dataBase->commit();
         } catch (\Exception $e) {
@@ -83,5 +76,14 @@ class PresupuestosProveedor extends AbstractRandomDocuments
         }
 
         return $generated;
+    }
+
+    /**
+     * 
+     * @return PresupuestoProveedor
+     */
+    protected function model()
+    {
+        return new PresupuestoProveedor();
     }
 }

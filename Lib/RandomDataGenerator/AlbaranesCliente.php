@@ -18,23 +18,16 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model\AlbaranCliente;
 
 /**
- *  Generates delivery notes to customers with random data.
+ * Generates delivery notes to customers with random data.
  *
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 class AlbaranesCliente extends AbstractRandomDocuments
 {
-
-    /**
-     * AlbaranesCliente constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct(new Model\AlbaranCliente());
-    }
 
     /**
      * Generate random data.
@@ -50,8 +43,8 @@ class AlbaranesCliente extends AbstractRandomDocuments
             return 0;
         }
 
-        $alb = $this->model;
         $generated = 0;
+        $alb = $this->model();
 
         // start transaction
         $this->dataBase->beginTransaction();
@@ -60,21 +53,17 @@ class AlbaranesCliente extends AbstractRandomDocuments
         try {
             while ($generated < $num) {
                 $alb->clear();
-                $this->randomizeDocument($alb);
 
-                $recargo = false;
-                if ($clientes[0]->recargo || mt_rand(0, 4) === 0) {
-                    $recargo = true;
-                }
-
-                $regimeniva = $this->randomizeDocumentVenta($alb, $clientes, $generated);
+                $cliente = $this->getOneItem($clientes);
+                $this->randomizeDocument($alb, $cliente);
                 if ($alb->save()) {
-                    $this->randomLineas($alb, 'idalbaran', self::MODEL_NAMESPACE . '\LineaAlbaranCliente', $regimeniva, $recargo, -1);
+                    $this->randomLineas($alb);
                     ++$generated;
                 } else {
                     break;
                 }
             }
+
             // confirm data
             $this->dataBase->commit();
         } catch (\Exception $e) {
@@ -85,7 +74,15 @@ class AlbaranesCliente extends AbstractRandomDocuments
             }
         }
 
-
         return $generated;
+    }
+
+    /**
+     * 
+     * @return AlbaranCliente
+     */
+    protected function model()
+    {
+        return new AlbaranCliente();
     }
 }

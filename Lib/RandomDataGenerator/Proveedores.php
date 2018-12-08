@@ -19,23 +19,16 @@
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
 use FacturaScripts\Core\App\AppSettings;
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model;
 
 /**
  *  Generate random data for the suppliers (proveedores) file
  *
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 class Proveedores extends AbstractRandomPeople
 {
-
-    /**
-     * Proveedores constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct(new Model\Proveedor());
-    }
 
     /**
      * Generate random data.
@@ -46,7 +39,7 @@ class Proveedores extends AbstractRandomPeople
      */
     public function generate($num = 50)
     {
-        $proveedor = $this->model;
+        $proveedor = $this->model();
 
         // start transaction
         $this->dataBase->beginTransaction();
@@ -55,13 +48,8 @@ class Proveedores extends AbstractRandomPeople
         try {
             for ($generated = 0; $generated < $num; ++$generated) {
                 $proveedor->clear();
+
                 $this->fillCliPro($proveedor);
-
-                if (mt_rand(0, 9) == 0) {
-                    $proveedor->regimeniva = 'Exento';
-                }
-
-                $proveedor->codproveedor = $proveedor->newCode();
                 if ($proveedor->save()) {
                     /// añadimos direcciones
                     $numDirs = mt_rand(0, 3);
@@ -74,6 +62,7 @@ class Proveedores extends AbstractRandomPeople
                     break;
                 }
             }
+
             // confirm data
             $this->dataBase->commit();
         } catch (\Exception $e) {
@@ -131,12 +120,20 @@ class Proveedores extends AbstractRandomPeople
             $dir->direccion = $this->direccion();
             $dir->codpostal = (string) mt_rand(1234, 99999);
             $dir->nombre = 'Dirección #' . $max;
-
             if (!$dir->save()) {
                 break;
             }
 
             --$max;
         }
+    }
+
+    /**
+     * 
+     * @return Model\Proveedor
+     */
+    protected function model()
+    {
+        return new Model\Proveedor();
     }
 }

@@ -19,23 +19,16 @@
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model;
 
 /**
  * Generate random accounting entries.
  *
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 class Asientos extends AbstractRandomAccounting
 {
-
-    /**
-     * Asientos constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct(new Model\Asiento());
-    }
 
     /**
      * Generate random data.
@@ -46,7 +39,7 @@ class Asientos extends AbstractRandomAccounting
      */
     public function generate($num = 50)
     {
-        $asiento = $this->model;
+        $asiento = $this->model();
         $subcuenta = new Model\Subcuenta();
 
         // start transaction
@@ -85,6 +78,11 @@ class Asientos extends AbstractRandomAccounting
         return $generated;
     }
 
+    /**
+     * 
+     * @param Model\Asiento $asiento
+     * @param array         $subcuentas
+     */
     private function generateLines(Model\Asiento &$asiento, array $subcuentas)
     {
         if (count($subcuentas) < 40) {
@@ -115,5 +113,14 @@ class Asientos extends AbstractRandomAccounting
                 $debe = !$debe;
             }
         }
+    }
+
+    /**
+     * 
+     * @return Model\Asiento
+     */
+    protected function model()
+    {
+        return new Model\Asiento();
     }
 }

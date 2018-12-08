@@ -18,23 +18,16 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model\PedidoCliente;
 
 /**
  *  Generates customer orders with random data.
  *
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 class PedidosCliente extends AbstractRandomDocuments
 {
-
-    /**
-     * PedidosCliente constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct(new Model\PedidoCliente());
-    }
 
     /**
      * Generate random data.
@@ -51,7 +44,7 @@ class PedidosCliente extends AbstractRandomDocuments
         }
 
         $generated = 0;
-        $ped = $this->model;
+        $ped = $this->model();
 
         // start transaction
         $this->dataBase->beginTransaction();
@@ -60,20 +53,20 @@ class PedidosCliente extends AbstractRandomDocuments
         try {
             while ($generated < $num) {
                 $ped->clear();
-                $this->randomizeDocument($ped);
 
-                $recargo = ($clientes[0]->recargo || mt_rand(0, 4) === 0);
-                $regimeniva = $this->randomizeDocumentVenta($ped, $clientes, $generated);
+                $cliente = $this->getOneItem($clientes);
+                $this->randomizeDocument($ped, $cliente);
                 if (mt_rand(0, 3) == 0) {
                     $ped->fechasalida = date('d-m-Y', strtotime($ped->fecha . ' +' . mt_rand(1, 3) . ' months'));
                 }
                 if ($ped->save()) {
-                    $this->randomLineas($ped, 'idpedido', self::MODEL_NAMESPACE . '\LineaPedidoCliente', $regimeniva, $recargo);
+                    $this->randomLineas($ped);
                     ++$generated;
                 } else {
                     break;
                 }
             }
+
             // confirm data
             $this->dataBase->commit();
         } catch (\Exception $e) {
@@ -85,5 +78,14 @@ class PedidosCliente extends AbstractRandomDocuments
         }
 
         return $generated;
+    }
+
+    /**
+     * 
+     * @return PedidoCliente
+     */
+    protected function model()
+    {
+        return new PedidoCliente();
     }
 }

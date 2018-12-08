@@ -19,13 +19,13 @@
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
 use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model;
 
 /**
  * Generate random data for the products (Productos) file
  *
- * @author Rafael San José <info@rsanjoseo.com>
- * @author Carlos García Gómez <carlos@facturascripts.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 class Productos extends AbstractRandom
 {
@@ -69,7 +69,7 @@ class Productos extends AbstractRandom
      */
     public function __construct()
     {
-        parent::__construct(new Model\Producto());
+        parent::__construct();
         $this->shuffle($this->almacenes, new Model\Almacen());
         $this->shuffle($this->atributoValores, new Model\AtributoValor());
         $this->shuffle($this->fabricantes, new Model\Fabricante());
@@ -86,7 +86,7 @@ class Productos extends AbstractRandom
      */
     public function generate($num = 50)
     {
-        $product = $this->model;
+        $product = $this->model();
 
         // start transaction
         $this->dataBase->beginTransaction();
@@ -114,6 +114,19 @@ class Productos extends AbstractRandom
         return $generated;
     }
 
+    /**
+     * 
+     * @return Model\Producto
+     */
+    protected function model()
+    {
+        return new Model\Producto();
+    }
+
+    /**
+     * 
+     * @param Model\Producto $product
+     */
     private function setProductoData(Model\Producto &$product)
     {
         $product->descripcion = $this->descripcion();
@@ -148,6 +161,12 @@ class Productos extends AbstractRandom
         $product->sevende = (mt_rand(0, 9) != 0);
     }
 
+    /**
+     * 
+     * @param Model\Producto $product
+     *
+     * @return Model\Variante[]
+     */
     private function setVariants(Model\Producto &$product): array
     {
         $variants = [];

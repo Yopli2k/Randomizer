@@ -18,23 +18,16 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model\Fabricante;
 
 /**
  * Generates random data in the manufacturers (fabricantes) file
  *
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 class Fabricantes extends AbstractRandomPeople
 {
-
-    /**
-     * Fabricantes constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct(new Model\Fabricante());
-    }
 
     /**
      * Generate random data.
@@ -45,7 +38,7 @@ class Fabricantes extends AbstractRandomPeople
      */
     public function generate($num = 50)
     {
-        $fabri = $this->model;
+        $fabri = $this->model();
 
         // start transaction
         $this->dataBase->beginTransaction();
@@ -71,5 +64,14 @@ class Fabricantes extends AbstractRandomPeople
         }
 
         return $generated;
+    }
+
+    /**
+     * 
+     * @return Fabricante
+     */
+    protected function model()
+    {
+        return new Fabricante();
     }
 }

@@ -19,23 +19,16 @@
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
 use FacturaScripts\Core\App\AppSettings;
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model;
 
 /**
  * Generate random data for the customers (clientes) file
  *
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 class Clientes extends AbstractRandomPeople
 {
-
-    /**
-     * Clientes constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct(new Model\Cliente());
-    }
 
     /**
      * Generate random data.
@@ -46,7 +39,7 @@ class Clientes extends AbstractRandomPeople
      */
     public function generate($num = 50)
     {
-        $cliente = $this->model;
+        $cliente = $this->model();
 
         // start transaction
         $this->dataBase->beginTransaction();
@@ -55,10 +48,9 @@ class Clientes extends AbstractRandomPeople
         try {
             for ($i = 0; $i < $num; ++$i) {
                 $cliente->clear();
-                $this->fillCliPro($cliente);
 
+                $this->fillCliPro($cliente);
                 $cliente->fechaalta = date(mt_rand(1, 28) . '-' . mt_rand(1, 12) . '-' . mt_rand(2013, date('Y')));
-                $cliente->regimeniva = (mt_rand(0, 9) === 0) ? 'Exento' : 'General';
 
                 if (mt_rand(0, 2) > 0) {
                     shuffle($this->agentes);
@@ -74,7 +66,6 @@ class Clientes extends AbstractRandomPeople
                     $cliente->codgrupo = null;
                 }
 
-                $cliente->codcliente = $cliente->newCode();
                 if (!$cliente->save()) {
                     break;
                 }
@@ -87,6 +78,7 @@ class Clientes extends AbstractRandomPeople
                 $numCuentas = mt_rand(0, 3);
                 $this->cuentasBancoCliente($cliente, $numCuentas);
             }
+
             // confirm data
             $this->dataBase->commit();
         } catch (\Exception $e) {
@@ -172,5 +164,14 @@ class Clientes extends AbstractRandomPeople
 
             --$max;
         }
+    }
+
+    /**
+     * 
+     * @return Model\Cliente
+     */
+    protected function model()
+    {
+        return new Model\Cliente();
     }
 }

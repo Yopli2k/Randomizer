@@ -18,13 +18,15 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model;
+use FacturaScripts\Dinamic\Lib\RegimenIVA;
 
 /**
  * Abstract class to randomly populate tables containing data of natural 
  * and legal persons (name, telephone numbers, addresses, etc.)
  *
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 abstract class AbstractRandomPeople extends AbstractRandom
 {
@@ -52,65 +54,13 @@ abstract class AbstractRandomPeople extends AbstractRandom
 
     /**
      * AbstractRandomPeople constructor.
-     *
-     * @param $model
      */
-    public function __construct($model)
+    public function __construct()
     {
-        parent::__construct($model);
-
+        parent::__construct();
         $this->shuffle($this->agentes, new Model\Agente());
         $this->shuffle($this->grupos, new Model\GrupoClientes());
         $this->shuffle($this->paises, new Model\Pais());
-    }
-
-    /**
-     * Return a random CIF.
-     *
-     * @return string
-     */
-    protected function cif()
-    {
-        return (mt_rand(0, 9) == 0) ? '' : (string) mt_rand(0, 99999999);
-    }
-
-    /**
-     * Return a random phone number.
-     *
-     * @return string
-     */
-    protected function telefono()
-    {
-        return (string) mt_rand(555555555, 999999999);
-    }
-
-    /**
-     * Return a random
-     *
-     * @return string
-     */
-    protected function seguridadSocial()
-    {
-        return (string) mt_rand(10000, 99999) . mt_rand(10000, 99999);
-    }
-
-    /**
-     * Returns a random name
-     *
-     * @return string
-     */
-    public function nombre()
-    {
-        $nombres = [
-            'Carlos', 'Pepe', 'Wilson', 'Petra', 'Madonna', 'Justin',
-            'Emiliana', 'Jo', 'Penélope', 'Mia', 'Wynona', 'Antonio',
-            'Joe', 'Cristiano', 'Mohamed', 'John', 'Ali', 'Pastor',
-            'Barak', 'Sadam', 'Donald', 'Jorge', 'Joel', 'Pedro', 'Mariano',
-            'Albert', 'Alberto', 'Gorka', 'Cecilia', 'Carmena', 'Pichita',
-            'Alicia', 'Laura', 'Riola', 'Wilson', 'Jaume', 'David',
-            "D'Ambrosio", '"Licenciado"', '"El master"',
-        ];
-        return $this->getOneItem($nombres);
     }
 
     /**
@@ -138,71 +88,21 @@ abstract class AbstractRandomPeople extends AbstractRandom
      */
     public function cargo()
     {
-        $cargos = ['Gerente', 'CEO', 'Compras', 'Comercial', 'Técnico', 'Freelance', 'Becario', 'Becario Senior'];
-
+        $cargos = [
+            'Gerente', 'CEO', 'Compras', 'Comercial', 'Técnico', 'Freelance',
+            'Becario', 'Becario Senior'
+        ];
         return $this->getOneItem($cargos);
     }
 
     /**
-     * Returns a random commercial name
+     * Return a random CIF.
      *
      * @return string
      */
-    public function empresa()
+    protected function cif()
     {
-        $nombres = [
-            'Tech', 'Motor', 'Pasión', 'Future', 'Max', 'Massive', 'Industrial',
-            'Plastic', 'Pro', 'Micro', 'System', 'Light', 'Magic', 'Fake', 'Techno',
-            'Miracle', 'NX', 'Smoke', 'Steam', 'Power', 'FX', 'Fusion', 'Bastion',
-            'Investments', 'Solutions', 'Neo', 'Ming', 'Tube', 'Pear', 'Apple',
-            'Dolphin', 'Chrome', 'Cat', 'Hat', 'Linux', 'Soft', 'Mobile', 'Phone',
-            'XL', 'Open', 'Thunder', 'Zero', 'Scorpio', 'Zelda', '10', 'V', 'Q',
-            'X', 'Arch', 'Arco', 'Broken', 'Arkam', 'RX', "d'Art", 'Peña', '"La cosa"',
-        ];
-
-        $separador = ['-', ' & ', ' ', '_', '', '/', '*'];
-        $tipo = ['S.L.', 'S.A.', 'Inc.', 'LTD', 'Corp.'];
-
-        return $this->getOneItem($nombres) . $this->getOneItem($separador) .
-            $this->getOneItem($nombres) . ' ' . $this->getOneItem($tipo);
-    }
-
-    /**
-     * Returns a random email
-     *
-     * @return string
-     */
-    public function email()
-    {
-        $nicks = [
-            'neo', 'carlos', 'mokko', 'snake', 'pikachu', 'pliskin', 'ocelot', 'samurai',
-            'ninja', 'infiltrator', 'info', 'compras', 'ventas', 'administracion', 'contacto',
-            'contact', 'invoices', 'mail',
-        ];
-        $domain = [
-            'facturascripts.com', 'gmail.com', 'hotmail.com', 'yahoo.com',
-        ];
-
-        return $this->getOneItem($nicks) . '.' . mt_rand(2, 99999) . '@' . $this->getOneItem($domain);
-    }
-
-    /**
-     * Returns a random province
-     *
-     * @return string
-     */
-    public function provincia()
-    {
-        $nombres = [
-            'A Coruña', 'Alava', 'Albacete', 'Alicante', 'Almería', 'Asturias', 'Ávila', 'Badajoz', 'Barcelona',
-            'Burgos', 'Cáceres', 'Cádiz', 'Cantabria', 'Castellón', 'Ceuta', 'Ciudad Real', 'Córdoba', 'Cuenca',
-            'Girona', 'Granada', 'Guadalajara', 'Guipuzcoa', 'Huelva', 'Huesca', 'Jaen', 'León', 'Lleida', 'La Rioja',
-            'Lugo', 'Madrid', 'Málaga', 'Melilla', 'Murcia', 'Navarra', 'Ourense', 'Palencia', 'Las Palmas', 'Pontevedra',
-            'Salamanca', 'Segovia', 'Sevilla', 'Soria', 'Tarragona', 'Tenerife', 'Teruel', 'Toledo', 'Valencia',
-            'Valladolid', 'Vizcaya', 'Zamora', 'Zaragoza',
-        ];
-
-        return $this->getOneItem($nombres);
+        return (mt_rand(0, 9) == 0) ? '' : (string) mt_rand(0, 99999999);
     }
 
     /**
@@ -220,7 +120,6 @@ abstract class AbstractRandomPeople extends AbstractRandom
             'Salamanca', 'Segovia', 'Sevilla', 'Soria', 'Tarragona', 'Tenerife', 'Teruel', 'Toledo', 'Valencia',
             'Valladolid', 'Vizcaya', 'Zamora', 'Zaragoza', 'Torrevieja', 'Elche',
         ];
-
         return $this->getOneItem($nombres);
     }
 
@@ -250,13 +149,126 @@ abstract class AbstractRandomPeople extends AbstractRandom
     }
 
     /**
+     * Returns a random email
+     *
+     * @return string
+     */
+    public function email()
+    {
+        $nicks = [
+            'neo', 'carlos', 'mokko', 'snake', 'pikachu', 'pliskin', 'ocelot', 'samurai',
+            'ninja', 'infiltrator', 'info', 'compras', 'ventas', 'administracion', 'contacto',
+            'contact', 'invoices', 'mail',
+        ];
+        $domain = [
+            'facturascripts.com', 'gmail.com', 'hotmail.com', 'yahoo.com',
+        ];
+
+        return $this->getOneItem($nicks) . '.' . mt_rand(2, 99999) . '@' . $this->getOneItem($domain);
+    }
+
+    /**
+     * Returns a random commercial name
+     *
+     * @return string
+     */
+    public function empresa()
+    {
+        $nombres = [
+            'Tech', 'Motor', 'Pasión', 'Future', 'Max', 'Massive', 'Industrial',
+            'Plastic', 'Pro', 'Micro', 'System', 'Light', 'Magic', 'Fake', 'Techno',
+            'Miracle', 'NX', 'Smoke', 'Steam', 'Power', 'FX', 'Fusion', 'Bastion',
+            'Investments', 'Solutions', 'Neo', 'Ming', 'Tube', 'Pear', 'Apple',
+            'Dolphin', 'Chrome', 'Cat', 'Hat', 'Linux', 'Soft', 'Mobile', 'Phone',
+            'XL', 'Open', 'Thunder', 'Zero', 'Scorpio', 'Zelda', '10', 'V', 'Q',
+            'X', 'Arch', 'Arco', 'Broken', 'Arkam', 'RX', "d'Art", 'Peña', '"La cosa"',
+        ];
+
+        $separador = ['-', ' & ', ' ', '_', '', '/', '*'];
+        $tipo = ['S.L.', 'S.A.', 'Inc.', 'LTD', 'Corp.'];
+
+        return $this->getOneItem($nombres) . $this->getOneItem($separador) .
+            $this->getOneItem($nombres) . ' ' . $this->getOneItem($tipo);
+    }
+
+    /**
+     * Returns a random name
+     *
+     * @return string
+     */
+    public function nombre()
+    {
+        $nombres = [
+            'Carlos', 'Pepe', 'Wilson', 'Petra', 'Madonna', 'Justin',
+            'Emiliana', 'Jo', 'Penélope', 'Mia', 'Wynona', 'Antonio',
+            'Joe', 'Cristiano', 'Mohamed', 'John', 'Ali', 'Pastor',
+            'Barak', 'Sadam', 'Donald', 'Jorge', 'Joel', 'Pedro', 'Mariano',
+            'Albert', 'Alberto', 'Gorka', 'Cecilia', 'Carmena', 'Pichita',
+            'Alicia', 'Laura', 'Riola', 'Wilson', 'Jaume', 'David',
+            "D'Ambrosio", '"Licenciado"', '"El master"',
+        ];
+        return $this->getOneItem($nombres);
+    }
+
+    /**
+     * Returns a random province
+     *
+     * @return string
+     */
+    public function provincia()
+    {
+        $nombres = [
+            'A Coruña', 'Alava', 'Albacete', 'Alicante', 'Almería', 'Asturias', 'Ávila', 'Badajoz', 'Barcelona',
+            'Burgos', 'Cáceres', 'Cádiz', 'Cantabria', 'Castellón', 'Ceuta', 'Ciudad Real', 'Córdoba', 'Cuenca',
+            'Girona', 'Granada', 'Guadalajara', 'Guipuzcoa', 'Huelva', 'Huesca', 'Jaen', 'León', 'Lleida', 'La Rioja',
+            'Lugo', 'Madrid', 'Málaga', 'Melilla', 'Murcia', 'Navarra', 'Ourense', 'Palencia', 'Las Palmas', 'Pontevedra',
+            'Salamanca', 'Segovia', 'Sevilla', 'Soria', 'Tarragona', 'Tenerife', 'Teruel', 'Toledo', 'Valencia',
+            'Valladolid', 'Vizcaya', 'Zamora', 'Zaragoza',
+        ];
+        return $this->getOneItem($nombres);
+    }
+
+    /**
+     * 
+     * @return string
+     */
+    public function regimeniva()
+    {
+        $values = array_keys(RegimenIVA::all());
+        return $this->getOneItem($values);
+    }
+
+    /**
+     * Return a random
+     *
+     * @return string
+     */
+    protected function seguridadSocial()
+    {
+        return (string) mt_rand(10000, 99999) . mt_rand(10000, 99999);
+    }
+
+    /**
+     * Return a random phone number.
+     *
+     * @return string
+     */
+    protected function telefono()
+    {
+        return (string) mt_rand(555555555, 999999999);
+    }
+
+    /**
      * Rellena un cliente con datos aleatorios.
      *
      * @param Model\Cliente|Model\Proveedor $clipro
      */
     protected function fillCliPro(&$clipro)
     {
-        $clipro->cifnif = (mt_rand(0, 14) === 0) ? '' : mt_rand(0, 99999999);
+        $clipro->cifnif = $this->cif();
+        $clipro->email = (mt_rand(0, 2) > 0) ? $this->email() : null;
+        $clipro->irpf = (mt_rand(0, 2) > 0) ? 0 : mt_rand(0, 19);
+        $clipro->regimeniva = $this->regimeniva();
 
         if (mt_rand(0, 24) == 0) {
             $clipro->debaja = true;
@@ -268,11 +280,13 @@ abstract class AbstractRandomPeople extends AbstractRandom
                 $clipro->nombre = $clipro->razonsocial = $this->empresa();
                 $clipro->personafisica = false;
                 break;
+
             case 1:
                 $clipro->nombre = $this->nombre() . ' ' . $this->apellidos();
                 $clipro->razonsocial = $this->empresa();
                 $clipro->personafisica = false;
                 break;
+
             default:
                 $clipro->nombre = $clipro->razonsocial = $this->nombre() . ' ' . $this->apellidos();
         }
@@ -281,14 +295,14 @@ abstract class AbstractRandomPeople extends AbstractRandom
             case 0:
                 $clipro->telefono1 = mt_rand(555555555, 999999999);
                 break;
+
             case 1:
                 $clipro->telefono1 = mt_rand(555555555, 999999999);
                 $clipro->telefono2 = mt_rand(555555555, 999999999);
                 break;
+
             default:
                 $clipro->telefono2 = mt_rand(555555555, 999999999);
         }
-
-        $clipro->email = (mt_rand(0, 2) > 0) ? $this->email() : null;
     }
 }

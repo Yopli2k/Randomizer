@@ -18,24 +18,17 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model;
 
 /**
  * Generates accounting sub-accounts at random.
  * It may be better to incorporate the accounting plan of your country.
  *
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 class Subcuentas extends AbstractRandomAccounting
 {
-
-    /**
-     * Subcuentas constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct(new Model\Subcuenta());
-    }
 
     /**
      * Generate random data.
@@ -46,7 +39,7 @@ class Subcuentas extends AbstractRandomAccounting
      */
     public function generate($num = 50)
     {
-        $subcuenta = $this->model;
+        $subcuenta = $this->model();
         $this->shuffle($cuentas, new Model\Cuenta());
         $ejercicio = new Model\Ejercicio();
 
@@ -79,5 +72,14 @@ class Subcuentas extends AbstractRandomAccounting
         }
 
         return $generated;
+    }
+
+    /**
+     * 
+     * @return Model\Subcuenta
+     */
+    protected function model()
+    {
+        return new Model\Subcuenta();
     }
 }

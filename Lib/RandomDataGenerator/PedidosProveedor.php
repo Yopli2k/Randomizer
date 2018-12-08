@@ -18,23 +18,16 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model\PedidoProveedor;
 
 /**
  *  Generates orders to suppliers with random data.
  *
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 class PedidosProveedor extends AbstractRandomDocuments
 {
-
-    /**
-     * PedidosProveedor constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct(new Model\PedidoProveedor());
-    }
 
     /**
      * Generate random data.
@@ -51,7 +44,7 @@ class PedidosProveedor extends AbstractRandomDocuments
         }
 
         $generated = 0;
-        $ped = $this->model;
+        $ped = $this->model();
 
         // start transaction
         $this->dataBase->beginTransaction();
@@ -60,17 +53,17 @@ class PedidosProveedor extends AbstractRandomDocuments
         try {
             while ($generated < $num) {
                 $ped->clear();
-                $this->randomizeDocument($ped);
 
-                $recargo = (mt_rand(0, 4) === 0);
-                $regimeniva = $this->randomizeDocumentCompra($ped, $proveedores, $generated);
+                $proveedor = $this->getOneItem($proveedores);
+                $this->randomizeDocument($ped, false, $proveedor);
                 if ($ped->save()) {
-                    $this->randomLineas($ped, 'idpedido', self::MODEL_NAMESPACE . '\LineaPedidoProveedor', $regimeniva, $recargo);
+                    $this->randomLineas($ped);
                     ++$generated;
                 } else {
                     break;
                 }
             }
+
             // confirm data
             $this->dataBase->commit();
         } catch (\Exception $e) {
@@ -82,5 +75,14 @@ class PedidosProveedor extends AbstractRandomDocuments
         }
 
         return $generated;
+    }
+
+    /**
+     * 
+     * @return PedidoProveedor
+     */
+    protected function model()
+    {
+        return new PedidoProveedor();
     }
 }

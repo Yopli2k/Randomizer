@@ -18,13 +18,15 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model;
+use FacturaScripts\Dinamic\Lib\BusinessDocumentTools;
 
 /**
  * Abstract class that contains the methods that generate random documents
  * for clients and suppliers, such as orders, delivery notes and invoices. 
  *
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 abstract class AbstractRandomDocuments extends AbstractRandomPeople
 {
@@ -44,18 +46,17 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
     protected $divisas;
 
     /**
+     *
+     * @var BusinessDocumentTools
+     */
+    protected $docTools;
+
+    /**
      * List of payment methods.
      *
      * @var Model\FormaPago[]
      */
     protected $formasPago;
-
-    /**
-     * List of taxes.
-     *
-     * @var Model\Impuesto[]
-     */
-    protected $impuestos;
 
     /**
      * List of series.
@@ -66,16 +67,15 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
 
     /**
      * AbstractRandomDocuments constructor.
-     *
-     * @param $model
      */
-    public function __construct($model)
+    public function __construct()
     {
-        parent::__construct($model);
+        parent::__construct();
+        $this->docTools = new BusinessDocumentTools();
+
         $this->shuffle($this->almacenes, new Model\Almacen());
         $this->shuffle($this->divisas, new Model\Divisa());
         $this->shuffle($this->formasPago, new Model\FormaPago());
-        $this->shuffle($this->impuestos, new Model\Impuesto());
         $this->shuffle($this->series, new Model\Serie());
     }
 
@@ -83,8 +83,10 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
      * Generates a random document
      *
      * @param Model\Base\BusinessDocument $doc
+     * @param Model\Cliente               $cliente
+     * @param Model\Proveedor             $proveedor
      */
-    protected function randomizeDocument(&$doc)
+    protected function randomizeDocument(&$doc, $cliente = false, $proveedor = false)
     {
         $fecha = $this->fecha();
         $hora = mt_rand(10, 20) . ':' . mt_rand(10, 59) . ':' . mt_rand(10, 59);
@@ -94,7 +96,6 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
         $doc->codalmacen = (mt_rand(0, 2) == 0) ? $this->almacenes[0]->codalmacen : $doc->codalmacen;
         $doc->codserie = (mt_rand(0, 2) == 0) ? $this->series[0]->codserie : $doc->codserie;
         $doc->codagente = mt_rand(0, 4) ? $this->agentes[0]->codagente : null;
-
         $doc->coddivisa = (mt_rand(0, 2) == 0) ? $this->divisas[0]->coddivisa : $doc->coddivisa;
         foreach ($this->divisas as $div) {
             if ($div->coddivisa == $doc->coddivisa) {
@@ -112,65 +113,28 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
         } elseif (isset($doc->numproveedor) && mt_rand(0, 4) == 0) {
             $doc->numproveedor = mt_rand(10, 99999);
         }
-    }
 
-    /**
-     * Generates a random purchase document
-     *
-     * @param $doc
-     * @param Model\Proveedor[] $proveedores
-     * @param int               $num
-     *
-     * @return string
-     */
-    protected function randomizeDocumentCompra(&$doc, $proveedores, $num)
-    {
-        $regimeniva = 'Exento';
-        if (mt_rand(0, 14) > 0 && isset($proveedores[$num])) {
-            $doc->setSubject($proveedores[$num]);
-            $regimeniva = $proveedores[$num]->regimeniva;
-        } else {
-            /// Every once in a while, generate one without provider, to check if it breaks ;-)
+        $option = mt_rand(0, 14);
+        if ($cliente && $option == 0) {
+            $doc->cifnif = $this->cif();
+            $doc->nombrecliente = $this->empresa();
+        } else if ($cliente) {
+            $doc->setSubject($cliente);
+        } elseif ($proveedor && $option == 0) {
+            $doc->cifnif = $this->cif();
             $doc->nombre = $this->empresa();
-            $doc->cifnif = mt_rand(1111111, 99999999) . 'Z';
+        } elseif ($proveedor) {
+            $doc->setSubject($proveedor);
         }
-
-        return $regimeniva;
-    }
-
-    /**
-     * Generates a random sale document
-     *
-     * @param $doc
-     * @param Model\Cliente[] $clientes
-     * @param int             $num
-     *
-     * @return string
-     */
-    protected function randomizeDocumentVenta(&$doc, $clientes, $num)
-    {
-        $regimeniva = 'Exento';
-        if (isset($clientes[$num])) {
-            $doc->setSubject($clientes[$num]);
-            $regimeniva = $clientes[$num]->regimeniva;
-        }
-
-        return $regimeniva;
     }
 
     /**
      * Generates random document lines
      *
-     * @param $doc
-     * @param string $iddoc
-     * @param string $lineaClass
-     * @param string $regimeniva
-     * @param bool   $recargo
-     * @param int    $modStock
+     * @param Model\Base\BusinessDocument $doc
      */
-    protected function randomLineas(&$doc, $iddoc, $lineaClass, $regimeniva, $recargo, $modStock = 0)
+    protected function randomLineas(&$doc)
     {
-        $imp = new Model\Impuesto();
         $productos = $this->randomProductos();
 
         /// 1 out of 5 times we use negative quantities
@@ -178,63 +142,27 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
 
         $numlineas = (int) $this->cantidad(0, 10, 200);
         while ($numlineas > 0) {
-            $lin = new $lineaClass();
-            $lin->{$iddoc} = $doc->{$iddoc};
-            $lin->cantidad = $modcantidad * $this->cantidad(1, 3, 19);
-            $lin->descripcion = $this->descripcion();
-            $lin->pvpunitario = $this->precio(1, 49, 699);
-            $lin->codimpuesto = $this->impuestos[0]->codimpuesto;
-            $lin->iva = $this->impuestos[0]->iva;
-
-            if ($recargo && mt_rand(0, 2) == 0) {
-                $lin->recargo = $this->impuestos[0]->recargo;
-            }
-
             if (isset($productos[$numlineas]) && $productos[$numlineas]->sevende) {
-                $lin->referencia = $productos[$numlineas]->referencia;
-                $lin->descripcion = $productos[$numlineas]->descripcion;
-                $lin->pvpunitario = $productos[$numlineas]->precio;
-
-                $impuesto = $imp->get($productos[$numlineas]->codimpuesto);
-                if ($impuesto) {
-                    $lin->codimpuesto = $impuesto->codimpuesto;
-                    $lin->iva = $impuesto->iva;
-                    $lin->recargo = $recargo ? $impuesto->recargo : 0.0;
-                }
+                $lin = $doc->getNewProductLine($productos[$numlineas]->referencia);
+            } else {
+                $lin = $doc->getNewLine();
+                $lin->descripcion = $this->descripcion();
+                $lin->pvpunitario = $this->precio(1, 49, 699);
             }
 
-            $lin->irpf = $doc->irpf;
-
-            if ($regimeniva == 'Exento') {
-                $lin->codimpuesto = null;
-                $lin->iva = 0.0;
-                $lin->recargo = 0.0;
-                $doc->irpf = $lin->irpf = 0.0;
-            }
-
+            $lin->cantidad = $modcantidad * $this->cantidad(1, 3, 19);
             if (mt_rand(0, 4) == 0) {
                 $lin->dtopor = $this->cantidad(0, 33, 100);
             }
 
             $lin->pvpsindto = $lin->pvpunitario * $lin->cantidad;
             $lin->pvptotal = $lin->pvpunitario * $lin->cantidad * (100 - $lin->dtopor) / 100;
-
-            if ($lin->save()) {
-                $doc->neto += $lin->pvptotal;
-                $doc->totaliva += ($lin->pvptotal * $lin->iva / 100);
-                $doc->totalirpf += ($lin->pvptotal * $lin->irpf / 100);
-                $doc->totalrecargo += ($lin->pvptotal * $lin->recargo / 100);
-            }
-
+            $lin->save();
             --$numlineas;
         }
 
-        /// redondeamos
-        $doc->neto = round($doc->neto, FS_NF0);
-        $doc->totaliva = round($doc->totaliva, FS_NF0);
-        $doc->totalirpf = round($doc->totalirpf, FS_NF0);
-        $doc->totalrecargo = round($doc->totalrecargo, FS_NF0);
-        $doc->total = $doc->neto + $doc->totaliva - $doc->totalirpf + $doc->totalrecargo;
+        /// recalculate
+        $this->docTools->recalculate($doc);
         $doc->save();
     }
 }

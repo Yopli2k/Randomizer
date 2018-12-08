@@ -18,23 +18,16 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model\Familia;
 
 /**
  * Generates random data in the product families (familias) file
  *
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 class Familias extends AbstractRandom
 {
-
-    /**
-     * Familias constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct(new Model\Familia());
-    }
 
     /**
      * Generate random data.
@@ -45,7 +38,7 @@ class Familias extends AbstractRandom
      */
     public function generate($num = 50)
     {
-        $fam = $this->model;
+        $fam = $this->model();
         $codfamilia = null;
 
         // start transaction
@@ -75,5 +68,14 @@ class Familias extends AbstractRandom
         }
 
         return $generated;
+    }
+
+    /**
+     * 
+     * @return Familia
+     */
+    protected function model()
+    {
+        return new Familia();
     }
 }

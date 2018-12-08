@@ -18,24 +18,17 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
-use FacturaScripts\Core\Model;
+use FacturaScripts\Dinamic\Model;
 
 /**
  * Generate random accounts.
  * It may be better to incorporate the accounting plan of your country.
  *
- * @author Rafael San José <info@rsanjoseo.com>
+ * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Carlos García Gómez  <carlos@facturascripts.com>
  */
 class Cuentas extends AbstractRandomAccounting
 {
-
-    /**
-     * Cuentas constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct(new Model\Cuenta());
-    }
 
     /**
      * Generate random data.
@@ -46,7 +39,7 @@ class Cuentas extends AbstractRandomAccounting
      */
     public function generate($num = 50)
     {
-        $cuenta = $this->model;
+        $cuenta = $this->model();
 
         // start transaction
         $this->dataBase->beginTransaction();
@@ -79,5 +72,14 @@ class Cuentas extends AbstractRandomAccounting
         }
 
         return $i;
+    }
+
+    /**
+     * 
+     * @return Model\Cuenta
+     */
+    protected function model()
+    {
+        return new Model\Cuenta();
     }
 }

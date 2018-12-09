@@ -119,7 +119,7 @@ class Proveedores extends AbstractRandomPeople
             $dir->ciudad = $this->ciudad();
             $dir->direccion = $this->direccion();
             $dir->codpostal = (string) mt_rand(1234, 99999);
-            $dir->nombre = 'Dirección #' . $max;
+            $dir->nombre = $this->nombre();
             if (!$dir->save()) {
                 break;
             }

@@ -71,7 +71,7 @@ class Clientes extends AbstractRandomPeople
                 }
 
                 /// añadimos direcciones
-                $numDirs = mt_rand(1, 3);
+                $numDirs = mt_rand(0, 3);
                 $this->direccionesCliente($cliente, $numDirs);
 
                 /// Añadimos cuentas bancarias
@@ -131,8 +131,8 @@ class Clientes extends AbstractRandomPeople
             $dir->ciudad = $this->ciudad();
             $dir->direccion = $this->direccion();
             $dir->codpostal = (string) mt_rand(1234, 99999);
-            $dir->nombre = 'Dirección facturación/envío #' . $max;
-            $dir->observaciones = 'Dirección facturación/envío #' . $max;
+            $dir->nombre = $this->nombre();
+            $dir->observaciones = $this->observaciones();
             if (!$dir->save()) {
                 break;
             }
@@ -145,14 +145,12 @@ class Clientes extends AbstractRandomPeople
                     break;
 
                 case 2:
-                    $dir->nombre = 'Dirección envío #' . $max;
-                    $dir->observaciones = 'Dirección envío';
+                    $dir->descripcion = 'Dirección envío #' . $max;
                     $cliente->idcontactoenv = $dir->idcontacto;
                     break;
 
                 default:
-                    $dir->nombre = 'Dirección #' . $max;
-                    $dir->observaciones = 'Dirección';
+                    $dir->descripcion = 'Dirección #' . $max;
                     break;
             }
 

@@ -95,7 +95,7 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
         $doc->codpago = $this->formasPago[0]->codpago;
         $doc->codalmacen = (mt_rand(0, 2) == 0) ? $this->almacenes[0]->codalmacen : $doc->codalmacen;
         $doc->codserie = (mt_rand(0, 2) == 0) ? $this->series[0]->codserie : $doc->codserie;
-        $doc->codagente = mt_rand(0, 4) ? $this->agentes[0]->codagente : null;
+        $doc->codagente = mt_rand(0, 4) && !empty($this->agentes) ? $this->agentes[0]->codagente : null;
         $doc->coddivisa = (mt_rand(0, 2) == 0) ? $this->divisas[0]->coddivisa : $doc->coddivisa;
         foreach ($this->divisas as $div) {
             if ($div->coddivisa == $doc->coddivisa) {

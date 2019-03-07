@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Randomizer plugin for FacturaScripts
- * Copyright (C) 2016-2018 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2016-2019 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -130,6 +130,8 @@ class Productos extends AbstractRandom
     private function setProductoData(Model\Producto &$product)
     {
         $product->descripcion = $this->descripcion();
+
+        shuffle($this->impuestos);
         $product->codimpuesto = $this->impuestos[0]->codimpuesto;
         $product->precio = $this->precio(1, 49, 699);
 

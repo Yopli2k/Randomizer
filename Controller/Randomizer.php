@@ -173,6 +173,10 @@ class Randomizer extends Base\Controller
                 $app = new RandomDataGenerator\Subcuentas();
                 $txt = 'generated-subaccounts';
                 break;
+            case 'servicios':
+                $app = new RandomDataGenerator\Servicios();
+                $txt = 'generated-services';
+                break;
 
             default:
                 $app = false;
@@ -209,7 +213,8 @@ class Randomizer extends Base\Controller
             'presupuestosprov' => '\FacturaScripts\Dinamic\Model\PresupuestoProveedor',
             'productos' => '\FacturaScripts\Dinamic\Model\Producto',
             'proveedores' => '\FacturaScripts\Dinamic\Model\Proveedor',
-            'subcuentas' => '\FacturaScripts\Dinamic\Model\Subcuenta'
+            'subcuentas' => '\FacturaScripts\Dinamic\Model\Subcuenta',
+            'servicios' => '\FacturaScripts\Dinamic\Model\Servicio'
         ];
 
         foreach ($models as $tag => $modelName) {

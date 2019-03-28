@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Randomizer plugin for FacturaScripts
- * Copyright (C) 2016-2018 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2016-2019 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -17,8 +17,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
-
-use FacturaScripts\Dinamic\Model\Servicio;
 
 /**
  * Generates delivery notes to customers with random data.
@@ -84,14 +82,13 @@ class Servicios extends AbstractRandomDocuments
 
     /**
      * 
-     * @return AlbaranCliente
+     * @return Servicio
      */
     protected function model()
     {
         return new \FacturaScripts\Plugins\Services\Model\Servicio();
     }
-    
-     
+
     /**
      * Returns random articles
      *
@@ -114,7 +111,7 @@ class Servicios extends AbstractRandomDocuments
 
         return $this->getOneItem($material);
     }
-    
+
     /**
      * Returns random product-status
      *
@@ -137,7 +134,7 @@ class Servicios extends AbstractRandomDocuments
 
         return $this->getOneItem($material_estado);
     }
-    
+
     /**
      * Returns random accesories
      *
@@ -160,7 +157,7 @@ class Servicios extends AbstractRandomDocuments
 
         return $this->getOneItem($accesorios);
     }
-    
+
     /**
      * Returns random problem-description
      *

@@ -170,9 +170,9 @@ abstract class AbstractRandom
      * @param int $start
      * @param int $end
      *
-     * @return false|string
+     * @return string
      */
-    protected function fecha($start = 2013, $end = 2018)
+    protected function fecha($start = 2015, $end = 2019)
     {
         return date(mt_rand(1, 28) . '-' . mt_rand(1, 12) . '-' . mt_rand($start, $end));
     }

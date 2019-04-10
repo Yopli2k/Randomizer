@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Randomizer plugin for FacturaScripts
- * Copyright (C) 2016-2018 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2016-2019 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -87,9 +87,9 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
     protected function randomizeDocument(&$doc)
     {
         $doc->codagente = mt_rand(0, 4) && !empty($this->agentes) ? $this->agentes[0]->codagente : null;
-        $doc->codalmacen = (mt_rand(0, 2) == 0) ? $this->almacenes[0]->codalmacen : $doc->codalmacen;
+        $doc->codalmacen = (mt_rand(0, 4) == 0) ? $this->almacenes[0]->codalmacen : $doc->codalmacen;
 
-        $doc->coddivisa = (mt_rand(0, 2) == 0) ? $this->divisas[0]->coddivisa : $doc->coddivisa;
+        $doc->coddivisa = (mt_rand(0, 4) == 0) ? $this->divisas[0]->coddivisa : $doc->coddivisa;
         foreach ($this->divisas as $div) {
             if ($div->coddivisa == $doc->coddivisa) {
                 $doc->tasaconv = $div->tasaconv;
@@ -98,8 +98,8 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
         }
 
         $doc->codpago = $this->formasPago[0]->codpago;
-        $doc->codserie = (mt_rand(0, 2) == 0) ? $this->series[0]->codserie : $doc->codserie;
-        if (mt_rand(0, 2) == 0) {
+        $doc->codserie = (mt_rand(0, 4) == 0) ? $this->series[0]->codserie : $doc->codserie;
+        if (mt_rand(0, 4) == 0) {
             $doc->observaciones = $this->observaciones();
         }
 

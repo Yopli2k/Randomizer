@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Randomizer plugin for FacturaScripts
- * Copyright (C) 2016-2018 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2016-2019 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -44,7 +44,6 @@ class PresupuestosCliente extends AbstractRandomDocuments
         }
 
         $generated = 0;
-        $presu = $this->model();
 
         // start transaction
         $this->dataBase->beginTransaction();
@@ -52,10 +51,11 @@ class PresupuestosCliente extends AbstractRandomDocuments
         // main save process
         try {
             while ($generated < $num) {
-                $presu->clear();
-
                 $cliente = $this->getOneItem($clientes);
-                $this->randomizeDocument($presu, $cliente);
+
+                $presu = $this->model();
+                $presu->setSubject($cliente);
+                $this->randomizeDocument($presu);
                 $presu->finoferta = date('d-m-Y', strtotime($presu->fecha . ' +' . mt_rand(1, 18) . ' months'));
                 if (!$presu->save()) {
                     break;

@@ -83,19 +83,12 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
      * Generates a random document
      *
      * @param Model\Base\BusinessDocument $doc
-     * @param Model\Cliente               $cliente
-     * @param Model\Proveedor             $proveedor
      */
-    protected function randomizeDocument(&$doc, $cliente = false, $proveedor = false)
+    protected function randomizeDocument(&$doc)
     {
-        $fecha = $this->fecha();
-        $hora = mt_rand(10, 20) . ':' . mt_rand(10, 59) . ':' . mt_rand(10, 59);
-        $doc->setDate($fecha, $hora);
-
-        $doc->codpago = $this->formasPago[0]->codpago;
-        $doc->codalmacen = (mt_rand(0, 2) == 0) ? $this->almacenes[0]->codalmacen : $doc->codalmacen;
-        $doc->codserie = (mt_rand(0, 2) == 0) ? $this->series[0]->codserie : $doc->codserie;
         $doc->codagente = mt_rand(0, 4) && !empty($this->agentes) ? $this->agentes[0]->codagente : null;
+        $doc->codalmacen = (mt_rand(0, 2) == 0) ? $this->almacenes[0]->codalmacen : $doc->codalmacen;
+
         $doc->coddivisa = (mt_rand(0, 2) == 0) ? $this->divisas[0]->coddivisa : $doc->coddivisa;
         foreach ($this->divisas as $div) {
             if ($div->coddivisa == $doc->coddivisa) {
@@ -104,6 +97,8 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
             }
         }
 
+        $doc->codpago = $this->formasPago[0]->codpago;
+        $doc->codserie = (mt_rand(0, 2) == 0) ? $this->series[0]->codserie : $doc->codserie;
         if (mt_rand(0, 2) == 0) {
             $doc->observaciones = $this->observaciones();
         }
@@ -114,18 +109,7 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
             $doc->numproveedor = mt_rand(10, 99999);
         }
 
-        $option = mt_rand(0, 14);
-        if ($cliente && $option == 0) {
-            $doc->cifnif = $this->cif();
-            $doc->nombrecliente = $this->empresa();
-        } elseif ($cliente) {
-            $doc->setSubject($cliente);
-        } elseif ($proveedor && $option == 0) {
-            $doc->cifnif = $this->cif();
-            $doc->nombre = $this->empresa();
-        } elseif ($proveedor) {
-            $doc->setSubject($proveedor);
-        }
+        $doc->setDate($this->fecha(), $this->hora());
     }
 
     /**
@@ -138,7 +122,7 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
         $productos = $this->randomProductos();
 
         /// 1 out of 5 times we use negative quantities
-        $modcantidad = (mt_rand(0, 4) == 0) ? -1 : 1;
+        $modcantidad = (mt_rand(0, 9) == 0) ? -1 : 1;
 
         $numlineas = (int) $this->cantidad(0, 10, 200);
         while ($numlineas > 0) {

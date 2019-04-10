@@ -190,6 +190,15 @@ abstract class AbstractRandom
     }
 
     /**
+     * 
+     * @return string
+     */
+    protected function hora()
+    {
+        return mt_rand(10, 20) . ':' . mt_rand(10, 59) . ':' . mt_rand(10, 59);
+    }
+
+    /**
      * Return an IBAN number.
      *
      * @return string

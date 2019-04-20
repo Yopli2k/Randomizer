@@ -54,9 +54,10 @@ class Randomizer extends Base\Controller
     public function getPageData()
     {
         $pageData = parent::getPageData();
-        $pageData['menu'] = 'admin';
-        $pageData['title'] = 'generate-test-data';
         $pageData['icon'] = 'fas fa-magic';
+        $pageData['menu'] = 'admin';
+        $pageData['submenu'] = 'sdk';
+        $pageData['title'] = 'generate-test-data';
 
         return $pageData;
     }

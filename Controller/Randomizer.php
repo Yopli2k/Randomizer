@@ -33,18 +33,18 @@ class Randomizer extends Base\Controller
 {
 
     /**
-     * URL where reload.
-     *
-     * @var string
-     */
-    public $urlReload;
-
-    /**
      * Contains the total quantity for each model.
      *
      * @var array
      */
     public $totalCounter = [];
+
+    /**
+     * URL where reload.
+     *
+     * @var string
+     */
+    public $urlReload;
 
     /**
      * Returns basic page attributes

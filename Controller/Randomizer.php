@@ -40,13 +40,6 @@ class Randomizer extends Base\Controller
     public $totalCounter = [];
 
     /**
-     * URL where reload.
-     *
-     * @var string
-     */
-    public $urlReload;
-
-    /**
      * Returns basic page attributes
      *
      * @return array
@@ -76,7 +69,7 @@ class Randomizer extends Base\Controller
         $option = $this->request->get('gen', '');
         if ($option !== '') {
             $this->execAction($option);
-            $this->urlReload = $this->url() . '?gen=' . $option;
+            $this->redirect($this->url() . '?gen=' . $option, 5);
         }
 
         $this->getTotals();
@@ -125,11 +118,6 @@ class Randomizer extends Base\Controller
                 $txt = 'generated-accounts';
                 break;
 
-            case 'grupos':
-                $app = new RandomDataGenerator\Grupos();
-                $txt = 'generated-customer-groups';
-                break;
-
             case 'fabricantes':
                 $app = new RandomDataGenerator\Fabricantes();
                 $txt = 'generated-manufacturers';
@@ -138,6 +126,11 @@ class Randomizer extends Base\Controller
             case 'familias':
                 $app = new RandomDataGenerator\Familias();
                 $txt = 'generated-families';
+                break;
+
+            case 'grupos':
+                $app = new RandomDataGenerator\Grupos();
+                $txt = 'generated-customer-groups';
                 break;
 
             case 'pedidoscli':
@@ -170,14 +163,14 @@ class Randomizer extends Base\Controller
                 $txt = 'generated-supplier';
                 break;
 
-            case 'subcuentas':
-                $app = new RandomDataGenerator\Subcuentas();
-                $txt = 'generated-subaccounts';
-                break;
-
             case 'servicios':
                 $app = new RandomDataGenerator\Servicios();
                 $txt = 'generated-services';
+                break;
+
+            case 'subcuentas':
+                $app = new RandomDataGenerator\Subcuentas();
+                $txt = 'generated-subaccounts';
                 break;
 
             default:
@@ -199,24 +192,24 @@ class Randomizer extends Base\Controller
     private function getTotals()
     {
         $models = [
-            'agentes' => '\FacturaScripts\Dinamic\Model\Agente',
-            'albaranescli' => '\FacturaScripts\Dinamic\Model\AlbaranCliente',
-            'albaranesprov' => '\FacturaScripts\Dinamic\Model\AlbaranProveedor',
-            'asientos' => '\FacturaScripts\Dinamic\Model\Asiento',
-            'clientes' => '\FacturaScripts\Dinamic\Model\Cliente',
-            'contactos' => '\FacturaScripts\Dinamic\Model\Contacto',
-            'cuentas' => '\FacturaScripts\Dinamic\Model\Cuenta',
-            'grupos' => '\FacturaScripts\Dinamic\Model\GrupoClientes',
-            'fabricantes' => '\FacturaScripts\Dinamic\Model\Fabricante',
-            'familias' => '\FacturaScripts\Dinamic\Model\Familia',
-            'pedidoscli' => '\FacturaScripts\Dinamic\Model\PedidoCliente',
-            'pedidosprov' => '\FacturaScripts\Dinamic\Model\PedidoProveedor',
-            'presupuestoscli' => '\FacturaScripts\Dinamic\Model\PresupuestoCliente',
-            'presupuestosprov' => '\FacturaScripts\Dinamic\Model\PresupuestoProveedor',
-            'productos' => '\FacturaScripts\Dinamic\Model\Producto',
-            'proveedores' => '\FacturaScripts\Dinamic\Model\Proveedor',
-            'subcuentas' => '\FacturaScripts\Dinamic\Model\Subcuenta',
-            'servicios' => '\FacturaScripts\Dinamic\Model\Servicio'
+            'agentes' => 'FacturaScripts\\Dinamic\\Model\\Agente',
+            'albaranescli' => 'FacturaScripts\\Dinamic\\Model\\AlbaranCliente',
+            'albaranesprov' => 'FacturaScripts\\Dinamic\\Model\\AlbaranProveedor',
+            'asientos' => 'FacturaScripts\\Dinamic\\Model\\Asiento',
+            'clientes' => 'FacturaScripts\\Dinamic\\Model\\Cliente',
+            'contactos' => 'FacturaScripts\\Dinamic\\Model\\Contacto',
+            'cuentas' => 'FacturaScripts\\Dinamic\\Model\\Cuenta',
+            'fabricantes' => 'FacturaScripts\\Dinamic\\Model\\Fabricante',
+            'familias' => 'FacturaScripts\\Dinamic\\Model\\Familia',
+            'grupos' => 'FacturaScripts\\Dinamic\\Model\\GrupoClientes',
+            'pedidoscli' => 'FacturaScripts\\Dinamic\\Model\\PedidoCliente',
+            'pedidosprov' => 'FacturaScripts\\Dinamic\\Model\\PedidoProveedor',
+            'presupuestoscli' => 'FacturaScripts\\Dinamic\\Model\\PresupuestoCliente',
+            'presupuestosprov' => 'FacturaScripts\\Dinamic\\Model\\PresupuestoProveedor',
+            'productos' => 'FacturaScripts\\Dinamic\\Model\\Producto',
+            'proveedores' => 'FacturaScripts\\Dinamic\\Model\\Proveedor',
+            'servicios' => 'FacturaScripts\\Dinamic\\Model\\Servicio',
+            'subcuentas' => 'FacturaScripts\\Dinamic\\Model\\Subcuenta',
         ];
 
         foreach ($models as $tag => $modelName) {

@@ -139,8 +139,6 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
                 $lin->dtopor = $this->cantidad(0, 33, 100);
             }
 
-            $lin->pvpsindto = $lin->pvpunitario * $lin->cantidad;
-            $lin->pvptotal = $lin->pvpunitario * $lin->cantidad * (100 - $lin->dtopor) / 100;
             $lin->save();
             --$numlineas;
         }

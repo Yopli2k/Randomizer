@@ -88,28 +88,27 @@ class Productos extends AbstractRandom
     {
         $product = $this->model();
 
-        // start transaction
-        $this->dataBase->beginTransaction();
-
         // main save process
         $generated = 0;
         for (; $generated < $num; ++$generated) {
+            // start transaction
+            $this->dataBase->beginTransaction();
+
             $product->clear();
             $this->setProductoData($product);
             if (!$product->save()) {
+                $this->dataBase->rollback();
                 continue;
             }
 
             $variants = $this->setVariants($product);
-            if ($product->nostock) {
-                continue;
+            if (!$product->nostock) {
+                $this->setStock($variants);
             }
 
-            $this->setStock($variants);
+            // confirm data
+            $this->dataBase->commit();
         }
-
-        // confirm data
-        $this->dataBase->commit();
 
         return $generated;
     }

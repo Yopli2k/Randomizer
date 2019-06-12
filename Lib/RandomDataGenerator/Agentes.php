@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Randomizer plugin for FacturaScripts
- * Copyright (C) 2016-2018 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2016-2019 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -82,22 +82,14 @@ class Agentes extends AbstractRandomPeople
      */
     private function setAgenteData(Agente &$agente)
     {
-        $agente->fechanacimiento = $this->fecha(1970, 1997);
-        $agente->fechaalta = $this->fecha(2013, 2016);
+        $agente->cargo = mt_rand(0, 2) > 0 ? $this->cargo() : '';
         $agente->cifnif = $this->cif();
-        $agente->nombre = $this->nombre();
-        $agente->apellidos = $this->apellidos();
-        $agente->provincia = $this->provincia();
-        $agente->ciudad = $this->ciudad();
-        $agente->direccion = $this->direccion();
-        $agente->codpostal = (string) mt_rand(11111, 99999);
-        $agente->fechabaja = (mt_rand(0, 24) == 0) ? date('d-m-Y') : null;
-        $agente->telefono1 = (mt_rand(0, 1) == 0) ? $this->telefono() : '';
-        $agente->telefono2 = (mt_rand(0, 1) == 0) ? $this->telefono() : '';
-        $agente->email = (mt_rand(0, 2) > 0) ? $this->email() : '';
-        $agente->cargo = (mt_rand(0, 2) > 0) ? $this->cargo() : '';
-        $agente->seg_social = (mt_rand(0, 1) == 0) ? $this->seguridadSocial() : '';
-        $agente->porcomision = $this->cantidad(0, 5, 20);
-        $agente->banco = mt_rand(0, 5) ? $this->iban() : '';
+        $agente->email = mt_rand(0, 2) > 0 ? $this->email() : '';
+        $agente->fechaalta = $this->fecha(2013, 2016);
+        $agente->fechabaja = mt_rand(0, 24) == 0 ? date('d-m-Y') : null;
+        $agente->nombre = $this->nombre() . ' ' . $this->apellidos();
+        $agente->observaciones = mt_rand(0, 2) > 0 ? $this->observaciones() : null;
+        $agente->telefono1 = mt_rand(0, 1) == 0 ? $this->telefono() : '';
+        $agente->telefono2 = mt_rand(0, 1) == 0 ? $this->telefono() : '';
     }
 }

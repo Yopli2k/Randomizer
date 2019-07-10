@@ -163,11 +163,6 @@ class Randomizer extends Base\Controller
                 $txt = 'generated-supplier';
                 break;
 
-            case 'servicios':
-                $app = new RandomDataGenerator\Servicios();
-                $txt = 'generated-services';
-                break;
-
             case 'subcuentas':
                 $app = new RandomDataGenerator\Subcuentas();
                 $txt = 'generated-subaccounts';
@@ -208,7 +203,6 @@ class Randomizer extends Base\Controller
             'presupuestosprov' => 'FacturaScripts\\Dinamic\\Model\\PresupuestoProveedor',
             'productos' => 'FacturaScripts\\Dinamic\\Model\\Producto',
             'proveedores' => 'FacturaScripts\\Dinamic\\Model\\Proveedor',
-            'servicios' => 'FacturaScripts\\Dinamic\\Model\\Servicio',
             'subcuentas' => 'FacturaScripts\\Dinamic\\Model\\Subcuenta',
         ];
 

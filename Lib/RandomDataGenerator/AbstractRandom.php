@@ -373,7 +373,7 @@ abstract class AbstractRandom
      */
     public function txt2codigo($txt, $len = 8)
     {
-        $result = str_replace([' ', '-', '_', '&', 'ó', ':', 'ñ', '"', "'", '*'], ['', '', '', '', 'O', '', 'N', '', '', '-'], strtoupper($txt));
+        $result = str_replace([' ', '-', '_', '&', 'ó', ':', 'ñ', '"', "'", '*', '/'], ['', '', '', '', 'O', '', 'N', '', '', '-', '-'], strtoupper($txt));
         if (strlen($result) > $len) {
             return substr($result, 0, $len - 1) . mt_rand(0, 9);
         }

@@ -107,6 +107,7 @@ class Clientes extends AbstractRandomPeople
             $cuenta->iban = $this->iban();
             $cuenta->swift = (mt_rand(0, 2) != 0) ? $this->randomString(8) : '';
             $cuenta->fmandato = (mt_rand(0, 1) == 0) ? date('d-m-Y', strtotime($cliente->fechaalta . ' +' . mt_rand(1, 30) . ' days')) : null;
+            $cuenta->setDisableIbanTest(true);
             if (!$cuenta->save()) {
                 break;
             }

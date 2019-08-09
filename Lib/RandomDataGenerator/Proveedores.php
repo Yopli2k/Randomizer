@@ -98,6 +98,7 @@ class Proveedores extends AbstractRandomPeople
                 $cuenta->iban = '';
             }
 
+            $cuenta->setDisableIbanTest(true);
             $cuenta->save();
             --$max;
         }

@@ -18,7 +18,6 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
-use FacturaScripts\Core\App\AppSettings;
 use FacturaScripts\Dinamic\Model;
 
 /**
@@ -82,7 +81,7 @@ class Clientes extends AbstractRandomPeople
             // confirm data
             $this->dataBase->commit();
         } catch (\Exception $e) {
-            $this->miniLog->alert($e->getMessage());
+            $this->toolBox()->log()->error($e->getMessage());
         } finally {
             if ($this->dataBase->inTransaction()) {
                 $this->dataBase->rollback();
@@ -105,7 +104,7 @@ class Clientes extends AbstractRandomPeople
             $cuenta->codcliente = $cliente->codcliente;
             $cuenta->descripcion = 'Banco ' . mt_rand(1, 999);
             $cuenta->iban = $this->iban();
-            $cuenta->swift = (mt_rand(0, 2) != 0) ? $this->randomString(8) : '';
+            $cuenta->swift = (mt_rand(0, 2) != 0) ? $this->toolBox()->utils()->randomString(8) : '';
             $cuenta->fmandato = (mt_rand(0, 1) == 0) ? date('d-m-Y', strtotime($cliente->fechaalta . ' +' . mt_rand(1, 30) . ' days')) : null;
             $cuenta->setDisableIbanTest(true);
             if (!$cuenta->save()) {
@@ -127,7 +126,7 @@ class Clientes extends AbstractRandomPeople
         while ($max > 0) {
             $dir = new Model\Contacto();
             $dir->codcliente = $cliente->codcliente;
-            $dir->codpais = (mt_rand(0, 2) === 0) ? $this->paises[0]->codpais : AppSettings::get('default', 'codpais');
+            $dir->codpais = (mt_rand(0, 2) === 0) ? $this->paises[0]->codpais : $this->toolBox()->appSettings()->get('default', 'codpais');
             $dir->provincia = $this->provincia();
             $dir->ciudad = $this->ciudad();
             $dir->direccion = $this->direccion();

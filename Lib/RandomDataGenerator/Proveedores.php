@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Randomizer plugin for FacturaScripts
- * Copyright (C) 2016-2018 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2016-2019 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -18,7 +18,6 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
-use FacturaScripts\Core\App\AppSettings;
 use FacturaScripts\Dinamic\Model;
 
 /**
@@ -66,7 +65,7 @@ class Proveedores extends AbstractRandomPeople
             // confirm data
             $this->dataBase->commit();
         } catch (\Exception $e) {
-            $this->miniLog->alert($e->getMessage());
+            $this->toolBox()->log()->error($e->getMessage());
         } finally {
             if ($this->dataBase->inTransaction()) {
                 $this->dataBase->rollback();
@@ -89,7 +88,7 @@ class Proveedores extends AbstractRandomPeople
             $cuenta->codproveedor = $proveedor->codproveedor;
             $cuenta->descripcion = 'Banco ' . mt_rand(1, 999);
             $cuenta->iban = $this->iban();
-            $cuenta->swift = $this->randomString(8);
+            $cuenta->swift = $this->toolBox()->utils()->randomString(8);
 
             $opcion = mt_rand(0, 2);
             if ($opcion == 0) {
@@ -115,7 +114,7 @@ class Proveedores extends AbstractRandomPeople
         while ($max) {
             $dir = new Model\Contacto();
             $dir->codproveedor = $proveedor->codproveedor;
-            $dir->codpais = (mt_rand(0, 2) === 0) ? $this->paises[0]->codpais : AppSettings::get('default', 'codpais');
+            $dir->codpais = (mt_rand(0, 2) === 0) ? $this->paises[0]->codpais : $this->toolBox()->appSettings()->get('default', 'codpais');
             $dir->provincia = $this->provincia();
             $dir->ciudad = $this->ciudad();
             $dir->direccion = $this->direccion();

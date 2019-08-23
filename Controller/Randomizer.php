@@ -51,7 +51,6 @@ class Randomizer extends Base\Controller
         $pageData['menu'] = 'admin';
         $pageData['submenu'] = 'sdk';
         $pageData['title'] = 'generate-test-data';
-
         return $pageData;
     }
 
@@ -174,8 +173,8 @@ class Randomizer extends Base\Controller
         }
 
         if (false !== $app) {
-            $this->miniLog->notice($this->i18n->trans($txt, ['%quantity%' => $app->generate()]));
-            $this->miniLog->notice($this->i18n->trans('randomizer-generating-more-items'));
+            $this->toolBox()->i18nLog()->notice($txt, ['%quantity%' => $app->generate()]);
+            $this->toolBox()->i18nLog()->notice('randomizer-generating-more-items');
         }
 
         return;

@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Randomizer plugin for FacturaScripts
- * Copyright (C) 2016-2018 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2016-2019 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -19,7 +19,7 @@
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
 use FacturaScripts\Core\Base\DataBase;
-use FacturaScripts\Core\Base\MiniLog;
+use FacturaScripts\Core\Base\ToolBox;
 use FacturaScripts\Dinamic\Model;
 
 /**
@@ -32,7 +32,7 @@ use FacturaScripts\Dinamic\Model;
 abstract class AbstractRandom
 {
 
-    const MODEL_NAMESPACE = '\FacturaScripts\Dinamic\Model';
+    const MODEL_NAMESPACE = '\\FacturaScripts\\Dinamic\\Model\\';
 
     /**
      * Link with the active database
@@ -40,13 +40,6 @@ abstract class AbstractRandom
      * @var DataBase
      */
     protected $dataBase;
-
-    /**
-     * App log manager.
-     *
-     * @var MiniLog
-     */
-    protected $miniLog;
 
     /**
      * Generates random data.
@@ -64,7 +57,6 @@ abstract class AbstractRandom
     public function __construct()
     {
         $this->dataBase = new DataBase();
-        $this->miniLog = new MiniLog();
     }
 
     /**
@@ -279,7 +271,7 @@ abstract class AbstractRandom
      */
     protected function randomAgentes()
     {
-        return $this->randomModel(self::MODEL_NAMESPACE . '\Agente', 'agentes');
+        return $this->randomModel(self::MODEL_NAMESPACE . 'Agente', 'agentes');
     }
 
     /**
@@ -289,7 +281,7 @@ abstract class AbstractRandom
      */
     protected function randomClientes()
     {
-        return $this->randomModel(self::MODEL_NAMESPACE . '\Cliente', 'clientes');
+        return $this->randomModel(self::MODEL_NAMESPACE . 'Cliente', 'clientes');
     }
 
     /**
@@ -324,7 +316,7 @@ abstract class AbstractRandom
      */
     protected function randomProductos()
     {
-        return $this->randomModel(self::MODEL_NAMESPACE . '\Producto', 'productos');
+        return $this->randomModel(self::MODEL_NAMESPACE . 'Producto', 'productos');
     }
 
     /**
@@ -334,19 +326,7 @@ abstract class AbstractRandom
      */
     protected function randomProveedores()
     {
-        return $this->randomModel(self::MODEL_NAMESPACE . '\Proveedor', 'proveedores');
-    }
-
-    /**
-     * Returns a random string of $length length
-     *
-     * @param string $length la longitud del string
-     *
-     * @return string la cadena aleatoria
-     */
-    public function randomString($length = 30)
-    {
-        return mb_substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, $length);
+        return $this->randomModel(self::MODEL_NAMESPACE . 'Proveedor', 'proveedores');
     }
 
     /**
@@ -379,5 +359,14 @@ abstract class AbstractRandom
         }
 
         return $result;
+    }
+
+    /**
+     * 
+     * @return ToolBox
+     */
+    protected function toolBox()
+    {
+        return new ToolBox();
     }
 }

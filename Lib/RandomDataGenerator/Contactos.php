@@ -18,8 +18,6 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
-use FacturaScripts\Core\App\AppSettings;
-use FacturaScripts\Core\Base\Utils;
 use FacturaScripts\Dinamic\Model;
 
 /**
@@ -59,7 +57,7 @@ class Contactos extends AbstractRandomPeople
             // confirm data
             $this->dataBase->commit();
         } catch (\Exception $e) {
-            $this->miniLog->alert($e->getMessage());
+            $this->toolBox()->log()->error($e->getMessage());
         } finally {
             if ($this->dataBase->inTransaction()) {
                 $this->dataBase->rollback();
@@ -93,7 +91,7 @@ class Contactos extends AbstractRandomPeople
         $contacto->ciudad = random_int(0, 1) > 0 ? $this->ciudad() : null;
         $contacto->codagente = random_int(0, 1) > 0 ? $agentes[0]->codagente ?? null : null;
         $contacto->codcliente = random_int(0, 1) > 0 ? $clientes[0]->codcliente ?? null : null;
-        $contacto->codpais = random_int(0, 1) > 0 ? $paises[0]->codpais : AppSettings::get('default', 'codpais');
+        $contacto->codpais = random_int(0, 1) > 0 ? $paises[0]->codpais : $this->toolBox()->appSettings()->get('default', 'codpais');
         $contacto->codpostal = (string) random_int(1234, 99999);
         $contacto->direccion = random_int(0, 1) > 0 ? $this->direccion() : null;
         $contacto->email = $this->email();
@@ -101,12 +99,12 @@ class Contactos extends AbstractRandomPeople
         $contacto->fechaalta = $this->fecha();
         $contacto->lastactivity = date('d-m-Y H:i:s', $timeStamp);
         $contacto->lastip = random_int(0, 1) > 0 ? $randomIp : '::1';
-        $contacto->logkey = Utils::randomString(99);
+        $contacto->logkey = $this->toolBox()->utils()->randomString(99);
         $contacto->nombre = $this->nombre();
         $contacto->observaciones = random_int(0, 1) > 0 ? $this->observaciones() : null;
         $contacto->password = '';
         if (random_int(0, 1) > 0) {
-            $planPass = Utils::randomString(10);
+            $planPass = $this->toolBox()->utils()->randomString(10);
             $contacto->setPassword($planPass);
         }
         $contacto->personafisica = random_int(0, 1) > 0;

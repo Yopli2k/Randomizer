@@ -66,7 +66,7 @@ class Cuentas extends AbstractRandomAccounting
             // confirm data
             $this->dataBase->commit();
         } catch (\Exception $e) {
-            $this->miniLog->alert($e->getMessage());
+            $this->toolBox()->log()->error($e->getMessage());
         } finally {
             if ($this->dataBase->inTransaction()) {
                 $this->dataBase->rollback();

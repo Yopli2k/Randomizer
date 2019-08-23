@@ -136,7 +136,7 @@ class Productos extends AbstractRandom
 
         switch (mt_rand(0, 5)) {
             case 0:
-                $product->referencia = $this->randomString(10);
+                $product->referencia = $this->toolBox()->utils()->randomString(10);
                 break;
 
             case 1:
@@ -176,7 +176,7 @@ class Productos extends AbstractRandom
             return $variants;
         }
 
-        $variant->codbarras = (0 === mt_rand(0, 2)) ? '' : $this->randomString(10);
+        $variant->codbarras = (0 === mt_rand(0, 2)) ? '' : $this->toolBox()->utils()->randomString(10);
         $variant->coste = $this->precio(0, $product->precio, $product->precio);
         if (!$variant->save()) {
             return $variants;
@@ -190,10 +190,10 @@ class Productos extends AbstractRandom
         for ($num = mt_rand(1, 9); $num > 0; $num--) {
             $newVariant = new Model\Variante();
             $newVariant->idproducto = $product->idproducto;
-            $newVariant->codbarras = (0 === mt_rand(0, 2)) ? '' : $this->randomString(10);
+            $newVariant->codbarras = (0 === mt_rand(0, 2)) ? '' : $this->toolBox()->utils()->randomString(10);
             $newVariant->coste = $this->precio(1, 49, 699);
             $newVariant->precio = $newVariant->coste + $this->precio(1, 49, 699);
-            $newVariant->referencia = (0 === mt_rand(0, 1)) ? $newVariant->newCode('referencia') : $this->randomString(10);
+            $newVariant->referencia = (0 === mt_rand(0, 1)) ? $newVariant->newCode('referencia') : $this->toolBox()->utils()->randomString(10);
 
             if (count($this->atributoValores) > 1) {
                 $newVariant->idatributovalor1 = $this->getOneItem($this->atributoValores)->id;

@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Randomizer plugin for FacturaScripts
- * Copyright (C) 2016-2019 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2016-2020 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -176,7 +176,7 @@ class Productos extends AbstractRandom
             return $variants;
         }
 
-        $variant->codbarras = (0 === mt_rand(0, 2)) ? '' : $this->toolBox()->utils()->randomString(10);
+        $variant->codbarras = (0 === mt_rand(0, 3)) ? '' : mt_rand(1000000000000, 9999999999999);
         $variant->coste = $this->precio(0, $product->precio, $product->precio);
         if (!$variant->save()) {
             return $variants;

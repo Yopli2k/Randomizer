@@ -1,4 +1,4 @@
 # Randomizer
-Generates random data for FacturaScripts 2018.
+Generates random data for FacturaScripts 2020.
 
-https://www.facturascripts.com/plugins/Randomizer
+https://facturascripts.com/plugins/Randomizer

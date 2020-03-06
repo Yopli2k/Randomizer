@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Randomizer plugin for FacturaScripts
- * Copyright (C) 2016-2019 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2016-2020 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -63,7 +63,7 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
      *
      * @var Model\Serie[]
      */
-    protected $series;
+    protected $series = [];
 
     /**
      * AbstractRandomDocuments constructor.
@@ -76,7 +76,15 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
         $this->shuffle($this->almacenes, new Model\Almacen());
         $this->shuffle($this->divisas, new Model\Divisa());
         $this->shuffle($this->formasPago, new Model\FormaPago());
-        $this->shuffle($this->series, new Model\Serie());
+
+        /// exclude serie for rectified invoices
+        $codserierec = $this->toolBox()->appSettings()->get('default', 'codserierec');
+        $serieModel = new Model\Serie();
+        foreach ($serieModel->all() as $serie) {
+            if ($serie->codserie != $codserierec) {
+                $this->series[] = $serie;
+            }
+        }
     }
 
     /**
@@ -98,7 +106,7 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
         }
 
         $doc->codpago = $this->formasPago[0]->codpago;
-        $doc->codserie = (mt_rand(0, 4) == 0) ? $this->series[0]->codserie : $doc->codserie;
+        $doc->codserie = mt_rand(0, 4) == 0 ? $this->series[0]->codserie : $doc->codserie;
         if (mt_rand(0, 4) == 0) {
             $doc->observaciones = $this->observaciones();
         }
@@ -137,6 +145,10 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
             $lin->cantidad = $modcantidad * $this->cantidad(1, 3, 19);
             if (mt_rand(0, 4) == 0) {
                 $lin->dtopor = $this->cantidad(0, 33, 100);
+            }
+
+            if (mt_rand(0, 49) == 0) {
+                $lin->suplido = true;
             }
 
             $lin->save();

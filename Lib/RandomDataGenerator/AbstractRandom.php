@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Randomizer plugin for FacturaScripts
- * Copyright (C) 2016-2019 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2016-2020 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -72,13 +72,14 @@ abstract class AbstractRandom
      */
     public function cantidad($min, $max1, $max2)
     {
-        $cantidad = mt_rand($min, $max1);
+        if (\mt_rand(0, 9) == 0) {
+            return \mt_rand($min, $max2);
+        }
 
-        if (mt_rand(0, 9) == 0) {
-            $cantidad = mt_rand($min, $max2);
-        } elseif ($cantidad < $max1 && mt_rand(0, 4) == 0) {
-            $cantidad += round(mt_rand(1, 5) / mt_rand(1, 10), mt_rand(0, 3));
-            $cantidad = min([$max1, $cantidad]);
+        $cantidad = \mt_rand($min, $max1);
+        if ($cantidad < $max1 && \mt_rand(0, 4) == 0) {
+            $cantidad += \round(\mt_rand(1, 5) / \mt_rand(1, 10), \mt_rand(0, 3));
+            return \min([$max1, $cantidad]);
         }
 
         return $cantidad;
@@ -92,14 +93,14 @@ abstract class AbstractRandom
     public function descripcion()
     {
         $sufijos = [
-            'II', '3', 'XL', 'XXL', 'SE', 'GT', 'GTX', 'Pro', 'NX', 'XP', 'OS', 'Nitro',
+            'II', '3', 'XL', 'XXL', 'SE', 'GT', 'GTX', 'Pro', 'NX', 'XP', 'OS', 'Nitro'
         ];
         $texto = $this->familia() . $this->getOneItem($sufijos);
 
         $descripciones1 = [
             'Una alcachofa', 'Un motor', 'Una tarjeta gráfica (GPU)', 'Un procesador',
             'Un coche', 'Un dispositivo tecnológico', 'Un magnetofón', 'Un palo',
-            'un cubo de basura', "Un objeto pequeño d'or", '"La hostia"',
+            'un cubo de basura', "Un objeto pequeño d'or", '"La hostia"'
         ];
 
         $descripciones = [
@@ -108,11 +109,11 @@ abstract class AbstractRandom
             '32 pistones digitales', 'tecnología digitrónica 4.1', 'cuernos metálicos', 'un palo',
             'memoria HBM', 'taladro matricial', 'Wifi 4G', 'faros de xenon', 'un ambientador de pino',
             'un posavasos', 'malignas intenciones', 'la virginidad intacta', 'malware', 'linux',
-            'Windows Vista', 'propiedades psicotrópicas', 'spyware', 'reproductor 4k',
+            'Windows Vista', 'propiedades psicotrópicas', 'spyware', 'reproductor 4k'
         ];
 
         $descripcion = $this->getOneItem($descripciones1);
-        switch (mt_rand(0, 4)) {
+        switch (\mt_rand(0, 4)) {
             case 0:
                 break;
 
@@ -145,28 +146,26 @@ abstract class AbstractRandom
     {
         $prefijos = [
             'Jet', 'Jex', 'Max', 'Pro', 'FX', 'Neo', 'Maxi', 'Extreme', 'Sub',
-            'Ultra', 'Minga', 'Hiper', 'Giga', 'Mega', 'Super', 'Fusion', 'Broken',
+            'Ultra', 'Minga', 'Hiper', 'Giga', 'Mega', 'Super', 'Fusion', 'Broken'
         ];
 
         $nombres = [
             'Motor', 'Engine', 'Generator', 'Tool', 'Oviode', 'Box', 'Proton', 'Neutro',
-            'Radeon', 'GeForce', 'nForce', 'Labtech', 'Station', 'Arco', 'Arkam',
+            'Radeon', 'GeForce', 'nForce', 'Labtech', 'Station', 'Arco', 'Arkam'
         ];
 
-        return (mt_rand(0, 4) ? $this->getOneItem($prefijos) . ' ' : '') . $this->getOneItem($nombres);
+        return (\mt_rand(0, 4) ? $this->getOneItem($prefijos) . ' ' : '') . $this->getOneItem($nombres);
     }
 
     /**
      * Return a date between $start and $end.
      *
-     * @param int $start
-     * @param int $end
-     *
      * @return string
      */
-    protected function fecha($start = 2015, $end = 2019)
+    protected function fecha()
     {
-        return date(mt_rand(1, 28) . '-' . mt_rand(1, 12) . '-' . mt_rand($start, $end));
+        $diff = \mt_rand(-900, 9);
+        return \date(Model\Producto::DATE_STYLE, \strtotime($diff . ' days'));
     }
 
     /**
@@ -178,7 +177,7 @@ abstract class AbstractRandom
      */
     public function getOneItem($array)
     {
-        return $array[mt_rand(0, count($array) - 1)];
+        return $array[\mt_rand(0, \count($array) - 1)];
     }
 
     /**
@@ -187,7 +186,7 @@ abstract class AbstractRandom
      */
     protected function hora()
     {
-        return mt_rand(10, 20) . ':' . mt_rand(10, 59) . ':' . mt_rand(10, 59);
+        return \mt_rand(10, 20) . ':' . \mt_rand(10, 59) . ':' . \mt_rand(10, 59);
     }
 
     /**
@@ -204,11 +203,11 @@ abstract class AbstractRandom
             'U' => '30', 'V' => '31', 'W' => '32', 'X' => '33', 'Y' => '34', 'Z' => '35',
         ];
 
-        $ccc = mt_rand(1000, 9999) . mt_rand(1000, 9999) . mt_rand(1000, 9999) . mt_rand(1000, 9999) . mt_rand(1000, 9999);
+        $ccc = \mt_rand(1000, 9999) . \mt_rand(1000, 9999) . \mt_rand(1000, 9999) . \mt_rand(1000, 9999) . \mt_rand(1000, 9999);
         $dividendo = $ccc . $pesos[$pais[0]] . $pesos[$pais[1]] . '00';
         $digitoControl = 98 - \bcmod($dividendo, '97');
 
-        if (strlen($digitoControl) === 1) {
+        if (\strlen($digitoControl) === 1) {
             $digitoControl = '0' . $digitoControl;
         }
 
@@ -231,7 +230,7 @@ abstract class AbstractRandom
 
         /// Add a lot of Blas as an option
         $bla = 'Bla';
-        while (mt_rand(0, 29) > 0) {
+        while (\mt_rand(0, 29) > 0) {
             $bla .= ', bla';
         }
         $observaciones[] = $bla . '.';
@@ -252,13 +251,13 @@ abstract class AbstractRandom
      */
     public function precio($min, $max1, $max2)
     {
-        $precio = mt_rand($min, $max1);
+        $precio = \mt_rand($min, $max1);
 
-        if (mt_rand(0, 9) == 0) {
-            $precio = mt_rand($min, $max2);
-        } elseif ($precio < $max1 && mt_rand(0, 2) == 0) {
-            $precio += round(mt_rand(1, 5) / mt_rand(1, 10), (int) FS_NF0);
-            $precio = min([$max1, $precio]);
+        if (\mt_rand(0, 9) == 0) {
+            $precio = \mt_rand($min, $max2);
+        } elseif ($precio < $max1 && \mt_rand(0, 2) == 0) {
+            $precio += \round(\mt_rand(1, 5) / \mt_rand(1, 10), (int) FS_NF0);
+            $precio = \min([$max1, $precio]);
         }
 
         return $precio;
@@ -297,7 +296,7 @@ abstract class AbstractRandom
         $lista = [];
 
         $sql = 'SELECT * FROM ' . $tableName . ' ORDER BY ';
-        $sql .= strtolower(FS_DB_TYPE) === 'mysql' ? 'RAND()' : 'random()';
+        $sql .= \strtolower(FS_DB_TYPE) === 'mysql' ? 'RAND()' : 'random()';
 
         $data = $this->dataBase->selectLimit($sql, 100, 0);
         if (!empty($data)) {
@@ -338,7 +337,7 @@ abstract class AbstractRandom
     public function shuffle(&$variable, $model)
     {
         $variable = $model->all();
-        shuffle($variable);
+        \shuffle($variable);
     }
 
     /**
@@ -353,12 +352,10 @@ abstract class AbstractRandom
      */
     public function txt2codigo($txt, $len = 8)
     {
-        $result = str_replace([' ', '-', '_', '&', 'ó', ':', 'ñ', '"', "'", '*', '/'], ['', '', '', '', 'O', '', 'N', '', '', '-', '-'], strtoupper($txt));
-        if (strlen($result) > $len) {
-            return substr($result, 0, $len - 1) . mt_rand(0, 9);
-        }
-
-        return $result;
+        $search = [' ', '-', '_', '&', 'ó', ':', 'ñ', '"', "'", '*', '/'];
+        $replace = ['', '', '', '', 'O', '', 'N', '', '', '-', '-'];
+        $result = \str_replace($search, $replace, \strtoupper($txt));
+        return \strlen($result) > $len ? \substr($result, 0, $len - 1) . \mt_rand(0, 9) : $result;
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Randomizer plugin for FacturaScripts
- * Copyright (C) 2016-2019 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2016-2020 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -85,7 +85,7 @@ class Agentes extends AbstractRandomPeople
         $agente->cargo = mt_rand(0, 2) > 0 ? $this->cargo() : '';
         $agente->cifnif = $this->cif();
         $agente->email = mt_rand(0, 2) > 0 ? $this->email() : '';
-        $agente->fechaalta = $this->fecha(2013, 2016);
+        $agente->fechaalta = $this->fecha();
         $agente->fechabaja = mt_rand(0, 24) == 0 ? date('d-m-Y') : null;
         $agente->nombre = $this->nombre() . ' ' . $this->apellidos();
         $agente->observaciones = mt_rand(0, 2) > 0 ? $this->observaciones() : null;

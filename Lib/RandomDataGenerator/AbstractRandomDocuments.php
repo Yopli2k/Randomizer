@@ -94,10 +94,10 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
      */
     protected function randomizeDocument(&$doc)
     {
-        $doc->codagente = mt_rand(0, 4) && !empty($this->agentes) ? $this->agentes[0]->codagente : null;
-        $doc->codalmacen = (mt_rand(0, 4) == 0) ? $this->almacenes[0]->codalmacen : $doc->codalmacen;
+        $doc->codagente = \mt_rand(0, 4) && !empty($this->agentes) ? $this->agentes[0]->codagente : null;
+        $doc->codalmacen = \mt_rand(0, 4) == 0 ? $this->almacenes[0]->codalmacen : $doc->codalmacen;
 
-        $doc->coddivisa = (mt_rand(0, 4) == 0) ? $this->divisas[0]->coddivisa : $doc->coddivisa;
+        $doc->coddivisa = \mt_rand(0, 4) == 0 ? $this->divisas[0]->coddivisa : $doc->coddivisa;
         foreach ($this->divisas as $div) {
             if ($div->coddivisa == $doc->coddivisa) {
                 $doc->tasaconv = $div->tasaconv;
@@ -106,15 +106,15 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
         }
 
         $doc->codpago = $this->formasPago[0]->codpago;
-        $doc->codserie = mt_rand(0, 4) == 0 ? $this->series[0]->codserie : $doc->codserie;
-        if (mt_rand(0, 4) == 0) {
+        $doc->codserie = \mt_rand(0, 4) == 0 ? $this->series[0]->codserie : $doc->codserie;
+        if (\mt_rand(0, 4) == 0) {
             $doc->observaciones = $this->observaciones();
         }
 
-        if (isset($doc->numero2) && mt_rand(0, 4) == 0) {
-            $doc->numero2 = mt_rand(10, 99999);
-        } elseif (isset($doc->numproveedor) && mt_rand(0, 4) == 0) {
-            $doc->numproveedor = mt_rand(10, 99999);
+        if (isset($doc->numero2) && \mt_rand(0, 4) == 0) {
+            $doc->numero2 = \mt_rand(10, 99999);
+        } elseif (isset($doc->numproveedor) && \mt_rand(0, 4) == 0) {
+            $doc->numproveedor = \mt_rand(10, 99999);
         }
 
         $doc->setDate($this->fecha(), $this->hora());
@@ -127,14 +127,14 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
      */
     protected function randomLineas(&$doc)
     {
-        $productos = $this->randomProductos();
+        $productos = $this->randomVariantes();
 
-        /// 1 out of 5 times we use negative quantities
-        $modcantidad = (mt_rand(0, 9) == 0) ? -1 : 1;
+        /// 1 out of 9 times we use negative quantities
+        $modCantidad = \mt_rand(0, 9) == 0 ? -1 : 1;
 
         $numlineas = (int) $this->cantidad(0, 10, 200);
         while ($numlineas > 0) {
-            if (isset($productos[$numlineas]) && $productos[$numlineas]->sevende) {
+            if (isset($productos[$numlineas]) && \mt_rand(0, 19) > 0) {
                 $lin = $doc->getNewProductLine($productos[$numlineas]->referencia);
             } else {
                 $lin = $doc->getNewLine();
@@ -142,12 +142,12 @@ abstract class AbstractRandomDocuments extends AbstractRandomPeople
                 $lin->pvpunitario = $this->precio(1, 49, 699);
             }
 
-            $lin->cantidad = $modcantidad * $this->cantidad(1, 3, 19);
-            if (mt_rand(0, 4) == 0) {
+            $lin->cantidad = $modCantidad * $this->cantidad(1, 3, 19);
+            if (\mt_rand(0, 4) == 0) {
                 $lin->dtopor = $this->cantidad(0, 33, 100);
             }
 
-            if (mt_rand(0, 49) == 0) {
+            if (\mt_rand(0, 49) == 0) {
                 $lin->suplido = true;
             }
 

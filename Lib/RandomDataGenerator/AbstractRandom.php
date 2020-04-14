@@ -329,6 +329,16 @@ abstract class AbstractRandom
     }
 
     /**
+     * Returns an array with random variants.
+     *
+     * @return Model\Variante[]
+     */
+    protected function randomVariantes()
+    {
+        return $this->randomModel(self::MODEL_NAMESPACE . 'Variante', 'variantes');
+    }
+
+    /**
      * Suffle all items from $model and put it to $variable.
      *
      * @param $variable

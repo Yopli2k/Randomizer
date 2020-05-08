@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Randomizer plugin for FacturaScripts
- * Copyright (C) 2016-2018 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2016-2020 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -76,7 +76,7 @@ abstract class AbstractRandomPeople extends AbstractRandom
             'Hijo de Dios', 'Petrov', 'Maximiliano', 'Nieve', 'Snow', 'Trump',
             'Obama', 'Ali', 'Stark', 'Sanz', 'Rajoy', 'Sánchez', 'Iglesias',
             'Rivera', 'Tudor', 'Lanister', 'Suarez', 'Aznar', 'Botella',
-            'Errejón', "D'Ambrosio", 'Peña', '"Márquez"',
+            'Errejón', "D'Ambrosio", 'Peña', '"Márquez"'
         ];
         return $this->getOneItem($apellidos) . ' ' . $this->getOneItem($apellidos);
     }
@@ -102,7 +102,7 @@ abstract class AbstractRandomPeople extends AbstractRandom
      */
     protected function cif()
     {
-        return (mt_rand(0, 9) == 0) ? '' : (string) mt_rand(0, 99999999);
+        return \mt_rand(0, 9) == 0 ? '' : (string) \mt_rand(0, 99999999);
     }
 
     /**
@@ -118,7 +118,7 @@ abstract class AbstractRandomPeople extends AbstractRandom
             'Girona', 'Granada', 'Guadalajara', 'Guipuzcoa', 'Huelva', 'Huesca', 'Jaen', 'León', 'Lleida', 'La Rioja',
             'Lugo', 'Madrid', 'Málaga', 'Melilla', 'Murcia', 'Navarra', 'Ourense', 'Palencia', 'Las Palmas', 'Pontevedra',
             'Salamanca', 'Segovia', 'Sevilla', 'Soria', 'Tarragona', 'Tenerife', 'Teruel', 'Toledo', 'Valencia',
-            'Valladolid', 'Vizcaya', 'Zamora', 'Zaragoza', 'Torrevieja', 'Elche',
+            'Valladolid', 'Vizcaya', 'Zamora', 'Zaragoza', 'Torrevieja', 'Elche'
         ];
         return $this->getOneItem($nombres);
     }
@@ -133,16 +133,16 @@ abstract class AbstractRandomPeople extends AbstractRandom
         $tipos = ['Calle', 'Avenida', 'Polígono', 'Carretera'];
         $nombres = [
             'Infante', 'Principal', 'Falsa', '58', '74', 'Pacheco', 'Baleares',
-            'Del Pacífico', 'Rue', "d'Ambrosio", 'Bañez', '"La calle"',
+            'Del Pacífico', 'Rue', "d'Ambrosio", 'Bañez', '"La calle"'
         ];
 
         $tipo = $this->getOneItem($tipos);
         $nombre = $this->getOneItem($nombres);
 
-        $ret = "$tipo $nombre, nº" . mt_rand(1, 199);
+        $ret = "$tipo $nombre, nº" . \mt_rand(1, 199);
 
-        if (mt_rand(0, 2) == 0) {
-            $ret .= ', puerta ' . mt_rand(1, 99);
+        if (\mt_rand(0, 2) == 0) {
+            $ret .= ', puerta ' . \mt_rand(1, 99);
         }
 
         return $ret;
@@ -158,13 +158,13 @@ abstract class AbstractRandomPeople extends AbstractRandom
         $nicks = [
             'neo', 'carlos', 'mokko', 'snake', 'pikachu', 'pliskin', 'ocelot', 'samurai',
             'ninja', 'infiltrator', 'info', 'compras', 'ventas', 'administracion', 'contacto',
-            'contact', 'invoices', 'mail',
+            'contact', 'invoices', 'mail'
         ];
         $domain = [
-            'facturascripts.com', 'gmail.com', 'hotmail.com', 'yahoo.com',
+            'facturascripts.com', 'gmail.com', 'hotmail.com', 'yahoo.com'
         ];
 
-        return $this->getOneItem($nicks) . '.' . mt_rand(2, 99999) . '@' . $this->getOneItem($domain);
+        return $this->getOneItem($nicks) . '.' . \mt_rand(2, 99999) . '@' . $this->getOneItem($domain);
     }
 
     /**
@@ -181,7 +181,7 @@ abstract class AbstractRandomPeople extends AbstractRandom
             'Investments', 'Solutions', 'Neo', 'Ming', 'Tube', 'Pear', 'Apple',
             'Dolphin', 'Chrome', 'Cat', 'Hat', 'Linux', 'Soft', 'Mobile', 'Phone',
             'XL', 'Open', 'Thunder', 'Zero', 'Scorpio', 'Zelda', '10', 'V', 'Q',
-            'X', 'Arch', 'Arco', 'Broken', 'Arkam', 'RX', "d'Art", 'Peña', '"La cosa"',
+            'X', 'Arch', 'Arco', 'Broken', 'Arkam', 'RX', "d'Art", 'Peña', '"La cosa"'
         ];
 
         $separador = ['-', ' & ', ' ', '_', '', '/', '*'];
@@ -205,7 +205,7 @@ abstract class AbstractRandomPeople extends AbstractRandom
             'Barak', 'Sadam', 'Donald', 'Jorge', 'Joel', 'Pedro', 'Mariano',
             'Albert', 'Alberto', 'Gorka', 'Cecilia', 'Carmena', 'Pichita',
             'Alicia', 'Laura', 'Riola', 'Wilson', 'Jaume', 'David',
-            "D'Ambrosio", '"Licenciado"', '"El master"',
+            "D'Ambrosio", '"Licenciado"', '"El master"'
         ];
         return $this->getOneItem($nombres);
     }
@@ -223,7 +223,7 @@ abstract class AbstractRandomPeople extends AbstractRandom
             'Girona', 'Granada', 'Guadalajara', 'Guipuzcoa', 'Huelva', 'Huesca', 'Jaen', 'León', 'Lleida', 'La Rioja',
             'Lugo', 'Madrid', 'Málaga', 'Melilla', 'Murcia', 'Navarra', 'Ourense', 'Palencia', 'Las Palmas', 'Pontevedra',
             'Salamanca', 'Segovia', 'Sevilla', 'Soria', 'Tarragona', 'Tenerife', 'Teruel', 'Toledo', 'Valencia',
-            'Valladolid', 'Vizcaya', 'Zamora', 'Zaragoza',
+            'Valladolid', 'Vizcaya', 'Zamora', 'Zaragoza'
         ];
         return $this->getOneItem($nombres);
     }
@@ -234,7 +234,7 @@ abstract class AbstractRandomPeople extends AbstractRandom
      */
     public function regimeniva()
     {
-        $values = array_keys(RegimenIVA::all());
+        $values = \array_keys(RegimenIVA::all());
         return $this->getOneItem($values);
     }
 
@@ -245,7 +245,7 @@ abstract class AbstractRandomPeople extends AbstractRandom
      */
     protected function seguridadSocial()
     {
-        return (string) mt_rand(10000, 99999) . mt_rand(10000, 99999);
+        return (string) \mt_rand(10000, 99999) . \mt_rand(10000, 99999);
     }
 
     /**
@@ -255,7 +255,7 @@ abstract class AbstractRandomPeople extends AbstractRandom
      */
     protected function telefono()
     {
-        return (string) mt_rand(555555555, 999999999);
+        return (string) \mt_rand(555555555, 999999999);
     }
 
     /**
@@ -266,16 +266,22 @@ abstract class AbstractRandomPeople extends AbstractRandom
     protected function fillCliPro(&$clipro)
     {
         $clipro->cifnif = $this->cif();
-        $clipro->email = (mt_rand(0, 2) > 0) ? $this->email() : null;
-        $clipro->irpf = (mt_rand(0, 2) > 0) ? 0 : mt_rand(0, 19);
+        $clipro->email = \mt_rand(0, 2) > 0 ? $this->email() : null;
         $clipro->regimeniva = $this->regimeniva();
 
-        if (mt_rand(0, 24) == 0) {
+        if (\mt_rand(0, 24) == 0) {
             $clipro->debaja = true;
             $clipro->fechabaja = date('d-m-Y');
         }
 
-        switch (mt_rand(0, 2)) {
+        if (empty($clipro->codretencion) && \mt_rand(0, 9) === 0) {
+            $retentions = $this->randomModel(self::MODEL_NAMESPACE . 'Retencion', 'retenciones');
+            $clipro->codretencion = empty($retentions) ? null : $this->getOneItem($retentions)->primaryColumnValue();
+        } elseif (!empty($clipro->codretencion) && \mt_rand(0, 1) === 0) {
+            $clipro->codretencion = null;
+        }
+
+        switch (\mt_rand(0, 2)) {
             case 0:
                 $clipro->nombre = $clipro->razonsocial = $this->empresa();
                 $clipro->personafisica = false;
@@ -291,18 +297,18 @@ abstract class AbstractRandomPeople extends AbstractRandom
                 $clipro->nombre = $clipro->razonsocial = $this->nombre() . ' ' . $this->apellidos();
         }
 
-        switch (mt_rand(0, 2)) {
+        switch (\mt_rand(0, 2)) {
             case 0:
-                $clipro->telefono1 = mt_rand(555555555, 999999999);
+                $clipro->telefono1 = \mt_rand(555555555, 999999999);
                 break;
 
             case 1:
-                $clipro->telefono1 = mt_rand(555555555, 999999999);
-                $clipro->telefono2 = mt_rand(555555555, 999999999);
+                $clipro->telefono1 = \mt_rand(555555555, 999999999);
+                $clipro->telefono2 = \mt_rand(555555555, 999999999);
                 break;
 
             default:
-                $clipro->telefono2 = mt_rand(555555555, 999999999);
+                $clipro->telefono2 = \mt_rand(555555555, 999999999);
         }
     }
 }

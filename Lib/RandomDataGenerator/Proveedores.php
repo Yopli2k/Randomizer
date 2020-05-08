@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Randomizer plugin for FacturaScripts
- * Copyright (C) 2016-2019 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2016-2020 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -54,11 +54,11 @@ class Proveedores extends AbstractRandomPeople
                 }
 
                 // adds addreses
-                $numDirs = mt_rand(0, 3);
+                $numDirs = \mt_rand(0, 3);
                 $this->direccionesProveedor($proveedor, $numDirs);
 
                 // adds bacnk accounts
-                $numCuentas = mt_rand(0, 3);
+                $numCuentas = \mt_rand(0, 3);
                 $this->cuentasBancoProveedor($proveedor, $numCuentas);
             }
 
@@ -86,11 +86,11 @@ class Proveedores extends AbstractRandomPeople
         while ($max > 0) {
             $cuenta = new Model\CuentaBancoProveedor();
             $cuenta->codproveedor = $proveedor->codproveedor;
-            $cuenta->descripcion = 'Banco ' . mt_rand(1, 999);
+            $cuenta->descripcion = 'Banco ' . \mt_rand(1, 999);
             $cuenta->iban = $this->iban();
             $cuenta->swift = $this->toolBox()->utils()->randomString(8);
 
-            $opcion = mt_rand(0, 2);
+            $opcion = \mt_rand(0, 2);
             if ($opcion == 0) {
                 $cuenta->swift = '';
             } elseif ($opcion == 1) {
@@ -114,11 +114,11 @@ class Proveedores extends AbstractRandomPeople
         while ($max) {
             $dir = new Model\Contacto();
             $dir->codproveedor = $proveedor->codproveedor;
-            $dir->codpais = (mt_rand(0, 2) === 0) ? $this->paises[0]->codpais : $this->toolBox()->appSettings()->get('default', 'codpais');
+            $dir->codpais = (\mt_rand(0, 2) === 0) ? $this->paises[0]->codpais : $this->toolBox()->appSettings()->get('default', 'codpais');
             $dir->provincia = $this->provincia();
             $dir->ciudad = $this->ciudad();
             $dir->direccion = $this->direccion();
-            $dir->codpostal = (string) mt_rand(1234, 99999);
+            $dir->codpostal = (string) \mt_rand(1234, 99999);
             $dir->nombre = $this->nombre();
             if (!$dir->save()) {
                 break;

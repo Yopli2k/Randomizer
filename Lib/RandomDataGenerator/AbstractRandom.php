@@ -20,6 +20,7 @@ namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
 
 use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Core\Base\ToolBox;
+use FacturaScripts\Core\Model\Base\ModelClass;
 use FacturaScripts\Dinamic\Model;
 
 /**
@@ -289,7 +290,7 @@ abstract class AbstractRandom
      * @param string $modelName
      * @param string $tableName
      *
-     * @return array
+     * @return ModelClass[]
      */
     protected function randomModel($modelName, $tableName)
     {

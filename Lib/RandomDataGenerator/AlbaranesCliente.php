@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Randomizer plugin for FacturaScripts
- * Copyright (C) 2016-2019 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2016-2020 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -52,11 +52,22 @@ class AlbaranesCliente extends AbstractRandomDocuments
         try {
             while ($generated < $num) {
                 $cliente = $this->getOneItem($clientes);
-                
+
                 $alb = $this->model();
                 $alb->setSubject($cliente);
                 $this->randomizeDocument($alb);
-                if (!$alb->save()) {
+
+                switch (\mt_rand(0, 2)) {
+                    case 0:
+                        $alb->numero2 = $this->toolBox()->utils()->randomString();
+                        break;
+
+                    case 1:
+                        $alb->numero2 = \mt_rand(1, 99999999);
+                        break;
+                }
+
+                if (false === $alb->save()) {
                     break;
                 }
 

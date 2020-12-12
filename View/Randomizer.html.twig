@@ -1,18 +1,21 @@
 {% extends "Master/MenuTemplate.html.twig" %}
 
 {% block body %}
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <h1 class="h2">
-                    <i class="fas fa-magic" aria-hidden="true"></i> {{ i18n.trans('generate-test-data') }}
-                    <a href="{{ fsc.url() }}" class="btn btn-sm btn-outline-secondary">
-                        <i class="fas fa-sync" aria-hidden="true"></i>
-                    </a>
-                </h1>
-                <hr/>
+    <div class="bg-light pt-4 pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h1 class="h2">
+                        <i class="fas fa-magic" aria-hidden="true"></i> {{ i18n.trans('generate-test-data') }}
+                        <a href="{{ fsc.url() }}" class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-sync" aria-hidden="true"></i>
+                        </a>
+                    </h1>
+                </div>
             </div>
         </div>
+    </div>
+    <div class="container mt-4">
         <div class="row">
             <div class="col-4">
                 <a href="{{ fsc.url() }}?gen=fabricantes" class="btn btn-block btn-success">
@@ -159,4 +162,13 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block css %}
+    {{ parent() }}
+    <style>
+        .bg-header {
+            background-color: #FAFBFC;
+        }
+    </style>
 {% endblock %}

@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Randomizer plugin for FacturaScripts
- * Copyright (C) 2016-2019 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2016-2020 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -56,7 +56,18 @@ class PedidosProveedor extends AbstractRandomDocuments
                 $ped = $this->model();
                 $ped->setSubject($proveedor);
                 $this->randomizeDocument($ped);
-                if (!$ped->save()) {
+
+                switch (\mt_rand(0, 2)) {
+                    case 0:
+                        $ped->numproveedor = $this->toolBox()->utils()->randomString();
+                        break;
+
+                    case 1:
+                        $ped->numproveedor = \mt_rand(1, 99999999);
+                        break;
+                }
+
+                if (false === $ped->save()) {
                     break;
                 }
 

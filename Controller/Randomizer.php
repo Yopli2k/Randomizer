@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Randomizer plugin for FacturaScripts
- * Copyright (C) 2017-2019 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2017-2021 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -20,7 +20,7 @@ namespace FacturaScripts\Plugins\Randomizer\Controller;
 
 use FacturaScripts\Core\Base;
 use FacturaScripts\Core\Model\User;
-use FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
+use FacturaScripts\Plugins\Randomizer\Lib\Random;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -47,10 +47,9 @@ class Randomizer extends Base\Controller
     public function getPageData()
     {
         $pageData = parent::getPageData();
-        $pageData['icon'] = 'fas fa-magic';
         $pageData['menu'] = 'admin';
-        $pageData['submenu'] = 'sdk';
         $pageData['title'] = 'generate-test-data';
+        $pageData['icon'] = 'fas fa-flask';
         return $pageData;
     }
 
@@ -83,101 +82,69 @@ class Randomizer extends Base\Controller
     {
         switch ($option) {
             case 'agentes':
-                $app = new RandomDataGenerator\Agentes();
-                $txt = 'generated-agents';
-                break;
+                return $this->generateAction('generated-agents', Random\Agentes::create());
 
             case 'albaranescli':
-                $app = new RandomDataGenerator\AlbaranesCliente();
-                $txt = 'generated-customer-delivery-notes';
-                break;
+                return $this->generateAction('generated-customer-delivery-notes', Random\AlbaranesClientes::create());
 
             case 'albaranesprov':
-                $app = new RandomDataGenerator\AlbaranesProveedor();
-                $txt = 'generated-supplier-delivery-notes';
-                break;
-
-            case 'asientos':
-                $app = new RandomDataGenerator\Asientos();
-                $txt = 'generated-accounting-entries';
-                break;
+                return $this->generateAction('generated-supplier-delivery-notes', Random\AlbaranesProveedores::create());
 
             case 'clientes':
-                $app = new RandomDataGenerator\Clientes();
-                $txt = 'generated-customers';
-                break;
+                return $this->generateAction('generated-customers', Random\Clientes::create());
 
             case 'contactos':
-                $app = new RandomDataGenerator\Contactos();
-                $txt = 'generated-contacts';
-                break;
-
-            case 'cuentas':
-                $app = new RandomDataGenerator\Cuentas();
-                $txt = 'generated-accounts';
-                break;
+                return $this->generateAction('generated-contacts', Random\Contactos::create());
 
             case 'fabricantes':
-                $app = new RandomDataGenerator\Fabricantes();
-                $txt = 'generated-manufacturers';
-                break;
+                return $this->generateAction('generated-manufacturers', Random\Fabricantes::create());
 
             case 'familias':
-                $app = new RandomDataGenerator\Familias();
-                $txt = 'generated-families';
-                break;
+                return $this->generateAction('generated-families', Random\Familias::create());
 
             case 'grupos':
-                $app = new RandomDataGenerator\Grupos();
-                $txt = 'generated-customer-groups';
-                break;
+                return $this->generateAction('generated-customer-groups', Random\GruposClientes::create());
 
             case 'pedidoscli':
-                $app = new RandomDataGenerator\PedidosCliente();
-                $txt = 'generated-customer-orders';
-                break;
+                return $this->generateAction('generated-customer-orders', Random\PedidosClientes::create());
 
             case 'pedidosprov':
-                $app = new RandomDataGenerator\PedidosProveedor();
-                $txt = 'generated-supplier-orders';
-                break;
+                return $this->generateAction('generated-supplier-orders', Random\PedidosProveedores::create());
 
             case 'presupuestoscli':
-                $app = new RandomDataGenerator\PresupuestosCliente();
-                $txt = 'generated-customer-estimations';
-                break;
+                return $this->generateAction('generated-customer-estimations', Random\PresupuestosClientes::create());
 
             case 'presupuestosprov':
-                $app = new RandomDataGenerator\PresupuestosProveedor();
-                $txt = 'generated-supplier-estimations';
-                break;
+                return $this->generateAction('generated-supplier-estimations', Random\PresupuestoProveedores::create());
 
             case 'productos':
-                $app = new RandomDataGenerator\Productos();
-                $txt = 'generated-products';
-                break;
+                return $this->generateAction('generated-products', Random\Productos::create());
 
             case 'proveedores':
-                $app = new RandomDataGenerator\Proveedores();
-                $txt = 'generated-supplier';
-                break;
+                return $this->generateAction('generated-supplier', Random\Proveedores::create());
 
-            case 'subcuentas':
-                $app = new RandomDataGenerator\Subcuentas();
-                $txt = 'generated-subaccounts';
-                break;
+            case 'proyectos':
+                return $this->generateAction('generated-projects', Random\Proyectos::create());
 
-            default:
-                $app = false;
-                $txt = '';
+            case 'servicios':
+                return $this->generateAction('generated-services', Random\Servicios::create());
+
+            case 'users':
+                return $this->generateAction('generated-users', Random\Usuarios::create());
         }
+        
+        /// TODO: crear atributos y valores, comisiones, tarifas, transportistas, empresas y almacenes
+    }
 
-        if (false !== $app) {
-            $this->toolBox()->i18nLog()->notice($txt, ['%quantity%' => $app->generate()]);
-            $this->toolBox()->i18nLog()->notice('randomizer-generating-more-items');
-        }
-
-        return;
+    /**
+     * 
+     * @param string $label
+     * @param int    $number
+     */
+    private function generateAction(string $label, int $number)
+    {
+        $this->toolBox()->i18nLog()->notice($label, ['%quantity%' => $number]);
+        $this->toolBox()->i18nLog()->notice('randomizer-generating-more-items');
     }
 
     /**
@@ -203,10 +170,11 @@ class Randomizer extends Base\Controller
             'productos' => 'FacturaScripts\\Dinamic\\Model\\Producto',
             'proveedores' => 'FacturaScripts\\Dinamic\\Model\\Proveedor',
             'subcuentas' => 'FacturaScripts\\Dinamic\\Model\\Subcuenta',
+            'users' => 'FacturaScripts\\Dinamic\\Model\\User'
         ];
 
         foreach ($models as $tag => $modelName) {
-            if (!class_exists($modelName)) {
+            if (false === \class_exists($modelName)) {
                 $this->totalCounter[$tag] = 0;
                 continue;
             }

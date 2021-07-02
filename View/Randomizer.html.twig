@@ -1,164 +1,52 @@
 {% extends "Master/MenuTemplate.html.twig" %}
 
 {% block body %}
-    <div class="bg-light pt-4 pb-3">
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <h1 class="h2">
-                        <i class="fas fa-magic" aria-hidden="true"></i> {{ i18n.trans('generate-test-data') }}
-                        <a href="{{ fsc.url() }}" class="btn btn-sm btn-outline-secondary">
-                            <i class="fas fa-sync" aria-hidden="true"></i>
-                        </a>
-                    </h1>
-                </div>
-            </div>
-        </div>
+    <div class="bg-light pt-5 pb-5">
     </div>
-    <div class="container mt-4">
+    <div class="container" style="margin-top: -70px;">
         <div class="row">
-            <div class="col-4">
-                <a href="{{ fsc.url() }}?gen=fabricantes" class="btn btn-block btn-success">
-                    <i class="fa fa-industry" aria-hidden="true"></i>&nbsp; {{ i18n.trans('manufacturers') }}
-                    <span class="badge badge-dark">{{ fsc.totalCounter['fabricantes'] }}</span>
-                </a>
-                <br/>
-            </div>
-            <div class="col-4">
-                <a href="{{ fsc.url() }}?gen=familias" class="btn btn-block btn-success">
-                    <i class="fa fa-sitemap" aria-hidden="true"></i>&nbsp; {{ i18n.trans('families') }}
-                    <span class="badge badge-dark">{{ fsc.totalCounter['familias'] }}</span>
-                </a>
-                <br/>
-            </div>
-            <div class="col-4">
-                <a href="{{ fsc.url() }}?gen=productos" class="btn btn-block btn-success">
-                    <i class="fa fa-cubes" aria-hidden="true"></i>&nbsp; {{ i18n.trans('products') }}
-                    <span class="badge badge-dark">{{ fsc.totalCounter['productos'] }}</span>
-                </a>
-                <br/>
-            </div>
-            <div class="col-4">
-                <a href="{{ fsc.url() }}?gen=agentes" class="btn btn-block btn-success">
-                    <i class="fa fa-user-tie" aria-hidden="true"></i>&nbsp; {{ i18n.trans('agents') }}
-                    <span class="badge badge-dark">{{ fsc.totalCounter['agentes'] }}</span>
-                </a>
-                <br/>
-            </div>
-            <div class="col-4">
-                <a href="{{ fsc.url() }}?gen=contactos" class="btn btn-block btn-success">
-                    <i class="fa fa-users" aria-hidden="true"></i>&nbsp; {{ i18n.trans('contacts') }}
-                    <span class="badge badge-dark">{{ fsc.totalCounter['contactos'] }}</span>
-                </a>
-                <br/>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <h3>{{ i18n.trans('suppliers') }}</h3>
-                <hr/>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-4">
-                <a href="{{ fsc.url() }}?gen=proveedores" class="btn btn-block btn-success">
-                    <i class="fa fa-users" aria-hidden="true"></i>&nbsp; {{ i18n.trans('suppliers') }}
-                    <span class="badge badge-dark">{{ fsc.totalCounter['proveedores'] }}</span>
-                </a>
-                <br/>
-            </div>
-            <div class="col-4">
-                <a href="{{ fsc.url() }}?gen=presupuestosprov" class="btn btn-block btn-success">
-                    <i class="fa fa-copy" aria-hidden="true"></i>&nbsp; {{ i18n.trans('estimations') }}
-                    <span class="badge badge-dark">{{ fsc.totalCounter['presupuestosprov'] }}</span>
-                </a>
-                <br/>
-            </div>
-            <div class="col-4">
-                <a href="{{ fsc.url() }}?gen=pedidosprov" class="btn btn-block btn-success">
-                    <i class="fa fa-copy" aria-hidden="true"></i>&nbsp; {{ i18n.trans('orders') }}
-                    <span class="badge badge-dark">{{ fsc.totalCounter['pedidosprov'] }}</span>
-                </a>
-                <br/>
-            </div>
-            <div class="col-4">
-                <a href="{{ fsc.url() }}?gen=albaranesprov" class="btn btn-block btn-success">
-                    <i class="fa fa-copy" aria-hidden="true"></i>&nbsp; {{ i18n.trans('delivery-notes') }}
-                    <span class="badge badge-dark">{{ fsc.totalCounter['albaranesprov'] }}</span>
-                </a>
-                <br/>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <h3>{{ i18n.trans('customers') }}</h3>
-                <hr/>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-4">
-                <a href="{{ fsc.url() }}?gen=grupos" class="btn btn-block btn-success">
-                    <i class="fa fa-users-cog" aria-hidden="true"></i>&nbsp; {{ i18n.trans('customer-groups') }}
-                    <span class="badge badge-dark">{{ fsc.totalCounter['grupos'] }}</span>
-                </a>
-                <br/>
-            </div>
-            <div class="col-4">
-                <a href="{{ fsc.url() }}?gen=clientes" class="btn btn-block btn-success">
-                    <i class="fa fa-users" aria-hidden="true"></i>&nbsp; {{ i18n.trans('customers') }}
-                    <span class="badge badge-dark">{{ fsc.totalCounter['clientes'] }}</span>
-                </a>
-                <br/>
-            </div>
-            <div class="col-4">
-                <a href="{{ fsc.url() }}?gen=presupuestoscli" class="btn btn-block btn-success">
-                    <i class="fa fa-copy" aria-hidden="true"></i>&nbsp; {{ i18n.trans('estimations') }}
-                    <span class="badge badge-dark">{{ fsc.totalCounter['presupuestoscli'] }}</span>
-                </a>
-                <br/>
-            </div>
-            <div class="col-4">
-                <a href="{{ fsc.url() }}?gen=pedidoscli" class="btn btn-block btn-success">
-                    <i class="fa fa-copy" aria-hidden="true"></i>&nbsp; {{ i18n.trans('orders') }}
-                    <span class="badge badge-dark">{{ fsc.totalCounter['pedidoscli'] }}</span>
-                </a>
-                <br/>
-            </div>
-            <div class="col-4">
-                <a href="{{ fsc.url() }}?gen=albaranescli" class="btn btn-block btn-success">
-                    <i class="fa fa-copy" aria-hidden="true"></i>&nbsp; {{ i18n.trans('delivery-notes') }}
-                    <span class="badge badge-dark">{{ fsc.totalCounter['albaranescli'] }}</span>
-                </a>
-                <br/>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <h3>{{ i18n.trans('accounting') }}</h3>
-                <hr/>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-4">
-                <a href="{{ fsc.url() }}?gen=cuentas" class="btn btn-block btn-success">
-                    <i class="fa fa-book" aria-hidden="true"></i>&nbsp; {{ i18n.trans('accounting-accounts') }}
-                    <span class="badge badge-dark">{{ fsc.totalCounter['cuentas'] }}</span>
-                </a>
-                <br/>
-            </div>
-            <div class="col-4">
-                <a href="{{ fsc.url() }}?gen=subcuentas" class="btn btn-block btn-success">
-                    <i class="fa fa-th-list" aria-hidden="true"></i>&nbsp; {{ i18n.trans('subaccounts') }}
-                    <span class="badge badge-dark">{{ fsc.totalCounter['subcuentas'] }}</span>
-                </a>
-                <br/>
-            </div>
-            <div class="col-4">
-                <a href="{{ fsc.url() }}?gen=asientos" class="btn btn-block btn-success">
-                    <i class="fa fa-balance-scale" aria-hidden="true"></i>&nbsp; {{ i18n.trans('accounting-entries') }}
-                    <span class="badge badge-dark">{{ fsc.totalCounter['asientos'] }}</span>
-                </a>
-                <br/>
+            <div class="col">
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <h1 class="h3 mb-5">
+                            <i class="{{ fsc.getPagedata().icon }}" aria-hidden="true"></i> {{ i18n.trans('generate-test-data') }}
+                            <a href="{{ fsc.url() }}" class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-sync" aria-hidden="true"></i>
+                            </a>
+                        </h1>
+                        <div class="form-row">
+                            {{ _self.genButton(fsc, 'fabricantes', i18n, 'fas fa-industry', 'manufacturers') }}
+                            {{ _self.genButton(fsc, 'familias', i18n, 'fas fa-sitemap', 'families') }}
+                            {{ _self.genButton(fsc, 'productos', i18n, 'fas fa-cubes', 'products') }}
+                            {{ _self.genButton(fsc, 'agentes', i18n, 'fas fa-user-tie', 'agents') }}
+                            {{ _self.genButton(fsc, 'contactos', i18n, 'fas fa-users', 'contacts') }}
+                            {{ _self.genButton(fsc, 'users', i18n, 'fas fa-user-circle', 'users') }}
+                        </div>
+                        <h3 class="mt-4">{{ i18n.trans('purchases') }}</h3>
+                        <hr/>
+                        <div class="form-row">
+                            {{ _self.genButton(fsc, 'proveedores', i18n, 'fas fa-users', 'suppliers') }}
+                            {{ _self.genButton(fsc, 'presupuestosprov', i18n, 'fas fa-copy', 'estimations') }}
+                            {{ _self.genButton(fsc, 'pedidosprov', i18n, 'fas fa-copy', 'orders') }}
+                            {{ _self.genButton(fsc, 'albaranesprov', i18n, 'fas fa-copy', 'delivery-notes') }}
+                        </div>
+                        <h3 class="mt-4">{{ i18n.trans('sales') }}</h3>
+                        <hr/>
+                        <div class="form-row">
+                            {{ _self.genButton(fsc, 'grupos', i18n, 'fas fa-users-cog', 'customer-groups') }}
+                            {{ _self.genButton(fsc, 'clientes', i18n, 'fas fa-users', 'customers') }}
+                            {{ _self.genButton(fsc, 'presupuestoscli', i18n, 'fas fa-copy', 'estimations') }}
+                            {{ _self.genButton(fsc, 'pedidoscli', i18n, 'fas fa-copy', 'orders') }}
+                            {{ _self.genButton(fsc, 'albaranescli', i18n, 'fas fa-copy', 'delivery-notes') }}
+                        </div>
+                        <h3 class="mt-4">{{ i18n.trans('plugins') }}</h3>
+                        <hr/>
+                        <div class="form-row">
+                            {{ _self.genButton(fsc, 'proyectos', i18n, 'fab fa-stack-overflow', 'projects') }}
+                            {{ _self.genButton(fsc, 'servicios', i18n, 'fas fa-headset', 'services') }}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -172,3 +60,14 @@
         }
     </style>
 {% endblock %}
+
+{% macro genButton(fsc, gen, i18n, icon, label) %}
+    <div class="col-sm-4">
+        <a href="{{ fsc.url() }}?gen={{ gen }}" class="btn btn-block btn-outline-success mb-3">
+            <i class="{{ icon }}" aria-hidden="true"></i>&nbsp; {{ i18n.trans(label) }}
+            {% if fsc.totalCounter[gen] > 0 %}
+                <span class="badge badge-success">{{ fsc.totalCounter[gen] }}</span>
+            {% endif %}
+        </a>
+    </div>
+{% endmacro %}

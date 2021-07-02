@@ -1,7 +1,7 @@
 <?php
 /**
  * This file is part of Randomizer plugin for FacturaScripts
- * Copyright (C) 2016-2018 Carlos Garcia Gomez <carlos@facturascripts.com>
+ * Copyright (C) 2021 Carlos Garcia Gomez <carlos@facturascripts.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as
@@ -16,34 +16,34 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace FacturaScripts\Plugins\Randomizer\Lib\RandomDataGenerator;
+namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
-use FacturaScripts\Dinamic\Model\Ejercicio;
+use Faker;
 
 /**
- * Abstract class that contains the methods that generate random data 
- * for accounting.
+ * Description of Proyectos
  *
- * @author Rafael San José      <info@rsanjoseo.com>
- * @author Carlos García Gómez  <carlos@facturascripts.com>
+ * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-abstract class AbstractRandomAccounting extends AbstractRandom
+class Proyectos extends NewItems
 {
 
     /**
-     * List of exercices.
+     * 
+     * @param int $number
      *
-     * @var Ejercicio[]
+     * @return int
      */
-    protected $ejercicios;
-
-    /**
-     * AbstractRandomAccounting constructor.
-     */
-    public function __construct()
+    public static function create(int $number = 50): int
     {
-        parent::__construct();
-        $ejercicios = new Ejercicio();
-        $this->ejercicios = $ejercicios->all();
+        $faker = Faker\Factory::create('es_ES');
+
+        for ($generated = 0; $generated < $number; $generated++) {
+            /// TODO: generar el proyecto
+            /// TODO: generar tareas para el proyecto
+            /// TODO: vincular albaranes, facturas, pedidos y presupuestos con el proyecto
+        }
+
+        return $generated;
     }
 }

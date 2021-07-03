@@ -19,6 +19,7 @@
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
 use FacturaScripts\Dinamic\Model\User;
+use FacturaScripts\Dinamic\Model\Role;
 use Faker;
 
 /**
@@ -30,7 +31,13 @@ class Usuarios extends NewItems
 {
 
     /**
-     * 
+     *
+     * @var Role[]
+     */
+    private $roles = [];
+
+    /**
+     *
      * @param int $number
      *
      * @return int
@@ -38,23 +45,27 @@ class Usuarios extends NewItems
     public static function create(int $number = 50): int
     {
         $faker = Faker\Factory::create('es_ES');
+        $this->roles = $this->loadRoles();
 
         for ($generated = 0; $generated < $number; $generated++) {
             $user = new User();
+            $user->nick = $faker->email;
+            if ($user->exists()) {
+                continue;
+            }
+
             $user->admin = $faker->boolean(5);
             $user->codagente = static::codagente();
             $user->codalmacen = static::codalmacen();
             $user->creationdate = $faker->date();
-            $user->email = $user->nick = $faker->email;
+            $user->email = $user->nick;
             $user->enabled = $faker->boolean(90);
             $user->lastactivity = $faker->date();
             $user->lastip = $faker->optional()->ipv4;
             $user->newPassword = $user->newPassword2 = $faker->password();
-            
-            /// TODO: asignar un rol, si no es administrador
 
-            if ($user->exists()) {
-                continue;
+            if (false == $user->admin) {
+                $this->setRol($user);
             }
 
             if (false === $user->save()) {
@@ -63,5 +74,29 @@ class Usuarios extends NewItems
         }
 
         return $generated;
+    }
+
+    /**
+     *
+     * @return Role[]
+     */
+    private function loadRoles()
+    {
+        $roleModel = new Role();
+        return $roleModel->all();
+    }
+
+    private function setRol(&$user)
+    {
+        if (empty($this->roles)) {
+            return;
+        }
+
+        shuffle($this->roles);
+
+        $roleUser = new RoleUser();
+        $roleUser->codrole = $this->roles[0]->codrole;
+        $roleUser->nick = $user->nick;
+        $roleUser->save();
     }
 }

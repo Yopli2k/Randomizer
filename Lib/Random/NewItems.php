@@ -40,7 +40,73 @@ abstract class NewItems
 {
 
     /**
-     * 
+     *
+     * @var Agente[]
+     */
+    private static $agents = null;
+
+    /**
+     *
+     * @var Pais[]
+     */
+    private static $countries = null;
+
+    /**
+     *
+     * @var Cliente[]
+     */
+    private static $customers = null;
+
+    /**
+     *
+     * @var GrupoClientes[]
+     */
+    private static $customerGroups = null;
+
+    /**
+     *
+     * @var Familia[]
+     */
+    private static $families = null;
+
+    /**
+     *
+     * @var Fabricante[]
+     */
+    private static $manufacturers = null;
+
+    /**
+     *
+     * @var FormaPago[]
+     */
+    private static $payments = null;
+
+    /**
+     *
+     * @var Serie[]
+     */
+    private static $series = null;
+
+    /**
+     *
+     * @var Proveedor[]
+     */
+    private static $suppliers = null;
+
+    /**
+     *
+     * @var Impuesto[]
+     */
+    private static $taxes = null;
+
+    /**
+     *
+     * @var Almacen[]
+     */
+    private static $warehouses = null;
+
+    /**
+     *
      * @param int $number
      *
      * @return int
@@ -48,7 +114,7 @@ abstract class NewItems
     abstract public static function create(int $number = 50): int;
 
     /**
-     * 
+     *
      * @return float
      */
     protected static function cantidad()
@@ -74,7 +140,7 @@ abstract class NewItems
     }
 
     /**
-     * 
+     *
      * @return string
      */
     protected static function cifnif(): string
@@ -105,22 +171,22 @@ abstract class NewItems
     }
 
     /**
-     * 
+     *
      * @return Cliente
      */
     protected static function cliente()
     {
-        $cliente = new Cliente();
-        $list = $cliente->all();
-        \shuffle($list);
+        if (null === static::$customers) {
+            $customer = new Cliente();
+            static::$customers = $customer->all();
+        }
 
-        /// TODO: usar una variable private static para la lista, así solamente hay que consultar a la base de datos una vez
-
-        return empty($list) ? new Cliente() : $list[0];
+        \shuffle(static::$customers);
+        return empty(static::$customers) ? new Cliente() : static::$customers[0];
     }
 
     /**
-     * 
+     *
      * @param int    $maxlen
      * @param string $use
      *
@@ -145,7 +211,7 @@ abstract class NewItems
     }
 
     /**
-     * 
+     *
      * @param int    $maxlen
      * @param string $use
      *
@@ -164,142 +230,142 @@ abstract class NewItems
     }
 
     /**
-     * 
+     *
      * @return string
      */
     protected static function codagente()
     {
-        $agente = new Agente();
-        $list = $agente->all();
-        \shuffle($list);
+        if (null === static::$agents) {
+            $agent = new Agente();
+            static::$agents = $agent->all();
+        }
 
-        /// TODO: usar una variable private static para la lista, así solamente hay que consultar a la base de datos una vez
-
-        return empty($list) || \mt_rand(0, 3) === 0 ? null : $list[0]->codagente;
+        \shuffle(static::$agents);
+        return empty(static::$agents) || \mt_rand(0, 3) === 0 ? null : static::$agents[0]->codagente;
     }
 
     /**
-     * 
+     *
      * @return string
      */
     protected static function codalmacen()
     {
-        $almacen = new Almacen();
-        $list = $almacen->all();
-        \shuffle($list);
+        if (null === static::$warehouses) {
+            $warehouse = new Almacen();
+            static::$warehouses = $warehouse->all();
+        }
 
-        /// TODO: usar una variable private static para la lista, así solamente hay que consultar a la base de datos una vez
-
-        return \mt_rand(0, 2) === 0 ? $list[0]->codalmacen : AppSettings::get('default', 'codalmacen');
+        \shuffle(static::$warehouses);
+        return \mt_rand(0, 2) === 0 ? static::$warehouses[0]->codalmacen : AppSettings::get('default', 'codalmacen');
     }
 
     /**
-     * 
+     *
      * @return string
      */
     protected static function codfabricante()
     {
-        $fabricante = new Fabricante();
-        $list = $fabricante->all();
-        \shuffle($list);
+        if (null === static::$manufacturers) {
+            $manufacturer = new Fabricante();
+            static::$manufacturers = $manufacturer->all();
+        }
 
-        /// TODO: usar una variable private static para la lista, así solamente hay que consultar a la base de datos una vez
-
-        return empty($list) || \mt_rand(0, 3) === 0 ? null : $list[0]->codfabricante;
+        \shuffle(static::$manufacturers);
+        return empty(static::$manufacturers) || \mt_rand(0, 3) === 0 ? null : static::$manufacturers[0]->codfabricante;
     }
 
     /**
-     * 
+     *
      * @return string
      */
     protected static function codfamilia()
     {
-        $familia = new Familia();
-        $list = $familia->all();
-        \shuffle($list);
+        if (null === static::$families) {
+            $family = new Familia();
+            static::$families = $family->all();
+        }
 
-        /// TODO: usar una variable private static para la lista, así solamente hay que consultar a la base de datos una vez
-
-        return empty($list) || \mt_rand(0, 3) === 0 ? null : $list[0]->codfamilia;
+        \shuffle(static::$families);
+        return empty(static::$families) || \mt_rand(0, 3) === 0 ? null : static::$families[0]->codfamilia;
     }
 
     /**
-     * 
+     *
      * @return string
      */
     protected static function codgrupo()
     {
-        $grupo = new GrupoClientes();
-        $list = $grupo->all();
-        \shuffle($list);
+        if (null === static::$customerGroups) {
+            $customerGroup = new GrupoClientes();
+            static::$customerGroups = $customerGroup->all();
+        }
 
-        /// TODO: usar una variable private static para la lista, así solamente hay que consultar a la base de datos una vez
-
-        return empty($list) || \mt_rand(0, 2) === 0 ? null : $list[0]->codgrupo;
+        \shuffle(static::$customerGroups);
+        return empty(static::$customerGroups) || \mt_rand(0, 2) === 0 ? null : static::$customerGroups[0]->codgrupo;
     }
 
     /**
-     * 
+     *
      * @return string
      */
     protected static function codimpuesto()
     {
-        $impuesto = new Impuesto();
-        $list = $impuesto->all();
-        \shuffle($list);
+        if (null === static::$taxes) {
+            $tax = new Impuesto();
+            static::$taxes = $tax->all();
+        }
 
-        /// TODO: usar una variable private static para la lista, así solamente hay que consultar a la base de datos una vez
-
-        return \mt_rand(0, 2) === 0 ? $list[0]->codimpuesto : AppSettings::get('default', 'codimpuesto');
+        \shuffle(static::$taxes);
+        return \mt_rand(0, 2) === 0 ? static::$taxes[0]->codimpuesto : AppSettings::get('default', 'codimpuesto');
     }
 
     /**
-     * 
+     *
      * @return string
      */
     protected static function codpais()
     {
-        $pais = new Pais();
-        $list = $pais->all();
-        \shuffle($list);
+        if (null === static::$countries) {
+            $country = new Pais();
+            static::$countries = $country->all();
+        }
 
-        /// TODO: usar una variable private static para la lista, así solamente hay que consultar a la base de datos una vez
-
-        return \mt_rand(0, 3) === 0 ? $list[0]->codpais : AppSettings::get('default', 'codpais');
+        \shuffle(static::$countries);
+        return \mt_rand(0, 3) === 0 ? static::$countries[0]->codpais : AppSettings::get('default', 'codpais');
     }
 
     /**
-     * 
+     *
      * @return string
      */
     protected static function codpago()
     {
-        $formaPago = new FormaPago();
-        $list = $formaPago->all();
-        \shuffle($list);
+        if (null === static::$payments) {
+            $payment = new FormaPago();
+            static::$payments = $payment->all();
+        }
 
-        /// TODO: usar una variable private static para la lista, así solamente hay que consultar a la base de datos una vez
-
-        return \mt_rand(0, 1) === 0 ? $list[0]->codpago : AppSettings::get('default', 'codpago');
+        \shuffle(static::$payments);
+        return \mt_rand(0, 1) === 0 ? static::$payments[0]->codpago : AppSettings::get('default', 'codpago');
     }
 
     /**
-     * 
+     *
      * @return string
      */
     protected static function codserie()
     {
-        $serie = new Serie();
-        $list = $serie->all();
-        \shuffle($list);
+        if (null === static::$series) {
+            $serie = new Serie();
+            static::$series = $serie->all();
+        }
 
-        /// TODO: usar una variable private static para la lista, así solamente hay que consultar a la base de datos una vez
-
-        return \mt_rand(0, 1) === 0 ? $list[0]->codserie : AppSettings::get('default', 'codserie');
+        \shuffle(static::$series);
+        return \mt_rand(0, 1) === 0 ? static::$series[0]->codserie : AppSettings::get('default', 'codserie');
     }
 
     /**
-     * 
+     *
      * @return string
      */
     protected static function fecha(): string
@@ -309,7 +375,7 @@ abstract class NewItems
     }
 
     /**
-     * 
+     *
      * @return string
      */
     protected static function fechaHora(): string
@@ -319,7 +385,7 @@ abstract class NewItems
     }
 
     /**
-     * 
+     *
      * @return string
      */
     protected static function hora(): string
@@ -329,17 +395,17 @@ abstract class NewItems
     }
 
     /**
-     * 
+     *
      * @return Proveedor
      */
     protected static function proveedor()
     {
-        $proveedor = new Proveedor();
-        $list = $proveedor->all();
-        \shuffle($list);
+        if (null === static::$suppliers) {
+            $supplier = new Proveedor();
+            static::$suppliers = $supplier->all();
+        }
 
-        /// TODO: usar una variable private static para la lista, así solamente hay que consultar a la base de datos una vez
-
-        return empty($list) ? new Proveedor() : $list[0];
+        \shuffle(static::$suppliers);
+        return empty(static::$suppliers) ? new Proveedor() : static::$suppliers[0];
     }
 }

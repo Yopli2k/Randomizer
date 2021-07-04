@@ -19,6 +19,7 @@
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
 use FacturaScripts\Dinamic\Model\AlbaranProveedor;
+use FacturaScripts\Plugins\Randomizer\Lib\Random\BusinessDocumentTrait;
 use Faker;
 
 /**
@@ -29,8 +30,10 @@ use Faker;
 class AlbaranesProveedores extends NewItems
 {
 
+    use BusinessDocumentTrait;
+
     /**
-     * 
+     *
      * @param int $number
      *
      * @return int
@@ -59,8 +62,9 @@ class AlbaranesProveedores extends NewItems
                 var_dump($doc);
                 break;
             }
-            
-            /// TODO: crear líneas y recalcular totales
+
+            static::createLines($faker, $doc, $faker->numberBetween(1, 9));
+            static::recalculate($doc);
         }
 
         return $generated;

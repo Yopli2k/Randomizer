@@ -30,6 +30,7 @@ use FacturaScripts\Dinamic\Model\Impuesto;
 use FacturaScripts\Dinamic\Model\Pais;
 use FacturaScripts\Dinamic\Model\Proveedor;
 use FacturaScripts\Dinamic\Model\Serie;
+use FacturaScripts\Dinamic\Model\Variante;
 
 /**
  * Description of NewItems
@@ -80,6 +81,12 @@ abstract class NewItems
      * @var FormaPago[]
      */
     private static $payments = null;
+
+    /**
+     *
+     * @var Variante[]
+     */
+    private static $references = null;
 
     /**
      *
@@ -407,5 +414,20 @@ abstract class NewItems
 
         \shuffle(static::$suppliers);
         return empty(static::$suppliers) ? new Proveedor() : static::$suppliers[0];
+    }
+
+    /**
+     *
+     * @return string
+     */
+    protected static function referencia()
+    {
+        if (null === static::$references) {
+            $reference = new Variante();
+            static::$references = $reference->all();
+        }
+
+        \shuffle(static::$references);
+        return empty(static::$references) || \mt_rand(0, 2) === 0 ? null : static::$references[0]->referencia;
     }
 }

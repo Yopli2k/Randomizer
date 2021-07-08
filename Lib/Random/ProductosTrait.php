@@ -29,6 +29,7 @@ use FacturaScripts\Dinamic\Model\Variante;
  * Set of methods for obtaining data derived from products
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
+ * @author Jose Antonio Cuello  <yopli2000@gmail.com>
  */
 trait ProductosTrait
 {

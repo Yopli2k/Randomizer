@@ -90,6 +90,9 @@ class Randomizer extends Base\Controller
             case 'albaranesprov':
                 return $this->generateAction('generated-supplier-delivery-notes', Random\AlbaranesProveedores::create());
 
+            case 'atributos':
+                return $this->generateAction('generated-attributes', Random\Atributos::create());
+
             case 'clientes':
                 return $this->generateAction('generated-customers', Random\Clientes::create());
 
@@ -115,7 +118,7 @@ class Randomizer extends Base\Controller
                 return $this->generateAction('generated-customer-estimations', Random\PresupuestosClientes::create());
 
             case 'presupuestosprov':
-                return $this->generateAction('generated-supplier-estimations', Random\PresupuestoProveedores::create());
+                return $this->generateAction('generated-supplier-estimations', Random\PresupuestosProveedores::create());
 
             case 'productos':
                 return $this->generateAction('generated-products', Random\Productos::create());
@@ -132,12 +135,13 @@ class Randomizer extends Base\Controller
             case 'users':
                 return $this->generateAction('generated-users', Random\Usuarios::create());
         }
-        
+
         /// TODO: crear atributos y valores, comisiones, tarifas, transportistas, empresas y almacenes
+        return $this->pipe('execAction');
     }
 
     /**
-     * 
+     *
      * @param string $label
      * @param int    $number
      */
@@ -145,6 +149,7 @@ class Randomizer extends Base\Controller
     {
         $this->toolBox()->i18nLog()->notice($label, ['%quantity%' => $number]);
         $this->toolBox()->i18nLog()->notice('randomizer-generating-more-items');
+        return true;
     }
 
     /**
@@ -157,6 +162,7 @@ class Randomizer extends Base\Controller
             'albaranescli' => 'FacturaScripts\\Dinamic\\Model\\AlbaranCliente',
             'albaranesprov' => 'FacturaScripts\\Dinamic\\Model\\AlbaranProveedor',
             'asientos' => 'FacturaScripts\\Dinamic\\Model\\Asiento',
+            'atributos' => 'FacturaScripts\\Dinamic\\Model\\Atributo',
             'clientes' => 'FacturaScripts\\Dinamic\\Model\\Cliente',
             'contactos' => 'FacturaScripts\\Dinamic\\Model\\Contacto',
             'cuentas' => 'FacturaScripts\\Dinamic\\Model\\Cuenta',

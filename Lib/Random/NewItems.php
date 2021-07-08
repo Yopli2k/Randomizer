@@ -19,18 +19,11 @@
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
 use FacturaScripts\Core\App\AppSettings;
-use FacturaScripts\Dinamic\Model\Agente;
-use FacturaScripts\Dinamic\Model\Almacen;
-use FacturaScripts\Dinamic\Model\Cliente;
-use FacturaScripts\Dinamic\Model\Fabricante;
-use FacturaScripts\Dinamic\Model\Familia;
 use FacturaScripts\Dinamic\Model\FormaPago;
-use FacturaScripts\Dinamic\Model\GrupoClientes;
 use FacturaScripts\Dinamic\Model\Impuesto;
 use FacturaScripts\Dinamic\Model\Pais;
-use FacturaScripts\Dinamic\Model\Proveedor;
+use FacturaScripts\Dinamic\Model\Retencion;
 use FacturaScripts\Dinamic\Model\Serie;
-use FacturaScripts\Dinamic\Model\Variante;
 
 /**
  * Description of NewItems
@@ -40,11 +33,8 @@ use FacturaScripts\Dinamic\Model\Variante;
 abstract class NewItems
 {
 
-    /**
-     *
-     * @var Agente[]
-     */
-    private static $agents = null;
+    use ComercialContactTrait;
+    use ProductosTrait;
 
     /**
      *
@@ -54,39 +44,15 @@ abstract class NewItems
 
     /**
      *
-     * @var Cliente[]
-     */
-    private static $customers = null;
-
-    /**
-     *
-     * @var GrupoClientes[]
-     */
-    private static $customerGroups = null;
-
-    /**
-     *
-     * @var Familia[]
-     */
-    private static $families = null;
-
-    /**
-     *
-     * @var Fabricante[]
-     */
-    private static $manufacturers = null;
-
-    /**
-     *
      * @var FormaPago[]
      */
     private static $payments = null;
 
     /**
      *
-     * @var Variante[]
+     * @var Retencion[]
      */
-    private static $references = null;
+    private static $retentions = null;
 
     /**
      *
@@ -96,21 +62,9 @@ abstract class NewItems
 
     /**
      *
-     * @var Proveedor[]
-     */
-    private static $suppliers = null;
-
-    /**
-     *
      * @var Impuesto[]
      */
     private static $taxes = null;
-
-    /**
-     *
-     * @var Almacen[]
-     */
-    private static $warehouses = null;
 
     /**
      *
@@ -179,21 +133,6 @@ abstract class NewItems
 
     /**
      *
-     * @return Cliente
-     */
-    protected static function cliente()
-    {
-        if (null === static::$customers) {
-            $customer = new Cliente();
-            static::$customers = $customer->all();
-        }
-
-        \shuffle(static::$customers);
-        return empty(static::$customers) ? new Cliente() : static::$customers[0];
-    }
-
-    /**
-     *
      * @param int    $maxlen
      * @param string $use
      *
@@ -234,81 +173,6 @@ abstract class NewItems
             default:
                 return null;
         }
-    }
-
-    /**
-     *
-     * @return string
-     */
-    protected static function codagente()
-    {
-        if (null === static::$agents) {
-            $agent = new Agente();
-            static::$agents = $agent->all();
-        }
-
-        \shuffle(static::$agents);
-        return empty(static::$agents) || \mt_rand(0, 3) === 0 ? null : static::$agents[0]->codagente;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    protected static function codalmacen()
-    {
-        if (null === static::$warehouses) {
-            $warehouse = new Almacen();
-            static::$warehouses = $warehouse->all();
-        }
-
-        \shuffle(static::$warehouses);
-        return \mt_rand(0, 2) === 0 ? static::$warehouses[0]->codalmacen : AppSettings::get('default', 'codalmacen');
-    }
-
-    /**
-     *
-     * @return string
-     */
-    protected static function codfabricante()
-    {
-        if (null === static::$manufacturers) {
-            $manufacturer = new Fabricante();
-            static::$manufacturers = $manufacturer->all();
-        }
-
-        \shuffle(static::$manufacturers);
-        return empty(static::$manufacturers) || \mt_rand(0, 3) === 0 ? null : static::$manufacturers[0]->codfabricante;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    protected static function codfamilia()
-    {
-        if (null === static::$families) {
-            $family = new Familia();
-            static::$families = $family->all();
-        }
-
-        \shuffle(static::$families);
-        return empty(static::$families) || \mt_rand(0, 3) === 0 ? null : static::$families[0]->codfamilia;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    protected static function codgrupo()
-    {
-        if (null === static::$customerGroups) {
-            $customerGroup = new GrupoClientes();
-            static::$customerGroups = $customerGroup->all();
-        }
-
-        \shuffle(static::$customerGroups);
-        return empty(static::$customerGroups) || \mt_rand(0, 2) === 0 ? null : static::$customerGroups[0]->codgrupo;
     }
 
     /**
@@ -360,6 +224,21 @@ abstract class NewItems
      *
      * @return string
      */
+    protected static function codretencion()
+    {
+        if (null === static::$retentions) {
+            $retention = new Retencion();
+            static::$retentions = $retention->all();
+        }
+
+        \shuffle(static::$retentions);
+        return \mt_rand(0, 2) === 0 ? static::$retentions[0]->codretencion : AppSettings::get('default', 'codretencion');
+    }
+    
+    /**
+     *
+     * @return string
+     */
     protected static function codserie()
     {
         if (null === static::$series) {
@@ -378,7 +257,7 @@ abstract class NewItems
     protected static function fecha(): string
     {
         $days = \mt_rand(0, 1999);
-        return \date(Agente::DATE_STYLE, \strtotime('-' . $days . ' days'));
+        return \date(Serie::DATE_STYLE, \strtotime('-' . $days . ' days'));
     }
 
     /**
@@ -388,7 +267,7 @@ abstract class NewItems
     protected static function fechaHora(): string
     {
         $days = \mt_rand(0, 1999);
-        return \date(Agente::DATETIME_STYLE, \strtotime('-' . $days . ' days'));
+        return \date(Serie::DATETIME_STYLE, \strtotime('-' . $days . ' days'));
     }
 
     /**
@@ -398,36 +277,6 @@ abstract class NewItems
     protected static function hora(): string
     {
         $minutes = \mt_rand(0, 1429);
-        return \date(Agente::HOUR_STYLE, \strtotime('-' . $minutes . ' minutes'));
-    }
-
-    /**
-     *
-     * @return Proveedor
-     */
-    protected static function proveedor()
-    {
-        if (null === static::$suppliers) {
-            $supplier = new Proveedor();
-            static::$suppliers = $supplier->all();
-        }
-
-        \shuffle(static::$suppliers);
-        return empty(static::$suppliers) ? new Proveedor() : static::$suppliers[0];
-    }
-
-    /**
-     *
-     * @return string
-     */
-    protected static function referencia()
-    {
-        if (null === static::$references) {
-            $reference = new Variante();
-            static::$references = $reference->all();
-        }
-
-        \shuffle(static::$references);
-        return empty(static::$references) || \mt_rand(0, 2) === 0 ? null : static::$references[0]->referencia;
+        return \date(Serie::HOUR_STYLE, \strtotime('-' . $minutes . ' minutes'));
     }
 }

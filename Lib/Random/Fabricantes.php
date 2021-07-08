@@ -30,7 +30,7 @@ class Fabricantes extends NewItems
 {
 
     /**
-     * 
+     *
      * @param int $number
      *
      * @return int
@@ -51,8 +51,6 @@ class Fabricantes extends NewItems
             if (false === $fabricante->save()) {
                 break;
             }
-            
-            /// TODO: crear líneas y recalcular totales
         }
 
         return $generated;

@@ -23,11 +23,11 @@ use FacturaScripts\Plugins\Randomizer\Lib\Random\BusinessDocumentTrait;
 use Faker;
 
 /**
- * Description of PresupuestoProveedores
+ * Description of PresupuestosProveedores
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class PresupuestoProveedores extends NewItems
+class PresupuestosProveedores extends NewItems
 {
 
     use BusinessDocumentTrait;

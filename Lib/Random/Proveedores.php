@@ -30,7 +30,7 @@ class Proveedores extends NewItems
 {
 
     /**
-     * 
+     *
      * @param int $number
      *
      * @return int
@@ -43,6 +43,9 @@ class Proveedores extends NewItems
             $proveedor = new Proveedor();
             $proveedor->acreedor = $faker->boolean();
             $proveedor->cifnif = static::cifnif();
+            $proveedor->codpago = static::codpago();
+            $proveedor->codretencion = static::codretencion();
+            $proveedor->codserie = static::codserie();
             $proveedor->email = $faker->optional()->email;
             $proveedor->fax = $faker->optional(0.1)->phoneNumber;
             $proveedor->fechaalta = $faker->date();
@@ -51,11 +54,10 @@ class Proveedores extends NewItems
             $proveedor->observaciones = $faker->optional()->paragraph();
             $proveedor->personafisica = $faker->boolean();
             $proveedor->razonsocial = $faker->optional()->company;
+            $proveedor->regimeniva = static::regimenIVA();
             $proveedor->telefono1 = $faker->optional()->phoneNumber;
             $proveedor->telefono2 = $faker->optional()->phoneNumber;
             $proveedor->web = $faker->optional()->url;
-
-            /// TODO: seleccionar una serie, forma de pago, retención y régimen
 
             if ($proveedor->exists()) {
                 continue;

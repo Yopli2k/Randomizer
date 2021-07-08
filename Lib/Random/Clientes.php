@@ -30,7 +30,7 @@ class Clientes extends NewItems
 {
 
     /**
-     * 
+     *
      * @param int $number
      *
      * @return int
@@ -44,6 +44,9 @@ class Clientes extends NewItems
             $cliente->cifnif = static::cifnif();
             $cliente->codagente = static::codagente();
             $cliente->codgrupo = static::codgrupo();
+            $cliente->codpago = static::codpago();
+            $cliente->codretencion = static::codretencion();
+            $cliente->codserie = static::codserie();
             $cliente->email = $faker->optional()->email;
             $cliente->fax = $faker->optional(0.1)->phoneNumber;
             $cliente->fechaalta = $faker->date();
@@ -52,11 +55,10 @@ class Clientes extends NewItems
             $cliente->observaciones = $faker->optional()->paragraph();
             $cliente->personafisica = $faker->boolean();
             $cliente->razonsocial = $faker->optional()->company;
+            $cliente->regimeniva = static::regimenIVA();
             $cliente->telefono1 = $faker->optional()->phoneNumber;
             $cliente->telefono2 = $faker->optional()->phoneNumber;
             $cliente->web = $faker->optional()->url;
-
-            /// TODO: seleccionar una serie, forma de pago, retención y régimen
 
             if ($cliente->exists()) {
                 continue;

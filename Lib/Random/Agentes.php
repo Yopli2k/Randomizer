@@ -61,7 +61,7 @@ class Agentes extends NewItems
                 break;
             }
 
-            $this->setContact($faker, $agente);
+            $static::setContact($faker, $agente);
         }
 
         return $generated;
@@ -74,7 +74,7 @@ class Agentes extends NewItems
      *
      * @param Agente $agent
      */
-    private function setContact(&$faker, &$agent)
+    private static function setContact(&$faker, &$agent)
     {
         $contact = $agent->getContact();
         $contact->apartado = $faker->optional(0.1)->postcode;

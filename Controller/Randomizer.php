@@ -126,7 +126,7 @@ class Randomizer extends Base\Controller
             }
         }
 
-        /// TODO: crear almacenes, comisiones, tarifas, transportistas, empresas
+        /// TODO: crear comisiones, tarifas,
         return $this->pipe('execAction');
     }
 
@@ -164,7 +164,9 @@ class Randomizer extends Base\Controller
      */
     private function loadButtons()
     {
+        $this->addButton('', 'empresas', 'generated-companies', 'companies', 'fas fa-building', 'Random\\Empresas', 'Empresa');
         $this->addButton('', 'almacenes', 'generated-warehouses', 'warehouses', 'fas fa-warehouse', 'Random\\Almacenes', 'Almacen');
+        $this->addButton('', 'transportistas', 'generated-carriers', 'carriers', 'fas fa-truck', 'Random\\AgenciasTransportes', 'AgenciaTransporte');
         $this->addButton('', 'fabricantes', 'generated-manufacturers', 'manufacturers', 'fas fa-industry', 'Random\\Fabricantes', 'Fabricante');
         $this->addButton('', 'familias', 'generated-families', 'families', 'fas fa-sitemap', 'Random\\Familias', 'Familia');
         $this->addButton('', 'atributos', 'generated-attributes', 'attributes', 'fas fa-tshirt', 'Random\\Atributos', 'Atributo');

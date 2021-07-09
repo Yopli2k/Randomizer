@@ -61,7 +61,7 @@ class Agentes extends NewItems
                 break;
             }
 
-            $static::setContact($faker, $agente);
+            static::setContact($faker, $agente);
         }
 
         return $generated;

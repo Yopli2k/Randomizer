@@ -88,7 +88,7 @@ class Clientes extends NewItems
         $max = $faker->numberBetween(1, 5);
         for ($index = 1; $index <= $max; $index++) {
             $bank = new CuentaBancoCliente();
-            $bank->descripcion = $faker->text;
+            $bank->descripcion = \implode(' ', $faker->words);
             $bank->iban = $faker->iban('ES');
             $bank->swift = $faker->swiftBicNumber;
             $bank->codcliente = $customer;

@@ -34,7 +34,7 @@ class GruposClientes extends NewItems
      *
      * @var Tarifa[]
      */
-    private $rates = [];
+    private static $rates = [];
 
     /**
      *
@@ -45,7 +45,9 @@ class GruposClientes extends NewItems
     public static function create(int $number = 50): int
     {
         $faker = Faker\Factory::create('es_ES');
-        $this->rates = $this->loadRates();
+        if (null === static::$rates) {
+            static::$rates = static::allRates();
+        }
 
         for ($generated = 0; $generated < $number; $generated++) {
             $grupo = new GrupoClientes();
@@ -55,7 +57,7 @@ class GruposClientes extends NewItems
             }
 
             $grupo->nombre = $faker->word();
-            $this->setRate($grupo);
+            static::setRate($grupo);
 
             if (false === $grupo->save()) {
                 break;
@@ -65,7 +67,7 @@ class GruposClientes extends NewItems
         return $generated;
     }
 
-    private function loadRates()
+    private static function allRates()
     {
         $rateModel = new Tarifa();
         return $rateModel->all();
@@ -75,13 +77,13 @@ class GruposClientes extends NewItems
      *
      * @param GrupoClientes $group
      */
-    private function setRate(&$group)
+    private static function setRate(&$group)
     {
-        if (empty($this->rates)) {
+        if (empty(static::$rates)) {
             return;
         }
 
-        shuffle($this->rates);
-        $group->codtarifa = $this->rates[0]->codtarifa;
+        shuffle(static::$rates);
+        $group->codtarifa = static::$rates[0]->codtarifa;
     }
 }

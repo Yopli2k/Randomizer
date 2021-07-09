@@ -19,6 +19,7 @@
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
 use FacturaScripts\Dinamic\Model\CuentaBancoProveedor;
+use FacturaScripts\Dinamic\Model\Contacto;
 use FacturaScripts\Dinamic\Model\Proveedor;
 use FacturaScripts\Plugins\Randomizer\Lib\Random\Contactos;
 use Faker;
@@ -86,7 +87,7 @@ class Proveedores extends NewItems
         $max = $faker->numberBetween(1, 5);
         for ($index = 1; $index <= $max; $index++) {
             $bank = new CuentaBancoProveedor();
-            $bank->descripcion = $faker->text;
+            $bank->descripcion = \implode(' ', $faker->words);
             $bank->iban = $faker->iban('ES');
             $bank->swift = $faker->swiftBicNumber;
             $bank->codproveedor = $supplier;

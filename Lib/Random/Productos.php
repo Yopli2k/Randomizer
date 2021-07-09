@@ -67,7 +67,7 @@ class Productos extends NewItems
                 $max--;
             }
 
-            $product->loadFromCode($producto->idproducto);
+            $product->loadFromCode($product->idproducto);
             $product->actualizado = $faker->dateTime();
             $product->save();
         }

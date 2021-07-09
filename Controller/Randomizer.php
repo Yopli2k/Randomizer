@@ -40,6 +40,44 @@ class Randomizer extends Base\Controller
     public $totalCounter = [];
 
     /**
+     *
+     * @var array
+     */
+    public $buttonList = [];
+
+    /**
+     *
+     * @var array
+     */
+    private $actionList = [];
+
+    /**
+     * Add a new button into group, for generate ramdom data.
+     *
+     * @param string $group
+     * @param string $action
+     * @param string $actionLabel
+     * @param string $buttonLabel
+     * @param string $buttonIcon
+     * @param string $randomClass
+     * @param string $modelClass
+     */
+    public function addButton($group, $action, $actionLabel, $buttonLabel, $buttonIcon, $randomClass, $modelClass)
+    {
+        $this->buttonList[$group][] = [
+            'action' => $action,
+            'label' => $buttonLabel,
+            'icon' => $buttonIcon,
+        ];
+
+        $this->actionList[$action] = [
+            'label' => $actionLabel,
+            'items' => 'FacturaScripts\\Dinamic\\Lib\\' . $randomClass,
+            'model' => 'FacturaScripts\\Dinamic\\Model\\' . $modelClass,
+        ];
+    }
+
+    /**
      * Returns basic page attributes
      *
      * @return array
@@ -64,6 +102,7 @@ class Randomizer extends Base\Controller
     {
         parent::privateCore($response, $user, $permissions);
 
+        $this->loadButtons();
         $option = $this->request->get('gen', '');
         if ($option !== '') {
             $this->execAction($option);
@@ -80,63 +119,14 @@ class Randomizer extends Base\Controller
      */
     private function execAction($option)
     {
-        switch ($option) {
-            case 'agentes':
-                return $this->generateAction('generated-agents', Random\Agentes::create());
-
-            case 'albaranescli':
-                return $this->generateAction('generated-customer-delivery-notes', Random\AlbaranesClientes::create());
-
-            case 'albaranesprov':
-                return $this->generateAction('generated-supplier-delivery-notes', Random\AlbaranesProveedores::create());
-
-            case 'atributos':
-                return $this->generateAction('generated-attributes', Random\Atributos::create());
-
-            case 'clientes':
-                return $this->generateAction('generated-customers', Random\Clientes::create());
-
-            case 'contactos':
-                return $this->generateAction('generated-contacts', Random\Contactos::create());
-
-            case 'fabricantes':
-                return $this->generateAction('generated-manufacturers', Random\Fabricantes::create());
-
-            case 'familias':
-                return $this->generateAction('generated-families', Random\Familias::create());
-
-            case 'grupos':
-                return $this->generateAction('generated-customer-groups', Random\GruposClientes::create());
-
-            case 'pedidoscli':
-                return $this->generateAction('generated-customer-orders', Random\PedidosClientes::create());
-
-            case 'pedidosprov':
-                return $this->generateAction('generated-supplier-orders', Random\PedidosProveedores::create());
-
-            case 'presupuestoscli':
-                return $this->generateAction('generated-customer-estimations', Random\PresupuestosClientes::create());
-
-            case 'presupuestosprov':
-                return $this->generateAction('generated-supplier-estimations', Random\PresupuestosProveedores::create());
-
-            case 'productos':
-                return $this->generateAction('generated-products', Random\Productos::create());
-
-            case 'proveedores':
-                return $this->generateAction('generated-supplier', Random\Proveedores::create());
-
-            case 'proyectos':
-                return $this->generateAction('generated-projects', Random\Proyectos::create());
-
-            case 'servicios':
-                return $this->generateAction('generated-services', Random\Servicios::create());
-
-            case 'users':
-                return $this->generateAction('generated-users', Random\Usuarios::create());
+        foreach ($this->actionList as $action => $values) {
+            if ($action == $option) {
+                $itemClass = $values['items'];
+                return $this->generateAction($values['label'], $itemClass::create());
+            }
         }
 
-        /// TODO: crear atributos y valores, comisiones, tarifas, transportistas, empresas y almacenes
+        /// TODO: crear almacenes, comisiones, tarifas, transportistas, empresas
         return $this->pipe('execAction');
     }
 
@@ -157,29 +147,8 @@ class Randomizer extends Base\Controller
      */
     private function getTotals()
     {
-        $models = [
-            'agentes' => 'FacturaScripts\\Dinamic\\Model\\Agente',
-            'albaranescli' => 'FacturaScripts\\Dinamic\\Model\\AlbaranCliente',
-            'albaranesprov' => 'FacturaScripts\\Dinamic\\Model\\AlbaranProveedor',
-            'asientos' => 'FacturaScripts\\Dinamic\\Model\\Asiento',
-            'atributos' => 'FacturaScripts\\Dinamic\\Model\\Atributo',
-            'clientes' => 'FacturaScripts\\Dinamic\\Model\\Cliente',
-            'contactos' => 'FacturaScripts\\Dinamic\\Model\\Contacto',
-            'cuentas' => 'FacturaScripts\\Dinamic\\Model\\Cuenta',
-            'fabricantes' => 'FacturaScripts\\Dinamic\\Model\\Fabricante',
-            'familias' => 'FacturaScripts\\Dinamic\\Model\\Familia',
-            'grupos' => 'FacturaScripts\\Dinamic\\Model\\GrupoClientes',
-            'pedidoscli' => 'FacturaScripts\\Dinamic\\Model\\PedidoCliente',
-            'pedidosprov' => 'FacturaScripts\\Dinamic\\Model\\PedidoProveedor',
-            'presupuestoscli' => 'FacturaScripts\\Dinamic\\Model\\PresupuestoCliente',
-            'presupuestosprov' => 'FacturaScripts\\Dinamic\\Model\\PresupuestoProveedor',
-            'productos' => 'FacturaScripts\\Dinamic\\Model\\Producto',
-            'proveedores' => 'FacturaScripts\\Dinamic\\Model\\Proveedor',
-            'subcuentas' => 'FacturaScripts\\Dinamic\\Model\\Subcuenta',
-            'users' => 'FacturaScripts\\Dinamic\\Model\\User'
-        ];
-
-        foreach ($models as $tag => $modelName) {
+        foreach ($this->actionList as $tag => $values) {
+            $modelName = $values['model'];
             if (false === \class_exists($modelName)) {
                 $this->totalCounter[$tag] = 0;
                 continue;
@@ -188,5 +157,33 @@ class Randomizer extends Base\Controller
             $model = new $modelName();
             $this->totalCounter[$tag] = $model->count();
         }
+    }
+
+    /**
+     *
+     */
+    private function loadButtons()
+    {
+        $this->addButton('', 'fabricantes', 'generated-manufacturers', 'manufacturers', 'fas fa-industry', 'Random\\Fabricantes', 'Fabricante');
+        $this->addButton('', 'familias', 'generated-families', 'families', 'fas fa-sitemap', 'Random\\Familias', 'Familia');
+        $this->addButton('', 'atributos', 'generated-attributes', 'attributes', 'fas fa-tshirt', 'Random\\Atributos', 'Atributo');
+        $this->addButton('', 'productos', 'generated-products', 'products', 'fas fa-cubes', 'Random\\Productos', 'Producto');
+        $this->addButton('', 'agentes', 'generated-agents', 'agents', 'fas fa-user-tie', 'Random\\Agentes', 'Agente');
+        $this->addButton('', 'contactos', 'generated-contacts', 'contacts', 'fas fa-users', 'Random\\Contactos', 'Contacto');
+        $this->addButton('', 'users', 'generated-users', 'users', 'fas fa-user-circle', 'Random\\Usuarios', 'User');
+
+        $this->addButton('purchases', 'proveedores', 'generated-supplier', 'suppliers', 'fas fa-users', 'Random\\Proveedores', 'Proveedor');
+        $this->addButton('purchases', 'presupuestosprov', 'generated-supplier-estimations', 'estimations', 'fas fa-copy', 'Random\\PresupuestosProveedores', 'PresupuestoProveedor');
+        $this->addButton('purchases', 'pedidosprov', 'generated-supplier-orders', 'orders', 'fas fa-copy', 'Random\\PedidosProveedores', 'PedidoProveedor');
+        $this->addButton('purchases', 'albaranesprov', 'generated-supplier-delivery-notes', 'delivery-notes', 'fas fa-copy', 'Random\\AlbaranesProveedores', 'AlbaranProveedor');
+
+        $this->addButton('sales', 'grupos', 'generated-customer-groups', 'customer-groups', 'fas fa-users-cog', 'Random\\GruposClientes', 'GrupoClientes');
+        $this->addButton('sales', 'clientes', 'generated-customers', 'customers', 'fas fa-users', 'Random\\Clientes', 'Cliente');
+        $this->addButton('sales', 'presupuestoscli', 'generated-customer-estimations', 'estimations', 'fas fa-copy', 'Random\\PresupuestosClientes', 'PresupuestoCliente');
+        $this->addButton('sales', 'pedidoscli', 'generated-customer-orders', 'orders', 'fas fa-copy', 'Random\\PedidosClientes', 'PedidoCliente');
+        $this->addButton('sales', 'albaranescli', 'generated-customer-delivery-notes', 'delivery-notes', 'fas fa-copy', 'Random\\AlbaranesClientes', 'AlbaranCliente');
+
+        $this->addButton('plugins', 'proyectos', 'generated-projects', 'projects', 'fab fa-stack-overflow', 'Random\\Proyectos', 'Proyecto');
+        $this->addButton('plugins', 'servicios', 'generated-services', 'services', 'fas fa-headset', 'Random\\Servicios', 'Servicio');
     }
 }

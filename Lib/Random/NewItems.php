@@ -19,6 +19,7 @@
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
 use FacturaScripts\Core\App\AppSettings;
+use FacturaScripts\Dinamic\Model\Empresa;
 use FacturaScripts\Dinamic\Model\FormaPago;
 use FacturaScripts\Dinamic\Model\Impuesto;
 use FacturaScripts\Dinamic\Model\Pais;
@@ -35,6 +36,12 @@ abstract class NewItems
 
     use ComercialContactTrait;
     use ProductosTrait;
+
+    /**
+     *
+     * @var Empresa[]
+     */
+    protected static $companies = null;
 
     /**
      *
@@ -248,6 +255,21 @@ abstract class NewItems
 
         \shuffle(static::$series);
         return \mt_rand(0, 1) === 0 ? static::$series[0]->codserie : AppSettings::get('default', 'codserie');
+    }
+
+    /**
+     *
+     * @return string
+     */
+    protected static function empresa()
+    {
+        if (null === static::$companies) {
+            $company = new Empresa();
+            static::$companies = $company->all();
+        }
+
+        \shuffle(static::$companies);
+        return \mt_rand(0, 2) === 0 ? static::$companies[0]->idempresa : AppSettings::get('default', 'idempresa');
     }
 
     /**

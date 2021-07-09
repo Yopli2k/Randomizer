@@ -164,6 +164,7 @@ class Randomizer extends Base\Controller
      */
     private function loadButtons()
     {
+        $this->addButton('', 'almacenes', 'generated-warehouses', 'warehouses', 'fas fa-warehouse', 'Random\\Almacenes', 'Almacen');
         $this->addButton('', 'fabricantes', 'generated-manufacturers', 'manufacturers', 'fas fa-industry', 'Random\\Fabricantes', 'Fabricante');
         $this->addButton('', 'familias', 'generated-families', 'families', 'fas fa-sitemap', 'Random\\Familias', 'Familia');
         $this->addButton('', 'atributos', 'generated-attributes', 'attributes', 'fas fa-tshirt', 'Random\\Atributos', 'Atributo');

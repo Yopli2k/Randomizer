@@ -65,7 +65,7 @@ trait BusinessDocumentTrait
      */
     private static function getNewLine(&$faker, &$document)
     {
-        $reference = static::referecia();
+        $reference = static::referencia();
         if (empty($reference)) {
             $newLine = $document->getNewLine();
             $newLine->descripcion = $faker->text();

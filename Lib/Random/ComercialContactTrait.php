@@ -36,25 +36,25 @@ trait ComercialContactTrait
      *
      * @var Agente[]
      */
-    private static $agents = null;
+    protected static $agents = null;
 
     /**
      *
      * @var Cliente[]
      */
-    private static $customers = null;
+    protected static $customers = null;
 
     /**
      *
      * @var GrupoClientes[]
      */
-    private static $customerGroups = null;
+    protected static $customerGroups = null;
 
     /**
      *
      * @var Proveedor[]
      */
-    private static $suppliers = null;
+    protected static $suppliers = null;
 
     /**
      *

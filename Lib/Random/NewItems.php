@@ -40,31 +40,31 @@ abstract class NewItems
      *
      * @var Pais[]
      */
-    private static $countries = null;
+    protected static $countries = null;
 
     /**
      *
      * @var FormaPago[]
      */
-    private static $payments = null;
+    protected static $payments = null;
 
     /**
      *
      * @var Retencion[]
      */
-    private static $retentions = null;
+    protected static $retentions = null;
 
     /**
      *
      * @var Serie[]
      */
-    private static $series = null;
+    protected static $series = null;
 
     /**
      *
      * @var Impuesto[]
      */
-    private static $taxes = null;
+    protected static $taxes = null;
 
     /**
      *
@@ -234,7 +234,7 @@ abstract class NewItems
         \shuffle(static::$retentions);
         return \mt_rand(0, 2) === 0 ? static::$retentions[0]->codretencion : AppSettings::get('default', 'codretencion');
     }
-    
+
     /**
      *
      * @return string

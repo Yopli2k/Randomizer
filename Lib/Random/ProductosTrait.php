@@ -38,31 +38,31 @@ trait ProductosTrait
      *
      * @var AtributoValor[]
      */
-    private static $attributes = null;
+    protected static $attributes = null;
 
     /**
      *
      * @var Familia[]
      */
-    private static $families = null;
+    protected static $families = null;
 
     /**
      *
      * @var Fabricante[]
      */
-    private static $manufacturers = null;
+    protected static $manufacturers = null;
 
     /**
      *
      * @var Variante[]
      */
-    private static $references = null;
+    protected static $references = null;
 
     /**
      *
      * @var Almacen[]
      */
-    private static $warehouses = null;
+    protected static $warehouses = null;
 
     /**
      *

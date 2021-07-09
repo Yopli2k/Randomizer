@@ -66,7 +66,7 @@ trait ProductosTrait
 
     /**
      *
-     * @return AtributoValor
+     * @return AtributoValor|null
      */
     protected static function atributo()
     {
@@ -96,7 +96,7 @@ trait ProductosTrait
 
     /**
      *
-     * @return string
+     * @return string|null
      */
     protected static function codfabricante()
     {
@@ -111,7 +111,7 @@ trait ProductosTrait
 
     /**
      *
-     * @return string
+     * @return string|null
      */
     protected static function codfamilia()
     {
@@ -126,7 +126,22 @@ trait ProductosTrait
 
     /**
      *
-     * @return string
+     * @return int|null
+     */
+    protected static function idproducto()
+    {
+        if (null === static::$references) {
+            $reference = new Variante();
+            static::$references = $reference->all();
+        }
+
+        \shuffle(static::$references);
+        return empty(static::$references) || \mt_rand(0, 2) === 0 ? null : static::$references[0]->idproducto;
+    }
+
+    /**
+     *
+     * @return string|null
      */
     protected static function referencia()
     {

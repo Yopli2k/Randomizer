@@ -88,6 +88,21 @@ trait ComercialContactTrait
 
     /**
      *
+     * @return string|null
+     */
+    protected static function codcliente()
+    {
+        if (null === static::$customers) {
+            $customer = new Cliente();
+            static::$customers = $customer->all();
+        }
+
+        \shuffle(static::$customers);
+        return empty(static::$customers) || \mt_rand(0, 3) === 0 ? null : static::$customers[0]->codcliente;
+    }
+
+    /**
+     *
      * @return string
      */
     protected static function codgrupo()

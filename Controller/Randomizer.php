@@ -20,7 +20,6 @@ namespace FacturaScripts\Plugins\Randomizer\Controller;
 
 use FacturaScripts\Core\Base;
 use FacturaScripts\Core\Model\User;
-use FacturaScripts\Plugins\Randomizer\Lib\Random;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -28,6 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Carlos García Gómez  <carlos@facturascripts.com>
  * @author Rafael San José      <info@rsanjoseo.com>
+ * @author Jose Antonio Cuello  <yopli2000@gmail.com>
  */
 class Randomizer extends Base\Controller
 {
@@ -122,12 +122,12 @@ class Randomizer extends Base\Controller
         foreach ($this->actionList as $action => $values) {
             if ($action == $option) {
                 $itemClass = $values['items'];
-                return $this->generateAction($values['label'], $itemClass::create());
+                if (\class_exists($itemClass)) {
+                    $this->generateAction($values['label'], $itemClass::create());
+                }
+                break;
             }
         }
-
-        /// TODO: crear tarifas,
-        return $this->pipe('execAction');
     }
 
     /**
@@ -187,7 +187,6 @@ class Randomizer extends Base\Controller
         $this->addButton('sales', 'pedidoscli', 'generated-customer-orders', 'orders', 'fas fa-copy', 'Random\\PedidosClientes', 'PedidoCliente');
         $this->addButton('sales', 'albaranescli', 'generated-customer-delivery-notes', 'delivery-notes', 'fas fa-copy', 'Random\\AlbaranesClientes', 'AlbaranCliente');
 
-        $this->addButton('plugins', 'proyectos', 'generated-projects', 'projects', 'fab fa-stack-overflow', 'Random\\Proyectos', 'Proyecto');
-        $this->addButton('plugins', 'servicios', 'generated-services', 'services', 'fas fa-headset', 'Random\\Servicios', 'Servicio');
+        $this->pipe('loadButtons');
     }
 }

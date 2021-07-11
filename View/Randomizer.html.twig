@@ -14,37 +14,17 @@
                                 <i class="fas fa-sync" aria-hidden="true"></i>
                             </a>
                         </h1>
-                        <div class="form-row">
-                            {{ _self.genButton(fsc, 'fabricantes', i18n, 'fas fa-industry', 'manufacturers') }}
-                            {{ _self.genButton(fsc, 'familias', i18n, 'fas fa-sitemap', 'families') }}
-                            {{ _self.genButton(fsc, 'productos', i18n, 'fas fa-cubes', 'products') }}
-                            {{ _self.genButton(fsc, 'agentes', i18n, 'fas fa-user-tie', 'agents') }}
-                            {{ _self.genButton(fsc, 'contactos', i18n, 'fas fa-users', 'contacts') }}
-                            {{ _self.genButton(fsc, 'users', i18n, 'fas fa-user-circle', 'users') }}
-                        </div>
-                        <h3 class="mt-4">{{ i18n.trans('purchases') }}</h3>
-                        <hr/>
-                        <div class="form-row">
-                            {{ _self.genButton(fsc, 'proveedores', i18n, 'fas fa-users', 'suppliers') }}
-                            {{ _self.genButton(fsc, 'presupuestosprov', i18n, 'fas fa-copy', 'estimations') }}
-                            {{ _self.genButton(fsc, 'pedidosprov', i18n, 'fas fa-copy', 'orders') }}
-                            {{ _self.genButton(fsc, 'albaranesprov', i18n, 'fas fa-copy', 'delivery-notes') }}
-                        </div>
-                        <h3 class="mt-4">{{ i18n.trans('sales') }}</h3>
-                        <hr/>
-                        <div class="form-row">
-                            {{ _self.genButton(fsc, 'grupos', i18n, 'fas fa-users-cog', 'customer-groups') }}
-                            {{ _self.genButton(fsc, 'clientes', i18n, 'fas fa-users', 'customers') }}
-                            {{ _self.genButton(fsc, 'presupuestoscli', i18n, 'fas fa-copy', 'estimations') }}
-                            {{ _self.genButton(fsc, 'pedidoscli', i18n, 'fas fa-copy', 'orders') }}
-                            {{ _self.genButton(fsc, 'albaranescli', i18n, 'fas fa-copy', 'delivery-notes') }}
-                        </div>
-                        <h3 class="mt-4">{{ i18n.trans('plugins') }}</h3>
-                        <hr/>
-                        <div class="form-row">
-                            {{ _self.genButton(fsc, 'proyectos', i18n, 'fab fa-stack-overflow', 'projects') }}
-                            {{ _self.genButton(fsc, 'servicios', i18n, 'fas fa-headset', 'services') }}
-                        </div>
+                        {% for title, group in fsc.buttonList %}
+                            {% if title %}
+                            <h3 class="mt-4">{{ i18n.trans(title) }}</h3>
+                            <hr/>
+                            {% endif %}
+                            <div class="form-row">
+                                {% for item in group %}
+                                    {{ _self.genButton(fsc, item.action, i18n, item.icon, item.label) }}
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>

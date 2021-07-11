@@ -18,19 +18,16 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
-use FacturaScripts\Dinamic\Model\AlbaranProveedor;
-use FacturaScripts\Plugins\Randomizer\Lib\Random\BusinessDocumentTrait;
+use FacturaScripts\Dinamic\Model\Almacen;
 use Faker;
 
 /**
- * Description of AlbaranesProveedores
+ * Description of Almacenes
  *
- * @author Carlos Garcia Gomez <carlos@facturascripts.com>
+ * @author Jose Antonio Cuello  <yopli2000@gmail.com>
  */
-class AlbaranesProveedores extends NewItems
+class Almacenes extends NewItems
 {
-
-    use BusinessDocumentTrait;
 
     /**
      *
@@ -38,33 +35,31 @@ class AlbaranesProveedores extends NewItems
      *
      * @return int
      */
-    public static function create(int $number = 50): int
+    public static function create(int $number = 10): int
     {
         $faker = Faker\Factory::create('es_ES');
 
         for ($generated = 0; $generated < $number; $generated++) {
-            $doc = new AlbaranProveedor();
-            $doc->setSubject(static::proveedor());
-            $doc->codalmacen = static::codalmacen();
-            $doc->codpago = static::codpago();
-            $doc->codserie = static::codserie();
-            $doc->dtopor1 = $faker->optional(0.1)->numberBetween(1, 90);
-            $doc->dtopor2 = $faker->optional(0.1)->numberBetween(1, 90);
-            $doc->fecha = static::fecha();
-            $doc->hora = static::hora();
-            $doc->observaciones = $faker->optional()->text();
+            $almacen = new Almacen();
+            $almacen->codalmacen = static::codeOrNull(4);
+            $almacen->idempresa = static::empresa();
+            $almacen->nombre = $faker->company;
+            $almacen->telefono = $faker->optional()->phoneNumber;
 
-            if ($doc->exists()) {
+            $almacen->apartado = $faker->optional(0.1)->postcode;
+            $almacen->ciudad = $faker->optional(0.7)->city;
+            $almacen->codpais = static::codpais();
+            $almacen->codpostal = $faker->optional()->postcode;
+            $almacen->direccion = $faker->optional()->address;
+            $almacen->provincia = $faker->optional()->state;
+
+            if ($almacen->exists()) {
                 continue;
             }
 
-            if (false === $doc->save()) {
-                var_dump($doc);
+            if (false === $almacen->save()) {
                 break;
             }
-
-            static::createLines($faker, $doc, $faker->numberBetween(1, 9));
-            static::recalculate($doc);
         }
 
         return $generated;

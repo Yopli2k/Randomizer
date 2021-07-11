@@ -18,32 +18,62 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
+use FacturaScripts\Dinamic\Model\Atributo;
+use FacturaScripts\Dinamic\Model\AtributoValor;
 use Faker;
 
 /**
- * Description of Proyectos
+ * Description of Atributos
  *
- * @author Carlos Garcia Gomez <carlos@facturascripts.com>
+ * @author Jose Antonio Cuello  <yopli2000@gmail.com>
  */
-class Proyectos extends NewItems
+class Atributos extends NewItems
 {
 
     /**
-     * 
+     *
      * @param int $number
      *
      * @return int
      */
-    public static function create(int $number = 50): int
+    public static function create(int $number = 5): int
     {
         $faker = Faker\Factory::create('es_ES');
 
         for ($generated = 0; $generated < $number; $generated++) {
-            /// TODO: generar el proyecto
-            /// TODO: generar tareas para el proyecto
-            /// TODO: vincular albaranes, facturas, pedidos y presupuestos con el proyecto
+            $atributo = new Atributo();
+            $atributo->nombre = \implode(' ', $faker->words);
+
+            if ($atributo->exists()) {
+                continue;
+            }
+
+            if (false === $atributo->save()) {
+                break;
+            }
+
+            self::createValues($faker, $atributo->codatributo);
         }
 
         return $generated;
+    }
+
+    /**
+     *
+     * @param Faker $faker
+     * @param string $parent
+     */
+    private static function createValues(&$faker, $parent)
+    {
+        $max = $faker->numberBetween(1, 10);
+        for ($index = 1; $index <= $max; $index++) {
+            $value = new AtributoValor();
+            $value->codatributo = $parent;
+            $value->descripcion = $faker->name;
+            $value->valor = \implode(' ', $faker->words);
+            if (false === $value->save()) {
+                break;
+            }
+        }
     }
 }

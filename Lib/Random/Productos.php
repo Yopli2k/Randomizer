@@ -18,6 +18,7 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
+use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Dinamic\Model\Producto;
 use FacturaScripts\Dinamic\Model\Variante;
 use Faker;
@@ -26,12 +27,13 @@ use Faker;
  * Description of Productos
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
+ * @author Jose Antonio Cuello  <yopli2000@gmail.com>
  */
 class Productos extends NewItems
 {
 
     /**
-     * 
+     *
      * @param int $number
      *
      * @return int
@@ -43,58 +45,123 @@ class Productos extends NewItems
         $maxPrice = $faker->numberBetween(1, 1999);
 
         for ($generated = 0; $generated < $number; $generated++) {
-            $producto = new Producto();
-            $producto->bloqueado = $faker->boolean(10);
-            $producto->codfabricante = static::codfabricante();
-            $producto->codfamilia = static::codfamilia();
-            $producto->codimpuesto = static::codimpuesto();
-            $producto->descripcion = $faker->paragraph;
-            $producto->fechaalta = $faker->date();
-            $producto->nostock = $faker->boolean(20);
-            $producto->observaciones = $faker->optional()->text(500);
-            $producto->publico = $faker->boolean();
-            $producto->referencia = static::code(20);
-            $producto->secompra = $faker->boolean(90);
-            $producto->sevende = $faker->boolean(90);
-            $producto->ventasinstock = $faker->boolean(30);
-
-            if ($producto->exists()) {
+            $product = static::getProduct($faker);
+            if ($product->exists()) {
                 continue;
             }
 
-            if (false === $producto->save()) {
+            if (false === $product->save()) {
                 break;
             }
 
-            foreach ($producto->getVariants() as $vari) {
-                $vari->codbarras = $faker->optional(0.5)->ean13();
-                $vari->coste = $faker->randomFloat(2, 0.1, $maxCost);
-                $vari->margen = $faker->optional(0.2)->numberBetween(10, 100);
-                $vari->precio = $faker->randomFloat(2, 0.1, $maxPrice);
-                $vari->save();
-            }
+            $variant = static::getProductVariant($product->idproducto, $product->referencia);
+            static::setVariantData($faker, $variant, $maxCost, $maxPrice);
+            $variant->save();
 
             $max = \mt_rand(-3, 9);
             while ($max > 0) {
-                $newVar = new Variante();
-                $newVar->codbarras = $faker->optional(0.5)->ean13();
-                $newVar->coste = $faker->randomFloat(2, 0.1, $maxCost);
-                $newVar->idproducto = $producto->idproducto;
-                $newVar->margen = $faker->optional(0.2)->numberBetween(10, 100);
-                $newVar->precio = $faker->randomFloat(2, 0.1, $maxPrice);
-                $newVar->referencia = $faker->isbn13;
-                $newVar->save();
-                
-                /// TODO: seleccionar atributos, si los hay
-
+                $variant = static::getNewVariant($faker, $product->idproducto, $maxCost, $maxPrice);
+                static::setVariantData($faker, $variant, $maxCost, $maxPrice);
+                static::setVariantAttributes($variant);
+                $variant->save();
                 $max--;
             }
 
-            $producto->loadFromCode($producto->idproducto);
-            $producto->actualizado = $faker->dateTime();
-            $producto->save();
+            $product->loadFromCode($product->idproducto);
+            $product->actualizado = $faker->dateTime();
+            $product->save();
         }
 
         return $generated;
+    }
+
+    /**
+     *
+     * @param Faker $faker
+     * @return Producto
+     */
+    private static function getProduct(&$faker)
+    {
+        $product = new Producto();
+        $product->bloqueado = $faker->boolean(10);
+        $product->codfabricante = static::codfabricante();
+        $product->codfamilia = static::codfamilia();
+        $product->codimpuesto = static::codimpuesto();
+        $product->descripcion = $faker->paragraph;
+        $product->fechaalta = $faker->date();
+        $product->nostock = $faker->boolean(20);
+        $product->observaciones = $faker->optional()->text(500);
+        $product->publico = $faker->boolean();
+        $product->referencia = static::code(20);
+        $product->secompra = $faker->boolean(90);
+        $product->sevende = $faker->boolean(90);
+        $product->ventasinstock = $faker->boolean(30);
+        return $product;
+    }
+
+    /**
+     *
+     * @param int $idproduct
+     * @param string $reference
+     * @return Variante
+     */
+    private static function getProductVariant($idproduct, $reference)
+    {
+        $variant = new Variante();
+        $where = [
+            new DataBaseWhere('idproducto', $idproduct),
+            new DataBaseWhere('referencia', $reference),
+        ];
+        $variant->loadFromCode('', $where);
+        return $variant;
+    }
+
+    /**
+     *
+     * @param Faker $faker
+     * @param int $idproduct
+     * @return Variante
+     */
+    private static function getNewVariant(&$faker, $idproduct)
+    {
+        $newVar = new Variante();
+        $newVar->idproducto = $idproduct;
+        $newVar->referencia = $faker->isbn13;
+        return $newVar;
+    }
+
+    /**
+     * Assigns attribute values to a product variant.
+     * Variants are assigned until a null is found or until a value is repeated
+     * for an already defined attribute.
+     *
+     * @param Variante $variant
+     */
+    private static function setVariantAttributes(&$variant)
+    {
+        $attributes = [];
+        for ($index = 1; $index < 5; $index++) {
+            $value = static::atributo();
+            if (null == $value || in_array($value->codatributo, $attributes)) {
+                break;
+            }
+            $attributes[] = $value->codatributo;
+            $variant->{'idatributovalor' . $index} = $value->id;
+        }
+    }
+
+    /**
+     *
+     * @param Faker $faker
+     * @param Variante $variant
+     * @param float $maxCost
+     * @param float $maxPrice
+     */
+    private static function setVariantData(&$faker, &$variant, $maxCost, $maxPrice)
+    {
+        $variant->codbarras = $faker->optional(0.5)->ean13();
+        $variant->coste = $faker->randomFloat(2, 0.1, $maxCost);
+        $variant->margen = $faker->optional(0.2)->numberBetween(10, 100);
+        $variant->precio = $faker->randomFloat(2, 0.1, $maxPrice);
     }
 }

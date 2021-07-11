@@ -19,6 +19,7 @@
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
 use FacturaScripts\Dinamic\Model\GrupoClientes;
+use FacturaScripts\Dinamic\Model\Tarifa;
 use Faker;
 
 /**
@@ -30,7 +31,13 @@ class GruposClientes extends NewItems
 {
 
     /**
-     * 
+     *
+     * @var Tarifa[]
+     */
+    private static $rates = [];
+
+    /**
+     *
      * @param int $number
      *
      * @return int
@@ -38,17 +45,19 @@ class GruposClientes extends NewItems
     public static function create(int $number = 50): int
     {
         $faker = Faker\Factory::create('es_ES');
+        if (null === static::$rates) {
+            static::$rates = static::allRates();
+        }
 
         for ($generated = 0; $generated < $number; $generated++) {
             $grupo = new GrupoClientes();
             $grupo->codgrupo = static::codeOrNull(6);
-            $grupo->nombre = $faker->word();
-            
-            /// TODO: asignar una tarifa, si existen
-
             if ($grupo->exists()) {
                 continue;
             }
+
+            $grupo->nombre = $faker->word();
+            static::setRate($grupo);
 
             if (false === $grupo->save()) {
                 break;
@@ -56,5 +65,25 @@ class GruposClientes extends NewItems
         }
 
         return $generated;
+    }
+
+    private static function allRates()
+    {
+        $rateModel = new Tarifa();
+        return $rateModel->all();
+    }
+
+    /**
+     *
+     * @param GrupoClientes $group
+     */
+    private static function setRate(&$group)
+    {
+        if (empty(static::$rates)) {
+            return;
+        }
+
+        shuffle(static::$rates);
+        $group->codtarifa = static::$rates[0]->codtarifa;
     }
 }

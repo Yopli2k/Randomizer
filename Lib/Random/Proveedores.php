@@ -18,7 +18,10 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
+use FacturaScripts\Dinamic\Model\CuentaBancoProveedor;
+use FacturaScripts\Dinamic\Model\Contacto;
 use FacturaScripts\Dinamic\Model\Proveedor;
+use FacturaScripts\Plugins\Randomizer\Lib\Random\Contactos;
 use Faker;
 
 /**
@@ -30,7 +33,7 @@ class Proveedores extends NewItems
 {
 
     /**
-     * 
+     *
      * @param int $number
      *
      * @return int
@@ -43,6 +46,9 @@ class Proveedores extends NewItems
             $proveedor = new Proveedor();
             $proveedor->acreedor = $faker->boolean();
             $proveedor->cifnif = static::cifnif();
+            $proveedor->codpago = static::codpago();
+            $proveedor->codretencion = static::codretencion();
+            $proveedor->codserie = static::codserie();
             $proveedor->email = $faker->optional()->email;
             $proveedor->fax = $faker->optional(0.1)->phoneNumber;
             $proveedor->fechaalta = $faker->date();
@@ -51,11 +57,10 @@ class Proveedores extends NewItems
             $proveedor->observaciones = $faker->optional()->paragraph();
             $proveedor->personafisica = $faker->boolean();
             $proveedor->razonsocial = $faker->optional()->company;
+            $proveedor->regimeniva = static::regimenIVA();
             $proveedor->telefono1 = $faker->optional()->phoneNumber;
             $proveedor->telefono2 = $faker->optional()->phoneNumber;
             $proveedor->web = $faker->optional()->url;
-
-            /// TODO: seleccionar una serie, forma de pago, retención y régimen
 
             if ($proveedor->exists()) {
                 continue;
@@ -65,10 +70,45 @@ class Proveedores extends NewItems
                 break;
             }
 
-            /// TODO: crear direcciones (contactos)
-            /// TODO: crear cuentas bancarias
+            static::createBankAccounts($faker, $proveedor->codproveedor);
+            static::createContacts($faker, $proveedor->codproveedor);
         }
 
         return $generated;
+    }
+
+    /**
+     *
+     * @param Faker $faker
+     * @param string $supplier
+     */
+    private static function createBankAccounts(&$faker, $supplier)
+    {
+        $max = $faker->numberBetween(1, 5);
+        for ($index = 1; $index <= $max; $index++) {
+            $bank = new CuentaBancoProveedor();
+            $bank->descripcion = \implode(' ', $faker->words);
+            $bank->iban = $faker->iban('ES');
+            $bank->swift = $faker->swiftBicNumber;
+            $bank->codproveedor = $supplier;
+            $bank->principal = ($index === 1);
+            $bank->save();
+        }
+    }
+
+    /**
+     *
+     * @param Faker $faker
+     * @param string $supplier
+     */
+    private static function createContacts(&$faker, $supplier)
+    {
+        $max = $faker->numberBetween(1, 5);
+        for ($index = 1; $index <= $max; $index++) {
+            $contact = new Contacto();
+            Contactos::setContactData($faker, $contact);
+            $contact->codproveedor = $supplier;
+            $contact->save();
+        }
     }
 }

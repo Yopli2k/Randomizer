@@ -18,16 +18,16 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
-use FacturaScripts\Dinamic\Model\AlbaranProveedor;
+use FacturaScripts\Dinamic\Model\PresupuestoProveedor;
 use FacturaScripts\Plugins\Randomizer\Lib\Random\BusinessDocumentTrait;
 use Faker;
 
 /**
- * Description of AlbaranesProveedores
+ * Description of PresupuestosProveedores
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class AlbaranesProveedores extends NewItems
+class PresupuestosProveedores extends NewItems
 {
 
     use BusinessDocumentTrait;
@@ -43,7 +43,7 @@ class AlbaranesProveedores extends NewItems
         $faker = Faker\Factory::create('es_ES');
 
         for ($generated = 0; $generated < $number; $generated++) {
-            $doc = new AlbaranProveedor();
+            $doc = new PresupuestoProveedor();
             $doc->setSubject(static::proveedor());
             $doc->codalmacen = static::codalmacen();
             $doc->codpago = static::codpago();

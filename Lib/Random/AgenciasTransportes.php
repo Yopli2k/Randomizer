@@ -18,19 +18,19 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
-use FacturaScripts\Dinamic\Model\PresupuestoProveedor;
+use FacturaScripts\Dinamic\Model\AgenciaTransporte;
 use Faker;
 
 /**
- * Description of PresupuestoProveedores
+ * Description of AgenciasTransportes
  *
- * @author Carlos Garcia Gomez <carlos@facturascripts.com>
+ * @author Jose Antonio Cuello  <yopli2000@gmail.com>
  */
-class PresupuestoProveedores extends NewItems
+class AgenciasTransportes extends NewItems
 {
 
     /**
-     * 
+     *
      * @param int $number
      *
      * @return int
@@ -40,27 +40,20 @@ class PresupuestoProveedores extends NewItems
         $faker = Faker\Factory::create('es_ES');
 
         for ($generated = 0; $generated < $number; $generated++) {
-            $doc = new PresupuestoProveedor();
-            $doc->setSubject(static::proveedor());
-            $doc->codalmacen = static::codalmacen();
-            $doc->codpago = static::codpago();
-            $doc->codserie = static::codserie();
-            $doc->dtopor1 = $faker->optional(0.1)->numberBetween(1, 90);
-            $doc->dtopor2 = $faker->optional(0.1)->numberBetween(1, 90);
-            $doc->fecha = static::fecha();
-            $doc->hora = static::hora();
-            $doc->observaciones = $faker->optional()->text();
+            $agencia = new AgenciaTransporte();
+            $agencia->codtrans = static::codeOrNull(8);
+            $agencia->activo = $faker->boolean();
+            $agencia->nombre = $faker->name();
+            $agencia->web = $faker->optional()->url;
+            $agencia->telefono = $faker->optional()->phoneNumber;
 
-            if ($doc->exists()) {
+            if ($agencia->exists()) {
                 continue;
             }
 
-            if (false === $doc->save()) {
-                var_dump($doc);
+            if (false === $agencia->save()) {
                 break;
             }
-
-            /// TODO: crear líneas y recalcular totales
         }
 
         return $generated;

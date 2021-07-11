@@ -18,19 +18,16 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
-use FacturaScripts\Dinamic\Model\AlbaranProveedor;
-use FacturaScripts\Plugins\Randomizer\Lib\Random\BusinessDocumentTrait;
+use FacturaScripts\Dinamic\Model\Comision;
 use Faker;
 
 /**
- * Description of AlbaranesProveedores
+ * Description of Comisiones
  *
- * @author Carlos Garcia Gomez <carlos@facturascripts.com>
+ * @author Jose Antonio Cuello  <yopli2000@gmail.com>
  */
-class AlbaranesProveedores extends NewItems
+class Comisiones extends NewItems
 {
-
-    use BusinessDocumentTrait;
 
     /**
      *
@@ -43,28 +40,23 @@ class AlbaranesProveedores extends NewItems
         $faker = Faker\Factory::create('es_ES');
 
         for ($generated = 0; $generated < $number; $generated++) {
-            $doc = new AlbaranProveedor();
-            $doc->setSubject(static::proveedor());
-            $doc->codalmacen = static::codalmacen();
-            $doc->codpago = static::codpago();
-            $doc->codserie = static::codserie();
-            $doc->dtopor1 = $faker->optional(0.1)->numberBetween(1, 90);
-            $doc->dtopor2 = $faker->optional(0.1)->numberBetween(1, 90);
-            $doc->fecha = static::fecha();
-            $doc->hora = static::hora();
-            $doc->observaciones = $faker->optional()->text();
+            $comision = new Comision();
+            $comision->idempresa = static::empresa();
+            $comision->porcentaje = $faker->numberBetween(1, 30);
+            $comision->prioridad = $faker->optional(0.1)->numberBetween(1, 10);
 
-            if ($doc->exists()) {
+            $comision->codagente = static::codagente();
+            $comision->codcliente = static::codcliente();
+            $comision->codfamilia = static::codfamilia();
+            $comision->idproducto = static::idproducto();
+
+            if ($comision->exists()) {
                 continue;
             }
 
-            if (false === $doc->save()) {
-                var_dump($doc);
+            if (false === $comision->save()) {
                 break;
             }
-
-            static::createLines($faker, $doc, $faker->numberBetween(1, 9));
-            static::recalculate($doc);
         }
 
         return $generated;

@@ -19,6 +19,9 @@
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
 use FacturaScripts\Dinamic\Model\Cliente;
+use FacturaScripts\Dinamic\Model\CuentaBancoCliente;
+use FacturaScripts\Dinamic\Model\Contacto;
+use FacturaScripts\Plugins\Randomizer\Lib\Random\Contactos;
 use Faker;
 
 /**
@@ -30,7 +33,7 @@ class Clientes extends NewItems
 {
 
     /**
-     * 
+     *
      * @param int $number
      *
      * @return int
@@ -44,6 +47,9 @@ class Clientes extends NewItems
             $cliente->cifnif = static::cifnif();
             $cliente->codagente = static::codagente();
             $cliente->codgrupo = static::codgrupo();
+            $cliente->codpago = static::codpago();
+            $cliente->codretencion = static::codretencion();
+            $cliente->codserie = static::codserie();
             $cliente->email = $faker->optional()->email;
             $cliente->fax = $faker->optional(0.1)->phoneNumber;
             $cliente->fechaalta = $faker->date();
@@ -52,11 +58,10 @@ class Clientes extends NewItems
             $cliente->observaciones = $faker->optional()->paragraph();
             $cliente->personafisica = $faker->boolean();
             $cliente->razonsocial = $faker->optional()->company;
+            $cliente->regimeniva = static::regimenIVA();
             $cliente->telefono1 = $faker->optional()->phoneNumber;
             $cliente->telefono2 = $faker->optional()->phoneNumber;
             $cliente->web = $faker->optional()->url;
-
-            /// TODO: seleccionar una serie, forma de pago, retención y régimen
 
             if ($cliente->exists()) {
                 continue;
@@ -66,10 +71,46 @@ class Clientes extends NewItems
                 break;
             }
 
-            /// TODO: crear direcciones (contactos)
-            /// TODO: crear cuentas bancarias
+            static::createBankAccounts($faker, $cliente->codcliente);
+            static::createContacts($faker, $cliente->codcliente);
         }
 
         return $generated;
+    }
+
+    /**
+     *
+     * @param Faker $faker
+     * @param string $customer
+     */
+    private static function createBankAccounts(&$faker, $customer)
+    {
+        $max = $faker->numberBetween(1, 5);
+        for ($index = 1; $index <= $max; $index++) {
+            $bank = new CuentaBancoCliente();
+            $bank->descripcion = \implode(' ', $faker->words);
+            $bank->iban = $faker->iban('ES');
+            $bank->swift = $faker->swiftBicNumber;
+            $bank->codcliente = $customer;
+            $bank->principal = ($index === 1);
+            $bank->fmandato = $faker->date();
+            $bank->save();
+        }
+    }
+
+    /**
+     *
+     * @param Faker $faker
+     * @param string $customer
+     */
+    private static function createContacts(&$faker, $customer)
+    {
+        $max = $faker->numberBetween(1, 5);
+        for ($index = 1; $index <= $max; $index++) {
+            $contact = new Contacto();
+            Contactos::setContactData($faker, $contact);
+            $contact->codcliente = $customer;
+            $contact->save();
+        }
     }
 }

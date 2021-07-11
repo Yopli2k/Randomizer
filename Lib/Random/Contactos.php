@@ -30,7 +30,7 @@ class Contactos extends NewItems
 {
 
     /**
-     * 
+     *
      * @param int $number
      *
      * @return int
@@ -41,29 +41,7 @@ class Contactos extends NewItems
 
         for ($generated = 0; $generated < $number; $generated++) {
             $contact = new Contacto();
-            $contact->aceptaprivacidad = $faker->boolean();
-            $contact->admitemarketing = $faker->boolean();
-            $contact->apartado = $faker->optional(0.1)->postcode;
-            $contact->apellidos = $faker->optional(0.9)->lastName;
-            $contact->cargo = $faker->optional()->jobTitle;
-            $contact->cifnif = static::cifnif();
-            $contact->ciudad = $faker->optional(0.7)->city;
-            $contact->codpais = static::codpais();
-            $contact->codpostal = $faker->optional()->postcode;
-            $contact->descripcion = $faker->optional(0.1)->name();
-            $contact->direccion = $faker->optional()->address;
-            $contact->email = $faker->optional(0.9)->email;
-            $contact->empresa = $faker->optional()->company;
-            $contact->fax = $faker->optional(0.1)->phoneNumber;
-            $contact->fechaalta = $faker->date();
-            $contact->lastip = $faker->optional()->ipv4;
-            $contact->nombre = $faker->firstName();
-            $contact->observaciones = $faker->optional()->paragraph();
-            $contact->personafisica = $faker->boolean(80);
-            $contact->provincia = $faker->optional()->state;
-            $contact->telefono1 = $faker->optional()->phoneNumber;
-            $contact->telefono2 = $faker->optional()->phoneNumber;
-            $contact->verificado = $faker->boolean();
+            self::setContactData($faker, $contact);
 
             if ($contact->exists()) {
                 continue;
@@ -75,5 +53,37 @@ class Contactos extends NewItems
         }
 
         return $generated;
+    }
+
+    /**
+     *
+     * @param Faker $faker
+     * @param Contacto $contact
+     */
+    public static function setContactData(&$faker, &$contact)
+    {
+        $contact->aceptaprivacidad = $faker->boolean();
+        $contact->admitemarketing = $faker->boolean();
+        $contact->apartado = $faker->optional(0.1)->postcode;
+        $contact->apellidos = $faker->optional(0.9)->lastName;
+        $contact->cargo = $faker->optional()->jobTitle;
+        $contact->cifnif = static::cifnif();
+        $contact->ciudad = $faker->optional(0.7)->city;
+        $contact->codpais = static::codpais();
+        $contact->codpostal = $faker->optional()->postcode;
+        $contact->descripcion = $faker->optional(0.1)->name();
+        $contact->direccion = $faker->optional()->address;
+        $contact->email = $faker->optional(0.9)->email;
+        $contact->empresa = $faker->optional()->company;
+        $contact->fax = $faker->optional(0.1)->phoneNumber;
+        $contact->fechaalta = $faker->date();
+        $contact->lastip = $faker->optional()->ipv4;
+        $contact->nombre = $faker->firstName();
+        $contact->observaciones = $faker->optional()->paragraph();
+        $contact->personafisica = $faker->boolean(80);
+        $contact->provincia = $faker->optional()->state;
+        $contact->telefono1 = $faker->optional()->phoneNumber;
+        $contact->telefono2 = $faker->optional()->phoneNumber;
+        $contact->verificado = $faker->boolean();
     }
 }

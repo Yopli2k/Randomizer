@@ -30,7 +30,7 @@ class Agentes extends NewItems
 {
 
     /**
-     * 
+     *
      * @param int $number
      *
      * @return int
@@ -41,9 +41,13 @@ class Agentes extends NewItems
 
         for ($generated = 0; $generated < $number; $generated++) {
             $agente = new Agente();
+            $agente->codagente = static::codeOrNull(10);
+            if ($agente->exists()) {
+                continue;
+            }
+
             $agente->cargo = $faker->optional()->jobTitle;
             $agente->cifnif = static::cifnif();
-            $agente->codagente = static::codeOrNull(10);
             $agente->email = $faker->optional(0.8)->email;
             $agente->fechaalta = $faker->date();
             $agente->fechabaja = $faker->optional(0.1)->date();
@@ -53,25 +57,32 @@ class Agentes extends NewItems
             $agente->telefono1 = $faker->optional()->phoneNumber;
             $agente->telefono2 = $faker->optional()->phoneNumber;
 
-            if ($agente->exists()) {
-                continue;
-            }
-
             if (false === $agente->save()) {
                 break;
             }
 
-            /// TODO: mover a una nueva función
-            $contact = $agente->getContact();
-            $contact->apartado = $faker->optional(0.1)->postcode;
-            $contact->ciudad = $faker->optional(0.7)->city;
-            $contact->codpais = static::codpais();
-            $contact->codpostal = $faker->optional()->postcode;
-            $contact->direccion = $faker->optional()->address;
-            $contact->provincia = $faker->optional()->state;
-            $contact->save();
+            static::setContact($faker, $agente);
         }
 
         return $generated;
+    }
+
+    /**
+     * Establish contact information for the agent.
+     * There is always contact for the agent.
+     * When a new agent is created, a contact is automatically created for him.
+     *
+     * @param Agente $agent
+     */
+    private static function setContact(&$faker, &$agent)
+    {
+        $contact = $agent->getContact();
+        $contact->apartado = $faker->optional(0.1)->postcode;
+        $contact->ciudad = $faker->optional(0.7)->city;
+        $contact->codpais = static::codpais();
+        $contact->codpostal = $faker->optional()->postcode;
+        $contact->direccion = $faker->optional()->address;
+        $contact->provincia = $faker->optional()->state;
+        $contact->save();
     }
 }

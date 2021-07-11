@@ -25,6 +25,7 @@ use FacturaScripts\Dinamic\Model\Impuesto;
 use FacturaScripts\Dinamic\Model\Pais;
 use FacturaScripts\Dinamic\Model\Retencion;
 use FacturaScripts\Dinamic\Model\Serie;
+use FacturaScripts\Dinamic\Model\User;
 
 /**
  * Description of NewItems
@@ -72,6 +73,12 @@ abstract class NewItems
      * @var Impuesto[]
      */
     protected static $taxes = null;
+
+    /**
+     *
+     * @var User[]
+     */
+    protected static $users = null;
 
     /**
      *
@@ -300,5 +307,20 @@ abstract class NewItems
     {
         $minutes = \mt_rand(0, 1429);
         return \date(Serie::HOUR_STYLE, \strtotime('-' . $minutes . ' minutes'));
+    }
+
+    /**
+     *
+     * @return string
+     */
+    protected static function nick()
+    {
+        if (null === static::$users) {
+            $user = new User();
+            static::$users = $user->all();
+        }
+
+        \shuffle(static::$users);
+        return empty(static::$users) ? null : static::$users[0]->nick;
     }
 }

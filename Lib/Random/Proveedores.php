@@ -21,7 +21,6 @@ namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 use FacturaScripts\Dinamic\Model\CuentaBancoProveedor;
 use FacturaScripts\Dinamic\Model\Contacto;
 use FacturaScripts\Dinamic\Model\Proveedor;
-use FacturaScripts\Plugins\Randomizer\Lib\Random\Contactos;
 use Faker;
 
 /**
@@ -42,6 +41,7 @@ class Proveedores extends NewItems
     {
         $faker = Faker\Factory::create('es_ES');
 
+        static::dataBase()->beginTransaction();
         for ($generated = 0; $generated < $number; $generated++) {
             $proveedor = new Proveedor();
             $proveedor->acreedor = $faker->boolean();
@@ -60,7 +60,7 @@ class Proveedores extends NewItems
             $proveedor->regimeniva = static::regimenIVA();
             $proveedor->telefono1 = $faker->optional()->phoneNumber;
             $proveedor->telefono2 = $faker->optional()->phoneNumber;
-            $proveedor->web = $faker->optional()->url;
+            $proveedor->web = static::web($faker);
 
             if ($proveedor->exists()) {
                 continue;
@@ -74,23 +74,24 @@ class Proveedores extends NewItems
             static::createContacts($faker, $proveedor->codproveedor);
         }
 
+        static::dataBase()->commit();
         return $generated;
     }
 
     /**
      *
-     * @param Faker $faker
-     * @param string $supplier
+     * @param Faker\Generator $faker
+     * @param string          $codproveedor
      */
-    private static function createBankAccounts(&$faker, $supplier)
+    private static function createBankAccounts(&$faker, $codproveedor)
     {
-        $max = $faker->numberBetween(1, 5);
+        $max = $faker->numberBetween(-1, 5);
         for ($index = 1; $index <= $max; $index++) {
             $bank = new CuentaBancoProveedor();
             $bank->descripcion = \implode(' ', $faker->words);
             $bank->iban = $faker->iban('ES');
-            $bank->swift = $faker->swiftBicNumber;
-            $bank->codproveedor = $supplier;
+            $bank->swift = $faker->optional()->swiftBicNumber;
+            $bank->codproveedor = $codproveedor;
             $bank->principal = ($index === 1);
             $bank->save();
         }
@@ -98,16 +99,16 @@ class Proveedores extends NewItems
 
     /**
      *
-     * @param Faker $faker
-     * @param string $supplier
+     * @param Faker\Generator $faker
+     * @param string          $codproveedor
      */
-    private static function createContacts(&$faker, $supplier)
+    private static function createContacts(&$faker, $codproveedor)
     {
-        $max = $faker->numberBetween(1, 5);
+        $max = $faker->numberBetween(-1, 5);
         for ($index = 1; $index <= $max; $index++) {
             $contact = new Contacto();
             Contactos::setContactData($faker, $contact);
-            $contact->codproveedor = $supplier;
+            $contact->codproveedor = $codproveedor;
             $contact->save();
         }
     }

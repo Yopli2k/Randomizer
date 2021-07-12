@@ -24,7 +24,8 @@ use Faker;
 /**
  * Description of Almacenes
  *
- * @author Jose Antonio Cuello  <yopli2000@gmail.com>
+ * @author Jose Antonio Cuello <yopli2000@gmail.com>
+ * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
 class Almacenes extends NewItems
 {
@@ -35,23 +36,22 @@ class Almacenes extends NewItems
      *
      * @return int
      */
-    public static function create(int $number = 10): int
+    public static function create(int $number = 5): int
     {
         $faker = Faker\Factory::create('es_ES');
 
         for ($generated = 0; $generated < $number; $generated++) {
             $almacen = new Almacen();
-            $almacen->codalmacen = static::codeOrNull(4);
-            $almacen->idempresa = static::empresa();
-            $almacen->nombre = $faker->company;
-            $almacen->telefono = $faker->optional()->phoneNumber;
-
             $almacen->apartado = $faker->optional(0.1)->postcode;
-            $almacen->ciudad = $faker->optional(0.7)->city;
+            $almacen->ciudad = $faker->optional()->city;
+            $almacen->codalmacen = static::codeOrNull(4);
             $almacen->codpais = static::codpais();
             $almacen->codpostal = $faker->optional()->postcode;
             $almacen->direccion = $faker->optional()->address;
+            $almacen->idempresa = static::idempresa();
+            $almacen->nombre = $faker->company;
             $almacen->provincia = $faker->optional()->state;
+            $almacen->telefono = $faker->optional()->phoneNumber;
 
             if ($almacen->exists()) {
                 continue;

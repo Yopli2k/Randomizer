@@ -25,7 +25,8 @@ use Faker;
 /**
  * Description of Atributos
  *
- * @author Jose Antonio Cuello  <yopli2000@gmail.com>
+ * @author Jose Antonio Cuello <yopli2000@gmail.com>
+ * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
 class Atributos extends NewItems
 {
@@ -60,7 +61,7 @@ class Atributos extends NewItems
 
     /**
      *
-     * @param Faker $faker
+     * @param Faker  $faker
      * @param string $parent
      */
     private static function createValues(&$faker, $parent)

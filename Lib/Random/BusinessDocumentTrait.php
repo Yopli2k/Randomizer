@@ -19,12 +19,15 @@
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
 use FacturaScripts\Dinamic\Lib\BusinessDocumentTools;
+use FacturaScripts\Core\Model\Base\BusinessDocument;
+use FacturaScripts\Core\Model\Base\BusinessDocumentLine;
 use Faker;
 
 /**
  * Set of methods common to the different Business Documents.
  *
- * @author Jose Antonio Cuello  <yopli2000@gmail.com>
+ * @author Jose Antonio Cuello <yopli2000@gmail.com>
+ * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
 trait BusinessDocumentTrait
 {
@@ -32,9 +35,9 @@ trait BusinessDocumentTrait
     /**
      * Add a number of lines to the indicated document.
      *
-     * @param Faker\Factory
+     * @param Faker\Generator  $faker
      * @param BusinessDocument $document
-     * @param int $numLines
+     * @param int              $numLines
      */
     protected static function createLines(&$faker, &$document, int $numLines = 1)
     {
@@ -60,8 +63,10 @@ trait BusinessDocumentTrait
     }
 
     /**
-     * @param Faker\Factory
+     * @param Faker\Generator  $faker
      * @param BusinessDocument $document
+     *
+     * @return BusinessDocumentLine
      */
     private static function getNewLine(&$faker, &$document)
     {

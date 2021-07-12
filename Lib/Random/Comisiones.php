@@ -24,7 +24,7 @@ use Faker;
 /**
  * Description of Comisiones
  *
- * @author Jose Antonio Cuello  <yopli2000@gmail.com>
+ * @author Jose Antonio Cuello <yopli2000@gmail.com>
  */
 class Comisiones extends NewItems
 {
@@ -41,14 +41,13 @@ class Comisiones extends NewItems
 
         for ($generated = 0; $generated < $number; $generated++) {
             $comision = new Comision();
-            $comision->idempresa = static::empresa();
-            $comision->porcentaje = $faker->numberBetween(1, 30);
-            $comision->prioridad = $faker->optional(0.1)->numberBetween(1, 10);
-
             $comision->codagente = static::codagente();
             $comision->codcliente = static::codcliente();
             $comision->codfamilia = static::codfamilia();
+            $comision->idempresa = static::idempresa();
             $comision->idproducto = static::idproducto();
+            $comision->porcentaje = $faker->numberBetween(1, 30);
+            $comision->prioridad = $faker->optional(0.1)->numberBetween(1, 10);
 
             if ($comision->exists()) {
                 continue;

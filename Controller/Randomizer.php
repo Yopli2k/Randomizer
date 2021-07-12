@@ -67,13 +67,13 @@ class Randomizer extends Base\Controller
         $this->buttonList[$group][] = [
             'action' => $action,
             'label' => $buttonLabel,
-            'icon' => $buttonIcon,
+            'icon' => $buttonIcon
         ];
 
         $this->actionList[$action] = [
             'label' => $actionLabel,
             'items' => 'FacturaScripts\\Dinamic\\Lib\\' . $randomClass,
-            'model' => 'FacturaScripts\\Dinamic\\Model\\' . $modelClass,
+            'model' => 'FacturaScripts\\Dinamic\\Model\\' . $modelClass
         ];
     }
 
@@ -159,9 +159,6 @@ class Randomizer extends Base\Controller
         }
     }
 
-    /**
-     *
-     */
     private function loadButtons()
     {
         $this->addButton('', 'empresas', 'generated-companies', 'companies', 'fas fa-building', 'Random\\Empresas', 'Empresa');

@@ -18,7 +18,6 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
-use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Dinamic\Model\Producto;
 use FacturaScripts\Dinamic\Model\Variante;
 use Faker;
@@ -27,7 +26,7 @@ use Faker;
  * Description of Productos
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
- * @author Jose Antonio Cuello  <yopli2000@gmail.com>
+ * @author Jose Antonio Cuello <yopli2000@gmail.com>
  */
 class Productos extends NewItems
 {
@@ -41,9 +40,10 @@ class Productos extends NewItems
     public static function create(int $number = 50): int
     {
         $faker = Faker\Factory::create('es_ES');
-        $maxCost = $faker->numberBetween(1, 499);
-        $maxPrice = $faker->numberBetween(1, 1999);
+        $maxCost = \mt_rand(0, 4) > 0 ? $faker->numberBetween(1, 49) : $faker->numberBetween(1, 499);
+        $maxPrice = \mt_rand(0, 4) > 0 ? $faker->numberBetween(1, 99) : $faker->numberBetween(1, 1999);
 
+        static::dataBase()->beginTransaction();
         for ($generated = 0; $generated < $number; $generated++) {
             $product = static::getProduct($faker);
             if ($product->exists()) {
@@ -54,15 +54,19 @@ class Productos extends NewItems
                 break;
             }
 
-            $variant = static::getProductVariant($product->idproducto, $product->referencia);
-            static::setVariantData($faker, $variant, $maxCost, $maxPrice);
-            $variant->save();
+            foreach ($product->getVariants() as $variant) {
+                static::setVariantData($faker, $variant, $maxCost, $maxPrice);
+                $variant->save();
+            }
 
             $max = \mt_rand(-3, 9);
+            $withAttr = \mt_rand(0, 3) === 0;
             while ($max > 0) {
                 $variant = static::getNewVariant($faker, $product->idproducto, $maxCost, $maxPrice);
                 static::setVariantData($faker, $variant, $maxCost, $maxPrice);
-                static::setVariantAttributes($variant);
+                if ($withAttr) {
+                    static::setVariantAttributes($variant);
+                }
                 $variant->save();
                 $max--;
             }
@@ -72,12 +76,14 @@ class Productos extends NewItems
             $product->save();
         }
 
+        static::dataBase()->commit();
         return $generated;
     }
 
     /**
      *
-     * @param Faker $faker
+     * @param Faker\Generator $faker
+     *
      * @return Producto
      */
     private static function getProduct(&$faker)
@@ -101,25 +107,9 @@ class Productos extends NewItems
 
     /**
      *
-     * @param int $idproduct
-     * @param string $reference
-     * @return Variante
-     */
-    private static function getProductVariant($idproduct, $reference)
-    {
-        $variant = new Variante();
-        $where = [
-            new DataBaseWhere('idproducto', $idproduct),
-            new DataBaseWhere('referencia', $reference),
-        ];
-        $variant->loadFromCode('', $where);
-        return $variant;
-    }
-
-    /**
+     * @param Faker\Generator $faker
+     * @param int             $idproduct
      *
-     * @param Faker $faker
-     * @param int $idproduct
      * @return Variante
      */
     private static function getNewVariant(&$faker, $idproduct)
@@ -152,10 +142,10 @@ class Productos extends NewItems
 
     /**
      *
-     * @param Faker $faker
-     * @param Variante $variant
-     * @param float $maxCost
-     * @param float $maxPrice
+     * @param Faker\Generator $faker
+     * @param Variante        $variant
+     * @param float           $maxCost
+     * @param float           $maxPrice
      */
     private static function setVariantData(&$faker, &$variant, $maxCost, $maxPrice)
     {

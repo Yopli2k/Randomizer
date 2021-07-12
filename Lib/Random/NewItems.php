@@ -19,13 +19,16 @@
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
 use FacturaScripts\Core\App\AppSettings;
+use FacturaScripts\Core\Base\DataBase;
 use FacturaScripts\Dinamic\Model\Empresa;
 use FacturaScripts\Dinamic\Model\FormaPago;
 use FacturaScripts\Dinamic\Model\Impuesto;
 use FacturaScripts\Dinamic\Model\Pais;
 use FacturaScripts\Dinamic\Model\Retencion;
 use FacturaScripts\Dinamic\Model\Serie;
+use FacturaScripts\Dinamic\Model\Tarifa;
 use FacturaScripts\Dinamic\Model\User;
+use Faker\Generator;
 
 /**
  * Description of NewItems
@@ -35,50 +38,62 @@ use FacturaScripts\Dinamic\Model\User;
 abstract class NewItems
 {
 
-    use ComercialContactTrait;
-    use ProductosTrait;
+    use ComercialContactTrait,
+        ProductosTrait;
 
     /**
      *
      * @var Empresa[]
      */
-    protected static $companies = null;
+    private static $companies = null;
 
     /**
      *
      * @var Pais[]
      */
-    protected static $countries = null;
+    private static $countries = null;
+
+    /**
+     * 
+     * @var DataBase
+     */
+    private static $database;
 
     /**
      *
      * @var FormaPago[]
      */
-    protected static $payments = null;
+    private static $payments = null;
+
+    /**
+     * 
+     * @var Tarifa[]
+     */
+    private static $rates = null;
 
     /**
      *
      * @var Retencion[]
      */
-    protected static $retentions = null;
+    private static $retentions = null;
 
     /**
      *
      * @var Serie[]
      */
-    protected static $series = null;
+    private static $series = null;
 
     /**
      *
      * @var Impuesto[]
      */
-    protected static $taxes = null;
+    private static $taxes = null;
 
     /**
      *
      * @var User[]
      */
-    protected static $users = null;
+    private static $users = null;
 
     /**
      *
@@ -195,13 +210,13 @@ abstract class NewItems
      */
     protected static function codimpuesto()
     {
-        if (null === static::$taxes) {
+        if (null === self::$taxes) {
             $tax = new Impuesto();
-            static::$taxes = $tax->all();
+            self::$taxes = $tax->all();
         }
 
-        \shuffle(static::$taxes);
-        return \mt_rand(0, 2) === 0 ? static::$taxes[0]->codimpuesto : AppSettings::get('default', 'codimpuesto');
+        \shuffle(self::$taxes);
+        return \mt_rand(0, 2) === 0 ? self::$taxes[0]->codimpuesto : AppSettings::get('default', 'codimpuesto');
     }
 
     /**
@@ -210,13 +225,13 @@ abstract class NewItems
      */
     protected static function codpais()
     {
-        if (null === static::$countries) {
+        if (null === self::$countries) {
             $country = new Pais();
-            static::$countries = $country->all();
+            self::$countries = $country->all();
         }
 
-        \shuffle(static::$countries);
-        return \mt_rand(0, 3) === 0 ? static::$countries[0]->codpais : AppSettings::get('default', 'codpais');
+        \shuffle(self::$countries);
+        return \mt_rand(0, 3) === 0 ? self::$countries[0]->codpais : AppSettings::get('default', 'codpais');
     }
 
     /**
@@ -225,13 +240,13 @@ abstract class NewItems
      */
     protected static function codpago()
     {
-        if (null === static::$payments) {
+        if (null === self::$payments) {
             $payment = new FormaPago();
-            static::$payments = $payment->all();
+            self::$payments = $payment->all();
         }
 
-        \shuffle(static::$payments);
-        return \mt_rand(0, 1) === 0 ? static::$payments[0]->codpago : AppSettings::get('default', 'codpago');
+        \shuffle(self::$payments);
+        return \mt_rand(0, 1) === 0 ? self::$payments[0]->codpago : AppSettings::get('default', 'codpago');
     }
 
     /**
@@ -240,13 +255,13 @@ abstract class NewItems
      */
     protected static function codretencion()
     {
-        if (null === static::$retentions) {
+        if (null === self::$retentions) {
             $retention = new Retencion();
-            static::$retentions = $retention->all();
+            self::$retentions = $retention->all();
         }
 
-        \shuffle(static::$retentions);
-        return \mt_rand(0, 2) === 0 ? static::$retentions[0]->codretencion : AppSettings::get('default', 'codretencion');
+        \shuffle(self::$retentions);
+        return \mt_rand(0, 2) === 0 ? self::$retentions[0]->codretencion : AppSettings::get('default', 'codretencion');
     }
 
     /**
@@ -255,28 +270,41 @@ abstract class NewItems
      */
     protected static function codserie()
     {
-        if (null === static::$series) {
+        if (null === self::$series) {
             $serie = new Serie();
-            static::$series = $serie->all();
+            self::$series = $serie->all();
         }
 
-        \shuffle(static::$series);
-        return \mt_rand(0, 1) === 0 ? static::$series[0]->codserie : AppSettings::get('default', 'codserie');
+        \shuffle(self::$series);
+        return \mt_rand(0, 1) === 0 ? self::$series[0]->codserie : AppSettings::get('default', 'codserie');
     }
 
     /**
      *
      * @return string
      */
-    protected static function empresa()
+    protected static function codtarifa()
     {
-        if (null === static::$companies) {
-            $company = new Empresa();
-            static::$companies = $company->all();
+        if (null === self::$rates) {
+            $tarifa = new Tarifa();
+            self::$rates = $tarifa->all();
         }
 
-        \shuffle(static::$companies);
-        return \mt_rand(0, 2) === 0 ? static::$companies[0]->idempresa : AppSettings::get('default', 'idempresa');
+        \shuffle(self::$rates);
+        return empty(self::$rates) || \mt_rand(0, 1) === 0 ? null : self::$rates[0]->codtarifa;
+    }
+
+    /**
+     * 
+     * @return DataBase
+     */
+    protected static function dataBase()
+    {
+        if (null === self::$database) {
+            self::$database = new DataBase();
+        }
+
+        return self::$database;
     }
 
     /**
@@ -311,16 +339,43 @@ abstract class NewItems
 
     /**
      *
+     * @return int
+     */
+    protected static function idempresa()
+    {
+        if (null === self::$companies) {
+            $company = new Empresa();
+            self::$companies = $company->all();
+        }
+
+        \shuffle(self::$companies);
+        return \mt_rand(0, 2) === 0 ? self::$companies[0]->idempresa : AppSettings::get('default', 'idempresa');
+    }
+
+    /**
+     *
      * @return string
      */
     protected static function nick()
     {
-        if (null === static::$users) {
+        if (null === self::$users) {
             $user = new User();
-            static::$users = $user->all();
+            self::$users = $user->all();
         }
 
-        \shuffle(static::$users);
-        return empty(static::$users) ? null : static::$users[0]->nick;
+        \shuffle(self::$users);
+        return empty(self::$users) ? null : self::$users[0]->nick;
+    }
+
+    /**
+     * 
+     * @param Generator $faker
+     *
+     * @return string
+     */
+    protected static function web(&$faker)
+    {
+        $web = $faker->optional()->url;
+        return \strlen($web) > 100 ? \substr($web, 0, 100) : $web;
     }
 }

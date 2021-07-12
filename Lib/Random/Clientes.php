@@ -21,7 +21,6 @@ namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 use FacturaScripts\Dinamic\Model\Cliente;
 use FacturaScripts\Dinamic\Model\CuentaBancoCliente;
 use FacturaScripts\Dinamic\Model\Contacto;
-use FacturaScripts\Plugins\Randomizer\Lib\Random\Contactos;
 use Faker;
 
 /**
@@ -42,6 +41,7 @@ class Clientes extends NewItems
     {
         $faker = Faker\Factory::create('es_ES');
 
+        static::dataBase()->beginTransaction();
         for ($generated = 0; $generated < $number; $generated++) {
             $cliente = new Cliente();
             $cliente->cifnif = static::cifnif();
@@ -61,7 +61,7 @@ class Clientes extends NewItems
             $cliente->regimeniva = static::regimenIVA();
             $cliente->telefono1 = $faker->optional()->phoneNumber;
             $cliente->telefono2 = $faker->optional()->phoneNumber;
-            $cliente->web = $faker->optional()->url;
+            $cliente->web = static::web($faker);
 
             if ($cliente->exists()) {
                 continue;
@@ -75,23 +75,24 @@ class Clientes extends NewItems
             static::createContacts($faker, $cliente->codcliente);
         }
 
+        static::dataBase()->commit();
         return $generated;
     }
 
     /**
      *
-     * @param Faker $faker
-     * @param string $customer
+     * @param Faker\Generator $faker
+     * @param string          $codcliente
      */
-    private static function createBankAccounts(&$faker, $customer)
+    private static function createBankAccounts(&$faker, $codcliente)
     {
-        $max = $faker->numberBetween(1, 5);
+        $max = $faker->numberBetween(-1, 5);
         for ($index = 1; $index <= $max; $index++) {
             $bank = new CuentaBancoCliente();
             $bank->descripcion = \implode(' ', $faker->words);
             $bank->iban = $faker->iban('ES');
-            $bank->swift = $faker->swiftBicNumber;
-            $bank->codcliente = $customer;
+            $bank->swift = $faker->optional()->swiftBicNumber;
+            $bank->codcliente = $codcliente;
             $bank->principal = ($index === 1);
             $bank->fmandato = $faker->date();
             $bank->save();
@@ -100,16 +101,16 @@ class Clientes extends NewItems
 
     /**
      *
-     * @param Faker $faker
-     * @param string $customer
+     * @param Faker\Generator $faker
+     * @param string          $codcliente
      */
-    private static function createContacts(&$faker, $customer)
+    private static function createContacts(&$faker, $codcliente)
     {
-        $max = $faker->numberBetween(1, 5);
+        $max = $faker->numberBetween(-1, 5);
         for ($index = 1; $index <= $max; $index++) {
             $contact = new Contacto();
             Contactos::setContactData($faker, $contact);
-            $contact->codcliente = $customer;
+            $contact->codcliente = $codcliente;
             $contact->save();
         }
     }

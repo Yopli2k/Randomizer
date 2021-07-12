@@ -24,7 +24,8 @@ use Faker;
 /**
  * Description of Empresas
  *
- * @author Jose Antonio Cuello  <yopli2000@gmail.com>
+ * @author Jose Antonio Cuello <yopli2000@gmail.com>
+ * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
 class Empresas extends NewItems
 {
@@ -35,33 +36,31 @@ class Empresas extends NewItems
      *
      * @return int
      */
-    public static function create(int $number = 10): int
+    public static function create(int $number = 5): int
     {
         $faker = Faker\Factory::create('es_ES');
 
         for ($generated = 0; $generated < $number; $generated++) {
             $empresa = new Empresa();
-            $empresa->administrador = $faker->name();
-            $empresa->nombre = $faker->name();
-            $empresa->nombrecorto = \implode(' ', $faker->words);
-            $empresa->web = $faker->optional()->url;
-            $empresa->regimeniva = static::regimenIVA();
-
+            $empresa->administrador = $faker->optional()->name();
             $empresa->apartado = $faker->optional(0.1)->postcode;
+            $empresa->cifnif = static::cifnif();
             $empresa->ciudad = $faker->optional(0.7)->city;
             $empresa->codpais = static::codpais();
             $empresa->codpostal = $faker->optional()->postcode;
             $empresa->direccion = $faker->optional()->address;
-            $empresa->provincia = $faker->optional()->state;
-
-            $empresa->cifnif = static::cifnif();
             $empresa->email = $faker->optional()->email;
             $empresa->fax = $faker->optional(0.1)->phoneNumber;
-            $empresa->fechaalta = $faker->date();
+            $empresa->fechaalta = $faker->optional()->date();
+            $empresa->nombre = $faker->name();
+            $empresa->nombrecorto = $faker->optional(0.5, $empresa->nombre)->firstName();
             $empresa->observaciones = $faker->optional()->paragraph();
             $empresa->personafisica = $faker->boolean();
+            $empresa->provincia = $faker->optional()->state;
+            $empresa->regimeniva = static::regimenIVA();
             $empresa->telefono1 = $faker->optional()->phoneNumber;
             $empresa->telefono2 = $faker->optional()->phoneNumber;
+            $empresa->web = $faker->optional()->url;
 
             if ($empresa->exists()) {
                 continue;

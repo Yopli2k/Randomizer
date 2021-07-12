@@ -42,10 +42,6 @@ class Agentes extends NewItems
         for ($generated = 0; $generated < $number; $generated++) {
             $agente = new Agente();
             $agente->codagente = static::codeOrNull(10);
-            if ($agente->exists()) {
-                continue;
-            }
-
             $agente->cargo = $faker->optional()->jobTitle;
             $agente->cifnif = static::cifnif();
             $agente->email = $faker->optional(0.8)->email;
@@ -56,6 +52,10 @@ class Agentes extends NewItems
             $agente->personafisica = $faker->boolean();
             $agente->telefono1 = $faker->optional()->phoneNumber;
             $agente->telefono2 = $faker->optional()->phoneNumber;
+
+            if ($agente->exists()) {
+                continue;
+            }
 
             if (false === $agente->save()) {
                 break;

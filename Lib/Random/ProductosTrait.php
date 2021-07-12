@@ -29,7 +29,7 @@ use FacturaScripts\Dinamic\Model\Variante;
  * Set of methods for obtaining data derived from products
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
- * @author Jose Antonio Cuello  <yopli2000@gmail.com>
+ * @author Jose Antonio Cuello <yopli2000@gmail.com>
  */
 trait ProductosTrait
 {
@@ -56,7 +56,7 @@ trait ProductosTrait
      *
      * @var Variante[]
      */
-    protected static $references = null;
+    protected static $variants = null;
 
     /**
      *
@@ -70,13 +70,13 @@ trait ProductosTrait
      */
     protected static function atributo()
     {
-        if (null === static::$attributes) {
+        if (null === self::$attributes) {
             $attribute = new AtributoValor();
-            static::$attributes = $attribute->all();
+            self::$attributes = $attribute->all();
         }
 
-        \shuffle(static::$attributes);
-        return empty(static::$attributes) || \mt_rand(0, 2) === 0 ? null : static::$attributes[0];
+        \shuffle(self::$attributes);
+        return empty(self::$attributes) || \mt_rand(0, 2) === 0 ? null : self::$attributes[0];
     }
 
     /**
@@ -85,13 +85,13 @@ trait ProductosTrait
      */
     protected static function codalmacen()
     {
-        if (null === static::$warehouses) {
+        if (null === self::$warehouses) {
             $warehouse = new Almacen();
-            static::$warehouses = $warehouse->all();
+            self::$warehouses = $warehouse->all();
         }
 
-        \shuffle(static::$warehouses);
-        return \mt_rand(0, 2) === 0 ? static::$warehouses[0]->codalmacen : AppSettings::get('default', 'codalmacen');
+        \shuffle(self::$warehouses);
+        return \mt_rand(0, 2) === 0 ? self::$warehouses[0]->codalmacen : AppSettings::get('default', 'codalmacen');
     }
 
     /**
@@ -100,13 +100,13 @@ trait ProductosTrait
      */
     protected static function codfabricante()
     {
-        if (null === static::$manufacturers) {
+        if (null === self::$manufacturers) {
             $manufacturer = new Fabricante();
-            static::$manufacturers = $manufacturer->all();
+            self::$manufacturers = $manufacturer->all();
         }
 
-        \shuffle(static::$manufacturers);
-        return empty(static::$manufacturers) || \mt_rand(0, 3) === 0 ? null : static::$manufacturers[0]->codfabricante;
+        \shuffle(self::$manufacturers);
+        return empty(self::$manufacturers) || \mt_rand(0, 3) === 0 ? null : self::$manufacturers[0]->codfabricante;
     }
 
     /**
@@ -115,13 +115,13 @@ trait ProductosTrait
      */
     protected static function codfamilia()
     {
-        if (null === static::$families) {
+        if (null === self::$families) {
             $family = new Familia();
-            static::$families = $family->all();
+            self::$families = $family->all();
         }
 
-        \shuffle(static::$families);
-        return empty(static::$families) || \mt_rand(0, 3) === 0 ? null : static::$families[0]->codfamilia;
+        \shuffle(self::$families);
+        return empty(self::$families) || \mt_rand(0, 3) === 0 ? null : self::$families[0]->codfamilia;
     }
 
     /**
@@ -130,13 +130,13 @@ trait ProductosTrait
      */
     protected static function idproducto()
     {
-        if (null === static::$references) {
-            $reference = new Variante();
-            static::$references = $reference->all();
+        if (null === self::$variants) {
+            $variant = new Variante();
+            self::$variants = $variant->all([], [], 0, 200);
         }
 
-        \shuffle(static::$references);
-        return empty(static::$references) || \mt_rand(0, 2) === 0 ? null : static::$references[0]->idproducto;
+        \shuffle(self::$variants);
+        return empty(self::$variants) || \mt_rand(0, 2) === 0 ? null : self::$variants[0]->idproducto;
     }
 
     /**
@@ -145,12 +145,12 @@ trait ProductosTrait
      */
     protected static function referencia()
     {
-        if (null === static::$references) {
-            $reference = new Variante();
-            static::$references = $reference->all();
+        if (null === self::$variants) {
+            $variant = new Variante();
+            self::$variants = $variant->all([], [], 0, 200);
         }
 
-        \shuffle(static::$references);
-        return empty(static::$references) || \mt_rand(0, 2) === 0 ? null : static::$references[0]->referencia;
+        \shuffle(self::$variants);
+        return empty(self::$variants) || \mt_rand(0, 2) === 0 ? null : self::$variants[0]->referencia;
     }
 }

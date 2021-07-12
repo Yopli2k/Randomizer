@@ -18,7 +18,6 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
-use FacturaScripts\Dinamic\Lib\BusinessDocumentTools;
 use FacturaScripts\Dinamic\Model\PresupuestoCliente;
 use Faker;
 
@@ -30,16 +29,19 @@ use Faker;
 class PresupuestosClientes extends NewItems
 {
 
+    use BusinessDocumentTrait;
+
     /**
      * 
      * @param int $number
      *
      * @return int
      */
-    public static function create(int $number = 50): int
+    public static function create(int $number = 25): int
     {
         $faker = Faker\Factory::create('es_ES');
 
+        static::dataBase()->beginTransaction();
         for ($generated = 0; $generated < $number; $generated++) {
             $doc = new PresupuestoCliente();
             $doc->setSubject(static::cliente());
@@ -51,7 +53,7 @@ class PresupuestosClientes extends NewItems
             $doc->dtopor2 = $faker->optional(0.1)->numberBetween(1, 90);
             $doc->fecha = static::fecha();
             $doc->hora = static::hora();
-            $doc->numero2 = $faker->optional()->isbn10;
+            $doc->numero2 = static::referencia();
             $doc->observaciones = $faker->optional()->text();
 
             if ($doc->exists()) {
@@ -62,24 +64,11 @@ class PresupuestosClientes extends NewItems
                 break;
             }
 
-            $freelines = \mt_rand(1, 200);
-            while ($freelines > 0) {
-                $newline = $doc->getNewLine();
-                $newline->cantidad = static::cantidad();
-                $newline->codimpuesto = static::codimpuesto();
-                $newline->descripcion = $faker->text();
-                $newline->dtopor = $faker->optional(0.2, 0)->numberBetween(0, 99);
-                $newline->pvpunitario = $faker->randomFloat(2, 0, 1999);
-                $newline->save();
-
-                $freelines--;
-            }
-
-            $tool = new BusinessDocumentTools();
-            $tool->recalculate($doc);
-            $doc->save();
+            static::createLines($faker, $doc, $faker->numberBetween(1, 99));
+            static::recalculate($doc);
         }
 
+        static::dataBase()->commit();
         return $generated;
     }
 }

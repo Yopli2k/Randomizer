@@ -24,7 +24,8 @@ use Faker;
 /**
  * Description of AgenciasTransportes
  *
- * @author Jose Antonio Cuello  <yopli2000@gmail.com>
+ * @author Jose Antonio Cuello <yopli2000@gmail.com>
+ * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
 class AgenciasTransportes extends NewItems
 {
@@ -35,17 +36,17 @@ class AgenciasTransportes extends NewItems
      *
      * @return int
      */
-    public static function create(int $number = 50): int
+    public static function create(int $number = 5): int
     {
         $faker = Faker\Factory::create('es_ES');
 
         for ($generated = 0; $generated < $number; $generated++) {
             $agencia = new AgenciaTransporte();
-            $agencia->codtrans = static::codeOrNull(8);
             $agencia->activo = $faker->boolean();
+            $agencia->codtrans = static::codeOrNull(8);
             $agencia->nombre = $faker->name();
-            $agencia->web = $faker->optional()->url;
             $agencia->telefono = $faker->optional()->phoneNumber;
+            $agencia->web = static::web($faker);
 
             if ($agencia->exists()) {
                 continue;

@@ -62,13 +62,13 @@ trait ComercialContactTrait
      */
     protected static function cliente()
     {
-        if (null === static::$customers) {
+        if (null === self::$customers) {
             $customer = new Cliente();
-            static::$customers = $customer->all();
+            self::$customers = $customer->all();
         }
 
-        \shuffle(static::$customers);
-        return empty(static::$customers) ? new Cliente() : static::$customers[0];
+        \shuffle(self::$customers);
+        return empty(self::$customers) ? new Cliente() : self::$customers[0];
     }
 
     /**
@@ -77,13 +77,13 @@ trait ComercialContactTrait
      */
     protected static function codagente()
     {
-        if (null === static::$agents) {
+        if (null === self::$agents) {
             $agent = new Agente();
-            static::$agents = $agent->all();
+            self::$agents = $agent->all();
         }
 
-        \shuffle(static::$agents);
-        return empty(static::$agents) || \mt_rand(0, 3) === 0 ? null : static::$agents[0]->codagente;
+        \shuffle(self::$agents);
+        return empty(self::$agents) || \mt_rand(0, 3) === 0 ? null : self::$agents[0]->codagente;
     }
 
     /**
@@ -92,13 +92,13 @@ trait ComercialContactTrait
      */
     protected static function codcliente()
     {
-        if (null === static::$customers) {
+        if (null === self::$customers) {
             $customer = new Cliente();
-            static::$customers = $customer->all();
+            self::$customers = $customer->all();
         }
 
-        \shuffle(static::$customers);
-        return empty(static::$customers) || \mt_rand(0, 3) === 0 ? null : static::$customers[0]->codcliente;
+        \shuffle(self::$customers);
+        return empty(self::$customers) || \mt_rand(0, 3) === 0 ? null : self::$customers[0]->codcliente;
     }
 
     /**
@@ -107,13 +107,13 @@ trait ComercialContactTrait
      */
     protected static function codgrupo()
     {
-        if (null === static::$customerGroups) {
+        if (null === self::$customerGroups) {
             $customerGroup = new GrupoClientes();
-            static::$customerGroups = $customerGroup->all();
+            self::$customerGroups = $customerGroup->all();
         }
 
-        \shuffle(static::$customerGroups);
-        return empty(static::$customerGroups) || \mt_rand(0, 2) === 0 ? null : static::$customerGroups[0]->codgrupo;
+        \shuffle(self::$customerGroups);
+        return empty(self::$customerGroups) || \mt_rand(0, 2) === 0 ? null : self::$customerGroups[0]->codgrupo;
     }
 
     /**
@@ -122,13 +122,13 @@ trait ComercialContactTrait
      */
     protected static function proveedor()
     {
-        if (null === static::$suppliers) {
+        if (null === self::$suppliers) {
             $supplier = new Proveedor();
-            static::$suppliers = $supplier->all();
+            self::$suppliers = $supplier->all();
         }
 
-        \shuffle(static::$suppliers);
-        return empty(static::$suppliers) ? new Proveedor() : static::$suppliers[0];
+        \shuffle(self::$suppliers);
+        return empty(self::$suppliers) ? new Proveedor() : self::$suppliers[0];
     }
 
     /**

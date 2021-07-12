@@ -19,7 +19,6 @@
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
 use FacturaScripts\Dinamic\Model\AlbaranProveedor;
-use FacturaScripts\Plugins\Randomizer\Lib\Random\BusinessDocumentTrait;
 use Faker;
 
 /**
@@ -38,10 +37,11 @@ class AlbaranesProveedores extends NewItems
      *
      * @return int
      */
-    public static function create(int $number = 50): int
+    public static function create(int $number = 25): int
     {
         $faker = Faker\Factory::create('es_ES');
 
+        static::dataBase()->beginTransaction();
         for ($generated = 0; $generated < $number; $generated++) {
             $doc = new AlbaranProveedor();
             $doc->setSubject(static::proveedor());
@@ -52,6 +52,7 @@ class AlbaranesProveedores extends NewItems
             $doc->dtopor2 = $faker->optional(0.1)->numberBetween(1, 90);
             $doc->fecha = static::fecha();
             $doc->hora = static::hora();
+            $doc->numproveedor = static::referencia();
             $doc->observaciones = $faker->optional()->text();
 
             if ($doc->exists()) {
@@ -63,10 +64,11 @@ class AlbaranesProveedores extends NewItems
                 break;
             }
 
-            static::createLines($faker, $doc, $faker->numberBetween(1, 9));
+            static::createLines($faker, $doc, $faker->numberBetween(1, 199));
             static::recalculate($doc);
         }
 
+        static::dataBase()->commit();
         return $generated;
     }
 }

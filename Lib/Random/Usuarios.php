@@ -18,8 +18,9 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
-use FacturaScripts\Dinamic\Model\User;
 use FacturaScripts\Dinamic\Model\Role;
+use FacturaScripts\Dinamic\Model\RoleUser;
+use FacturaScripts\Dinamic\Model\User;
 use Faker;
 
 /**
@@ -34,7 +35,7 @@ class Usuarios extends NewItems
      *
      * @var Role[]
      */
-    private $roles = [];
+    private static $roles;
 
     /**
      *
@@ -42,10 +43,9 @@ class Usuarios extends NewItems
      *
      * @return int
      */
-    public static function create(int $number = 50): int
+    public static function create(int $number = 25): int
     {
         $faker = Faker\Factory::create('es_ES');
-        $this->roles = $this->loadRoles();
 
         for ($generated = 0; $generated < $number; $generated++) {
             $user = new User();
@@ -64,12 +64,12 @@ class Usuarios extends NewItems
             $user->lastip = $faker->optional()->ipv4;
             $user->newPassword = $user->newPassword2 = $faker->password();
 
-            if (false == $user->admin) {
-                $this->setRol($user);
-            }
-
             if (false === $user->save()) {
                 break;
+            }
+
+            if (false === $user->admin) {
+                static::setRole($user);
             }
         }
 
@@ -77,26 +77,27 @@ class Usuarios extends NewItems
     }
 
     /**
-     *
-     * @return Role[]
+     * 
+     * @param User $user
      */
-    private function loadRoles()
+    private static function setRole($user)
     {
-        $roleModel = new Role();
-        return $roleModel->all();
-    }
+        if (null === self::$roles) {
+            $role = new Role();
+            self::$roles = $role->all();
+        }
 
-    private function setRol(&$user)
-    {
-        if (empty($this->roles)) {
+        if (\count(self::$roles) <= 1) {
             return;
         }
 
-        shuffle($this->roles);
-
-        $roleUser = new RoleUser();
-        $roleUser->codrole = $this->roles[0]->codrole;
-        $roleUser->nick = $user->nick;
-        $roleUser->save();
+        \shuffle(self::$roles);
+        foreach (self::$roles as $role) {
+            $roleUser = new RoleUser();
+            $roleUser->codrole = $role->codrole;
+            $roleUser->nick = $user->nick;
+            $roleUser->save();
+            break;
+        }
     }
 }

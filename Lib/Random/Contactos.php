@@ -57,8 +57,8 @@ class Contactos extends NewItems
 
     /**
      *
-     * @param Faker $faker
-     * @param Contacto $contact
+     * @param Faker\Generator $faker
+     * @param Contacto        $contact
      */
     public static function setContactData(&$faker, &$contact)
     {

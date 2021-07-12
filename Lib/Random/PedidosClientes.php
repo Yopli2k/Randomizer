@@ -26,10 +26,8 @@ use Faker;
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class PedidosClientes extends NewItems
+class PedidosClientes extends NewBusinessDocument
 {
-
-    use BusinessDocumentTrait;
 
     /**
      *
@@ -47,12 +45,15 @@ class PedidosClientes extends NewItems
             $doc->setSubject(static::cliente());
             $doc->codagente = static::codagente();
             $doc->codalmacen = static::codalmacen();
+            $doc->codigoenv = $faker->optional()->isbn13;
             $doc->codpago = static::codpago();
+            $doc->codtrans = static::codtrans();
             $doc->codserie = static::codserie();
             $doc->dtopor1 = $faker->optional(0.1)->numberBetween(1, 90);
             $doc->dtopor2 = $faker->optional(0.1)->numberBetween(1, 90);
             $doc->fecha = static::fecha();
             $doc->hora = static::hora();
+            $doc->nick = static::nick(true);
             $doc->numero2 = static::referencia();
             $doc->observaciones = $faker->optional()->text();
 

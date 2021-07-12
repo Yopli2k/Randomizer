@@ -26,10 +26,8 @@ use Faker;
  *
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-class AlbaranesProveedores extends NewItems
+class AlbaranesProveedores extends NewBusinessDocument
 {
-
-    use BusinessDocumentTrait;
 
     /**
      *
@@ -52,6 +50,7 @@ class AlbaranesProveedores extends NewItems
             $doc->dtopor2 = $faker->optional(0.1)->numberBetween(1, 90);
             $doc->fecha = static::fecha();
             $doc->hora = static::hora();
+            $doc->nick = static::nick(true);
             $doc->numproveedor = static::referencia();
             $doc->observaciones = $faker->optional()->text();
 

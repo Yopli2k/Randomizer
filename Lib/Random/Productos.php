@@ -40,8 +40,8 @@ class Productos extends NewItems
     public static function create(int $number = 50): int
     {
         $faker = Faker\Factory::create('es_ES');
-        $maxCost = \mt_rand(0, 4) > 0 ? $faker->numberBetween(1, 49) : $faker->numberBetween(1, 499);
-        $maxPrice = \mt_rand(0, 4) > 0 ? $faker->numberBetween(1, 99) : $faker->numberBetween(1, 1999);
+        $maxCost = \mt_rand(0, 5) > 0 ? $faker->numberBetween(1, 49) : $faker->numberBetween(1, 499);
+        $maxPrice = \mt_rand(0, 5) > 0 ? $faker->numberBetween(1, 99) : $faker->numberBetween(1, 1999);
 
         static::dataBase()->beginTransaction();
         for ($generated = 0; $generated < $number; $generated++) {
@@ -101,7 +101,7 @@ class Productos extends NewItems
         $product->referencia = static::code(20);
         $product->secompra = $faker->boolean(90);
         $product->sevende = $faker->boolean(90);
-        $product->ventasinstock = $faker->boolean(30);
+        $product->ventasinstock = $faker->boolean();
         return $product;
     }
 

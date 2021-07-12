@@ -353,10 +353,12 @@ abstract class NewItems
     }
 
     /**
+     * 
+     * @param bool $null
      *
      * @return string
      */
-    protected static function nick()
+    protected static function nick(bool $null = false)
     {
         if (null === self::$users) {
             $user = new User();
@@ -364,7 +366,9 @@ abstract class NewItems
         }
 
         \shuffle(self::$users);
-        return empty(self::$users) ? null : self::$users[0]->nick;
+        return false === $null || \mt_rand(0, 3) === 0 ?
+            null :
+            self::$users[0]->nick;
     }
 
     /**

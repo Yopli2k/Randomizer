@@ -18,9 +18,10 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
-use FacturaScripts\Dinamic\Lib\BusinessDocumentTools;
 use FacturaScripts\Core\Model\Base\BusinessDocument;
 use FacturaScripts\Core\Model\Base\BusinessDocumentLine;
+use FacturaScripts\Dinamic\Lib\BusinessDocumentTools;
+use FacturaScripts\Dinamic\Model\AgenciaTransporte;
 use Faker;
 
 /**
@@ -29,8 +30,29 @@ use Faker;
  * @author Jose Antonio Cuello <yopli2000@gmail.com>
  * @author Carlos Garcia Gomez <carlos@facturascripts.com>
  */
-trait BusinessDocumentTrait
+abstract class NewBusinessDocument extends NewItems
 {
+
+    /**
+     * 
+     * @var AgenciaTransporte[]
+     */
+    private static $agenciastrans = null;
+
+    /**
+     * 
+     * @return string
+     */
+    protected static function codtrans()
+    {
+        if (null === self::$agenciastrans) {
+            $agencia = new AgenciaTransporte();
+            self::$agenciastrans = $agencia->all();
+        }
+
+        \shuffle(self::$agenciastrans);
+        return empty(self::$agenciastrans) || \mt_rand(0, 2) > 0 ? null : self::$agenciastrans[0]->codtrans;
+    }
 
     /**
      * Add a number of lines to the indicated document.
@@ -43,7 +65,7 @@ trait BusinessDocumentTrait
     {
         for ($line = 0; $line < $numLines; $line++) {
             $newLine = static::getNewLine($faker, $document);
-            $newLine->cantidad = $faker->numberBetween(1, 99);
+            $newLine->cantidad = static::cantidad();
             $newLine->dtopor = $faker->optional(0.1, 0)->numberBetween(1, 90);
             if (false === $newLine->save()) {
                 break;
@@ -74,6 +96,7 @@ trait BusinessDocumentTrait
         if (empty($reference)) {
             $newLine = $document->getNewLine();
             $newLine->descripcion = $faker->text();
+            $newLine->pvpunitario = $faker->numberBetween(0, 9999);
             return $newLine;
         }
 

@@ -120,13 +120,15 @@ class Randomizer extends Base\Controller
     private function execAction($option)
     {
         foreach ($this->actionList as $action => $values) {
-            if ($action == $option) {
-                $itemClass = $values['items'];
-                if (\class_exists($itemClass)) {
-                    $this->generateAction($values['label'], $itemClass::create());
-                }
-                break;
+            if ($action != $option) {
+                continue;
             }
+
+            $itemClass = $values['items'];
+            if (\class_exists($itemClass)) {
+                $this->generateAction($values['label'], $itemClass::create());
+            }
+            break;
         }
     }
 
@@ -177,6 +179,7 @@ class Randomizer extends Base\Controller
         $this->addButton('purchases', 'pedidosprov', 'generated-supplier-orders', 'orders', 'fas fa-copy', 'Random\\PedidosProveedores', 'PedidoProveedor');
         $this->addButton('purchases', 'albaranesprov', 'generated-supplier-delivery-notes', 'delivery-notes', 'fas fa-copy', 'Random\\AlbaranesProveedores', 'AlbaranProveedor');
 
+        /// TODO: añadir tarifas
         $this->addButton('sales', 'grupos', 'generated-customer-groups', 'customer-groups', 'fas fa-users-cog', 'Random\\GruposClientes', 'GrupoClientes');
         $this->addButton('sales', 'clientes', 'generated-customers', 'customers', 'fas fa-users', 'Random\\Clientes', 'Cliente');
         $this->addButton('sales', 'comisiones', 'generated-commissions', 'commissions', 'fas fa-percentage', 'Random\\Comisiones', 'Comision');

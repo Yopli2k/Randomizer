@@ -35,7 +35,7 @@ class GruposClientes extends NewItems
      *
      * @return int
      */
-    public static function create(int $number = 50): int
+    public static function create(int $number = 25): int
     {
         $faker = Faker\Factory::create('es_ES');
 

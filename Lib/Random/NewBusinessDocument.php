@@ -65,7 +65,7 @@ abstract class NewBusinessDocument extends NewItems
     {
         for ($line = 0; $line < $numLines; $line++) {
             $newLine = static::getNewLine($faker, $document);
-            $newLine->cantidad = static::cantidad();
+            $newLine->cantidad = $faker->optional(0.1, 1)->randomFloat(2, -9, 999);
             $newLine->dtopor = $faker->optional(0.1, 0)->numberBetween(1, 90);
             if (false === $newLine->save()) {
                 break;
@@ -96,7 +96,7 @@ abstract class NewBusinessDocument extends NewItems
         if (empty($reference)) {
             $newLine = $document->getNewLine();
             $newLine->descripcion = $faker->text();
-            $newLine->pvpunitario = $faker->numberBetween(0, 9999);
+            $newLine->pvpunitario = $faker->numberBetween(0, 49) * $faker->optional(0.1, 1)->randomFloat(2, 0.01, 100);
             return $newLine;
         }
 

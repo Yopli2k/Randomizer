@@ -45,13 +45,13 @@ abstract class NewItems
      *
      * @var Empresa[]
      */
-    private static $companies = null;
+    private static $companies;
 
     /**
      *
      * @var Pais[]
      */
-    private static $countries = null;
+    private static $countries;
 
     /**
      * 
@@ -63,37 +63,37 @@ abstract class NewItems
      *
      * @var FormaPago[]
      */
-    private static $payments = null;
+    private static $payments;
 
     /**
      * 
      * @var Tarifa[]
      */
-    private static $rates = null;
+    private static $rates;
 
     /**
      *
      * @var Retencion[]
      */
-    private static $retentions = null;
+    private static $retentions;
 
     /**
      *
      * @var Serie[]
      */
-    private static $series = null;
+    private static $series;
 
     /**
      *
      * @var Impuesto[]
      */
-    private static $taxes = null;
+    private static $taxes;
 
     /**
      *
      * @var User[]
      */
-    private static $users = null;
+    private static $users;
 
     /**
      *
@@ -102,32 +102,6 @@ abstract class NewItems
      * @return int
      */
     abstract public static function create(int $number = 50): int;
-
-    /**
-     *
-     * @return float
-     */
-    protected static function cantidad()
-    {
-        $option = \mt_rand(0, 19);
-        switch ($option) {
-            default:
-                return \mt_rand(0, 9);
-
-            case 0:
-                return \mt_rand(10, 99);
-
-            case 1:
-                return \mt_rand(100, 9999);
-
-            case 2:
-                return \mt_rand(-49, 0);
-
-            case 3:
-            case 4:
-                return \mt_rand(100, 99999) / 1000;
-        }
-    }
 
     /**
      *
@@ -366,9 +340,9 @@ abstract class NewItems
         }
 
         \shuffle(self::$users);
-        return false === $null || \mt_rand(0, 3) === 0 ?
-            null :
-            self::$users[0]->nick;
+        return false === $null || \mt_rand(0, 3) > 0 ?
+            self::$users[0]->nick :
+            null;
     }
 
     /**

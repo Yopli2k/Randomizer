@@ -18,6 +18,7 @@
  */
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
+use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Dinamic\Model\Producto;
 use FacturaScripts\Dinamic\Model\Variante;
 use Faker;
@@ -40,8 +41,8 @@ class Productos extends NewItems
     public static function create(int $number = 50): int
     {
         $faker = Faker\Factory::create('es_ES');
-        $maxCost = \mt_rand(0, 5) > 0 ? $faker->numberBetween(1, 49) : $faker->numberBetween(1, 499);
-        $maxPrice = \mt_rand(0, 5) > 0 ? $faker->numberBetween(1, 99) : $faker->numberBetween(1, 1999);
+        $maxCost = \mt_rand(0, 19) > 0 ? $faker->randomFloat(3, 0.01, 49) : $faker->numberBetween(1, 499);
+        $maxPrice = \mt_rand(0, 19) > 0 ? $faker->randomFloat(3, 0.01, 99) : $faker->numberBetween(1, 1999);
 
         static::dataBase()->beginTransaction();
         for ($generated = 0; $generated < $number; $generated++) {
@@ -59,10 +60,10 @@ class Productos extends NewItems
                 $variant->save();
             }
 
-            $max = \mt_rand(-3, 9);
-            $withAttr = \mt_rand(0, 3) === 0;
+            $max = \mt_rand(-9, 9);
+            $withAttr = \mt_rand(0, 4) === 0;
             while ($max > 0) {
-                $variant = static::getNewVariant($faker, $product->idproducto, $maxCost, $maxPrice);
+                $variant = static::getNewVariant($faker, $product->idproducto);
                 static::setVariantData($faker, $variant, $maxCost, $maxPrice);
                 if ($withAttr) {
                     static::setVariantAttributes($variant);
@@ -89,16 +90,16 @@ class Productos extends NewItems
     private static function getProduct(&$faker)
     {
         $product = new Producto();
-        $product->bloqueado = $faker->boolean(10);
+        $product->bloqueado = $faker->boolean(5);
         $product->codfabricante = static::codfabricante();
         $product->codfamilia = static::codfamilia();
         $product->codimpuesto = static::codimpuesto();
         $product->descripcion = $faker->paragraph;
         $product->fechaalta = $faker->date();
-        $product->nostock = $faker->boolean(20);
+        $product->nostock = $faker->boolean(10);
         $product->observaciones = $faker->optional()->text(500);
         $product->publico = $faker->boolean();
-        $product->referencia = static::code(20);
+        $product->referencia = static::newReferencia($faker);
         $product->secompra = $faker->boolean(90);
         $product->sevende = $faker->boolean(90);
         $product->ventasinstock = $faker->boolean();
@@ -116,8 +117,56 @@ class Productos extends NewItems
     {
         $newVar = new Variante();
         $newVar->idproducto = $idproduct;
-        $newVar->referencia = $faker->isbn13;
+        $newVar->referencia = static::newReferencia($faker);
         return $newVar;
+    }
+
+    /**
+     * 
+     * @param Faker\Generator $faker
+     *
+     * @return string
+     */
+    private static function newReferencia($faker)
+    {
+        $option = \mt_rand(0, 9);
+        switch ($option) {
+            default:
+                $ref = static::code(20);
+                break;
+
+            case 1:
+                $ref = $faker->isbn10;
+                break;
+
+            case 2:
+                $ref = $faker->isbn13;
+                break;
+
+            case 3:
+                $ref = $faker->ean8;
+                break;
+
+            case 4:
+                $ref = $faker->ean13;
+                break;
+
+            case 5:
+                $ref = $faker->domainName;
+                break;
+
+            case 6:
+                $ref = $faker->word . \mt_rand(1, 99999999);
+                break;
+
+            case 7:
+                $ref = \mt_rand(1, 99999999) . $faker->word;
+                break;
+        }
+
+        $variante = new Variante();
+        $where = [new DataBaseWhere('referencia', $ref)];
+        return $variante->loadFromCode('', $where) ? 'REF' . \mt_rand(1, 999999999) : $ref;
     }
 
     /**

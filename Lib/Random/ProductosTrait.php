@@ -132,7 +132,7 @@ trait ProductosTrait
     {
         if (null === self::$variants) {
             $variant = new Variante();
-            self::$variants = $variant->all([], [], 0, 200);
+            self::$variants = $variant->all([], static::variantOrder(), 0, 200);
         }
 
         \shuffle(self::$variants);
@@ -147,10 +147,25 @@ trait ProductosTrait
     {
         if (null === self::$variants) {
             $variant = new Variante();
-            self::$variants = $variant->all([], [], 0, 200);
+            self::$variants = $variant->all([], static::variantOrder(), 0, 200);
         }
 
         \shuffle(self::$variants);
         return empty(self::$variants) || \mt_rand(0, 2) === 0 ? null : self::$variants[0]->referencia;
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    private static function variantOrder(): array
+    {
+        $fields = ['codbarras', 'coste', 'idproducto', 'idvariante', 'precio', 'referencia'];
+        \shuffle($fields);
+
+        $options = ['ASC', 'DESC'];
+        \shuffle($options);
+
+        return [$fields[0] => $options[0]];
     }
 }

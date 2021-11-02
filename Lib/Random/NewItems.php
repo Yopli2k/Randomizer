@@ -20,6 +20,7 @@ namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
 use FacturaScripts\Core\App\AppSettings;
 use FacturaScripts\Core\Base\DataBase;
+use FacturaScripts\Core\Base\DataBase\DataBaseWhere;
 use FacturaScripts\Dinamic\Model\Empresa;
 use FacturaScripts\Dinamic\Model\FormaPago;
 use FacturaScripts\Dinamic\Model\Impuesto;
@@ -54,7 +55,7 @@ abstract class NewItems
     private static $countries;
 
     /**
-     * 
+     *
      * @var DataBase
      */
     private static $database;
@@ -66,7 +67,7 @@ abstract class NewItems
     private static $payments;
 
     /**
-     * 
+     *
      * @var Tarifa[]
      */
     private static $rates;
@@ -246,7 +247,10 @@ abstract class NewItems
     {
         if (null === self::$series) {
             $serie = new Serie();
-            self::$series = $serie->all();
+            $where = [
+                new DataBaseWhere('codserie', AppSettings::get('default', 'codserierec'), '<>'),
+            ];
+            self::$series = $serie->all($where);
         }
 
         \shuffle(self::$series);
@@ -269,7 +273,7 @@ abstract class NewItems
     }
 
     /**
-     * 
+     *
      * @return DataBase
      */
     protected static function dataBase()
@@ -327,7 +331,7 @@ abstract class NewItems
     }
 
     /**
-     * 
+     *
      * @param bool $null
      *
      * @return string
@@ -346,7 +350,7 @@ abstract class NewItems
     }
 
     /**
-     * 
+     *
      * @param Generator $faker
      *
      * @return string

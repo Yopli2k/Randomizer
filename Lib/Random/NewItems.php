@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace FacturaScripts\Plugins\Randomizer\Lib\Random;
 
 use FacturaScripts\Core\App\AppSettings;
@@ -43,61 +44,51 @@ abstract class NewItems
         ProductosTrait;
 
     /**
-     *
      * @var Empresa[]
      */
     private static $companies;
 
     /**
-     *
      * @var Pais[]
      */
     private static $countries;
 
     /**
-     *
      * @var DataBase
      */
     private static $database;
 
     /**
-     *
      * @var FormaPago[]
      */
     private static $payments;
 
     /**
-     *
      * @var Tarifa[]
      */
     private static $rates;
 
     /**
-     *
      * @var Retencion[]
      */
     private static $retentions;
 
     /**
-     *
      * @var Serie[]
      */
     private static $series;
 
     /**
-     *
      * @var Impuesto[]
      */
     private static $taxes;
 
     /**
-     *
      * @var User[]
      */
     private static $users;
 
     /**
-     *
      * @param int $number
      *
      * @return int
@@ -105,19 +96,18 @@ abstract class NewItems
     abstract public static function create(int $number = 50): int;
 
     /**
-     *
      * @return string
      */
     protected static function cifnif(): string
     {
-        $number = \mb_substr(\str_shuffle('0123456789'), 0, \mt_rand(8, 9));
-        $letter = \mb_substr(\str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 1);
-        $letter2 = \mb_substr(\str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 1);
+        $number = mb_substr(str_shuffle('0123456789'), 0, mt_rand(8, 9));
+        $letter = mb_substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 1);
+        $letter2 = mb_substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 1);
 
         $separators = ['', ' ', '-', '.', ','];
-        \shuffle($separators);
+        shuffle($separators);
 
-        switch (\mt_rand(0, 5)) {
+        switch (mt_rand(0, 5)) {
             case 0:
                 return '';
 
@@ -136,40 +126,38 @@ abstract class NewItems
     }
 
     /**
-     *
-     * @param int    $maxlen
+     * @param int $maxlen
      * @param string $use
      *
      * @return string
      */
     protected static function code(int $maxlen, string $use = '-_.'): string
     {
-        $size = \mt_rand(1, $maxlen);
-        $code = \mb_substr(\str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz0123456789' . $use), 0, $size);
-        switch (\mt_rand(0, 5)) {
+        $size = mt_rand(1, $maxlen);
+        $code = mb_substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyz0123456789' . $use), 0, $size);
+        switch (mt_rand(0, 5)) {
             case 0:
-                return \mb_substr(\str_shuffle('0123456789012345678901234567890123456789' . $use), 0, $size);
+                return mb_substr(str_shuffle('0123456789012345678901234567890123456789' . $use), 0, $size);
 
             case 1:
-                return \strtoupper($code);
+                return strtoupper($code);
 
             default:
                 return $code;
         }
 
-        return \mt_rand(0, 1) ? $code : \strtoupper($code);
+        return mt_rand(0, 1) ? $code : strtoupper($code);
     }
 
     /**
-     *
-     * @param int    $maxlen
+     * @param int $maxlen
      * @param string $use
      *
      * @return string
      */
     protected static function codeOrNull(int $maxlen, string $use = '-_.')
     {
-        switch (\mt_rand(0, 5)) {
+        switch (mt_rand(0, 5)) {
             case 0:
             case 1:
                 return static::code($maxlen, $use);
@@ -180,7 +168,6 @@ abstract class NewItems
     }
 
     /**
-     *
      * @return string
      */
     protected static function codimpuesto()
@@ -190,12 +177,11 @@ abstract class NewItems
             self::$taxes = $tax->all();
         }
 
-        \shuffle(self::$taxes);
-        return \mt_rand(0, 2) === 0 ? self::$taxes[0]->codimpuesto : AppSettings::get('default', 'codimpuesto');
+        shuffle(self::$taxes);
+        return mt_rand(0, 2) === 0 ? self::$taxes[0]->codimpuesto : AppSettings::get('default', 'codimpuesto');
     }
 
     /**
-     *
      * @return string
      */
     protected static function codpais()
@@ -205,12 +191,11 @@ abstract class NewItems
             self::$countries = $country->all();
         }
 
-        \shuffle(self::$countries);
-        return \mt_rand(0, 3) === 0 ? self::$countries[0]->codpais : AppSettings::get('default', 'codpais');
+        shuffle(self::$countries);
+        return mt_rand(0, 3) === 0 ? self::$countries[0]->codpais : AppSettings::get('default', 'codpais');
     }
 
     /**
-     *
      * @return string
      */
     protected static function codpago()
@@ -220,12 +205,11 @@ abstract class NewItems
             self::$payments = $payment->all();
         }
 
-        \shuffle(self::$payments);
-        return \mt_rand(0, 1) === 0 ? self::$payments[0]->codpago : AppSettings::get('default', 'codpago');
+        shuffle(self::$payments);
+        return mt_rand(0, 1) === 0 ? self::$payments[0]->codpago : AppSettings::get('default', 'codpago');
     }
 
     /**
-     *
      * @return string
      */
     protected static function codretencion()
@@ -235,12 +219,11 @@ abstract class NewItems
             self::$retentions = $retention->all();
         }
 
-        \shuffle(self::$retentions);
-        return \mt_rand(0, 2) === 0 ? self::$retentions[0]->codretencion : AppSettings::get('default', 'codretencion');
+        shuffle(self::$retentions);
+        return mt_rand(0, 2) === 0 ? self::$retentions[0]->codretencion : AppSettings::get('default', 'codretencion');
     }
 
     /**
-     *
      * @return string
      */
     protected static function codserie()
@@ -253,12 +236,11 @@ abstract class NewItems
             self::$series = $serie->all($where);
         }
 
-        \shuffle(self::$series);
-        return \mt_rand(0, 1) === 0 ? self::$series[0]->codserie : AppSettings::get('default', 'codserie');
+        shuffle(self::$series);
+        return mt_rand(0, 1) === 0 ? self::$series[0]->codserie : AppSettings::get('default', 'codserie');
     }
 
     /**
-     *
      * @return string
      */
     protected static function codtarifa()
@@ -268,12 +250,11 @@ abstract class NewItems
             self::$rates = $tarifa->all();
         }
 
-        \shuffle(self::$rates);
-        return empty(self::$rates) || \mt_rand(0, 1) === 0 ? null : self::$rates[0]->codtarifa;
+        shuffle(self::$rates);
+        return empty(self::$rates) || mt_rand(0, 1) === 0 ? null : self::$rates[0]->codtarifa;
     }
 
     /**
-     *
      * @return DataBase
      */
     protected static function dataBase()
@@ -286,37 +267,33 @@ abstract class NewItems
     }
 
     /**
-     *
      * @return string
      */
     protected static function fecha(): string
     {
-        $days = \mt_rand(0, 1999);
-        return \date(Serie::DATE_STYLE, \strtotime('-' . $days . ' days'));
+        $days = mt_rand(0, 1999);
+        return date(Serie::DATE_STYLE, strtotime('-' . $days . ' days'));
     }
 
     /**
-     *
      * @return string
      */
     protected static function fechaHora(): string
     {
-        $days = \mt_rand(0, 1999);
-        return \date(Serie::DATETIME_STYLE, \strtotime('-' . $days . ' days'));
+        $days = mt_rand(0, 1999);
+        return date(Serie::DATETIME_STYLE, strtotime('-' . $days . ' days'));
     }
 
     /**
-     *
      * @return string
      */
     protected static function hora(): string
     {
-        $minutes = \mt_rand(0, 1429);
-        return \date(Serie::HOUR_STYLE, \strtotime('-' . $minutes . ' minutes'));
+        $minutes = mt_rand(0, 1429);
+        return date(Serie::HOUR_STYLE, strtotime('-' . $minutes . ' minutes'));
     }
 
     /**
-     *
      * @return int
      */
     protected static function idempresa()
@@ -326,12 +303,11 @@ abstract class NewItems
             self::$companies = $company->all();
         }
 
-        \shuffle(self::$companies);
-        return \mt_rand(0, 2) === 0 ? self::$companies[0]->idempresa : AppSettings::get('default', 'idempresa');
+        shuffle(self::$companies);
+        return mt_rand(0, 2) === 0 ? self::$companies[0]->idempresa : AppSettings::get('default', 'idempresa');
     }
 
     /**
-     *
      * @param bool $null
      *
      * @return string
@@ -343,14 +319,13 @@ abstract class NewItems
             self::$users = $user->all();
         }
 
-        \shuffle(self::$users);
-        return false === $null || \mt_rand(0, 3) > 0 ?
+        shuffle(self::$users);
+        return false === $null || mt_rand(0, 3) > 0 ?
             self::$users[0]->nick :
             null;
     }
 
     /**
-     *
      * @param Generator $faker
      *
      * @return string
@@ -358,6 +333,6 @@ abstract class NewItems
     protected static function web(&$faker)
     {
         $web = $faker->optional()->url;
-        return \strlen($web) > 100 ? \substr($web, 0, 100) : $web;
+        return strlen($web) > 100 ? substr($web, 0, 100) : $web;
     }
 }

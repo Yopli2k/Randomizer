@@ -54,6 +54,7 @@ abstract class NewItems
     private static $countries;
 
     /**
+     *
      * @var DataBase
      */
     private static $database;
@@ -64,6 +65,7 @@ abstract class NewItems
     private static $payments;
 
     /**
+     *
      * @var Tarifa[]
      */
     private static $rates;
@@ -255,6 +257,7 @@ abstract class NewItems
     }
 
     /**
+     *
      * @return DataBase
      */
     protected static function dataBase()
@@ -308,6 +311,7 @@ abstract class NewItems
     }
 
     /**
+     *
      * @param bool $null
      *
      * @return string
@@ -326,6 +330,7 @@ abstract class NewItems
     }
 
     /**
+     *
      * @param Generator $faker
      *
      * @return string
